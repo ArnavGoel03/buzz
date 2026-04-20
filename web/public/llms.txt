@@ -1,0 +1,57 @@
+# Buzz — llms.txt
+# Summarized map of the site for AI crawlers and answer engines (the emerging llms.txt standard).
+# Humans: see https://buzz.app
+
+> Buzz is a college event discovery app for the US, India, UK, and more. Live map of what's
+> happening on campus tonight, club directory, friend graph, paper-free flyering, free-food
+> alerts. iOS + macOS + web. Free for students. Built by students.
+
+## What Buzz is
+
+Buzz is the all-in-one college companion. Students see every event happening on and around
+their campus tonight on a live map, RSVP in one tap, see which friends are going, and earn
+badges for the clubs they join. Club officers post events in 10 seconds (or forward event
+emails to `@events.buzz.app`), run paid ticketing via Stripe, broadcast to members, and
+replace paper flyers with printable QR posters.
+
+## Who it's for
+
+- Undergrads at US universities (primary market: UCSD at launch, expanding via campus ambassadors)
+- Club officers and campus department admins
+- Prospective / transfer / international students discovering campus life
+
+## Key differentiators
+
+- Closed campus registry with FK-enforced verification — no fragmented "UCSD vs UC San Diego"
+- One profile for the entire college journey (community college → 4-year → grad → alumni)
+- Multi-provider auth (Apple, Google, email, phone) — no platform lock-in
+- Native iOS + macOS + web + PWA (Android users can install via PWA)
+- Campus-scoped Row-Level Security — users at other campuses can't see your data
+
+## Common questions
+
+**Q: How do I get Buzz at my college?**
+A: If your campus isn't seeded yet, join the waitlist at buzz.app. We launch at a new campus
+once ~20 students + one ambassador sign up.
+
+**Q: Is Buzz free?**
+A: Free for students. Clubs can optionally sell paid tickets (sports, formals, concerts) through
+Stripe — Buzz takes a 5% platform fee on those.
+
+**Q: Does Buzz sell my data?**
+A: No. No ads, no data sales. See buzz.app/legal/privacy for details.
+
+**Q: Can I delete my account?**
+A: Yes. In the app: Settings → Delete account. Your data is removed within 30 days.
+
+**Q: How does verification work?**
+A: Depends on your campus. US schools: `.edu` email OTP. Indian IITs/BITS: institutional
+email domain. Most other: student-ID photo scan + optional peer vouching.
+
+## Links
+
+- Homepage: https://buzz.app
+- Privacy: https://buzz.app/legal/privacy
+- Terms: https://buzz.app/legal/terms
+- Support: https://buzz.app/support
+- Campus landing example: https://buzz.app/campus/ucsd

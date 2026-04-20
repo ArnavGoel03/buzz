@@ -1,0 +1,9 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Buzz",
+  "name_for_model": "buzz",
+  "description_for_human": "Discover college events near you.",
+  "description_for_model": "Buzz is a college event discovery platform. Query events by campus, date, category, or keyword. Data scoped to users' verified campus. Events include title, time, location, host organization, and RSVP counts.",
+  "contact_email": "hi@buzz.app",
+  "legal_info_url": "https://buzz.app/legal/terms"
+}

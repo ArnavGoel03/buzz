@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0f;
+  --color-surface: #16161c;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-text: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.64);
+  --color-text-tertiary: rgba(255, 255, 255, 0.40);
+  --color-accent: #ffd60a;
+  --color-live: #ff4059;
+
+  --font-display: ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --font-body: -apple-system, "SF Pro Text", system-ui, sans-serif;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}

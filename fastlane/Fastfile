@@ -1,0 +1,43 @@
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    setup_ci if ENV["CI"]
+  end
+
+  desc "Run unit tests"
+  lane :test do
+    run_tests(
+      project: "Buzz.xcodeproj",
+      scheme: "Buzz",
+      devices: ["iPhone 15"]
+    )
+  end
+
+  desc "Build + upload a new TestFlight build"
+  lane :beta do
+    match(type: "appstore", readonly: true)
+    build_app(
+      project: "Buzz.xcodeproj",
+      scheme: "Buzz",
+      export_method: "app-store"
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      changelog: git_branch + " — " + last_git_commit[:message]
+    )
+  end
+
+  desc "Cut a new production release"
+  lane :release do
+    match(type: "appstore", readonly: true)
+    build_app(project: "Buzz.xcodeproj", scheme: "Buzz", export_method: "app-store")
+    upload_to_app_store(
+      submit_for_review: false,
+      automatic_release: false,
+      force: true,
+      skip_screenshots: true,
+      skip_metadata: false
+    )
+  end
+end

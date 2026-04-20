@@ -1,0 +1,35 @@
+Buzz is every college event, on one map.
+
+Live discovery for parties, clubs, sports, free food, study sessions, and academic talks happening tonight on and around your campus. Tap an event, RSVP in one second, see which friends are going.
+
+ONE APP FOR COLLEGE LIFE
+• Live map of every event happening tonight, within walking distance
+• Join clubs in a tap — badges show on your profile (Member, Officer, President)
+• Free food alerts (the killer push notification every student wants)
+• Paper-free: clubs replace stacks of printed flyers with one QR poster
+• Streaks that keep track of how many events you've shown up to
+• See which friends are going to what — kills the "what's happening rn" group text
+
+FOR CLUB OFFICERS
+• Forward any event email to @events.buzz.app and we draft it for you
+• Recurring events, templates, duplicate from last week — 10-second posting
+• Bulk invite members by CSV or paste
+• Broadcast push + email to your roster (rate-limited — no spam)
+• Check-in QR at the door, real attendance vs RSVPs
+• Tabling Mode: one iPad at your booth broadcasts your club to every nearby phone
+• Real analytics: RSVPs → attendance funnel, best time to host, paper saved
+
+BUILT FOR EVERY COLLEGE JOURNEY
+Community college → 4-year → grad school → alumni — one profile, stacking affiliations. Transfer to another school? Your badges and history come with you. We work at 50+ campuses across 12 countries and counting.
+
+PRIVACY AND SAFETY FIRST
+• Sign in with Apple by default, multi-provider so you're never locked in
+• Per-badge visibility controls — show only what you want to show
+• Events can be campus-only, invite-only, officers-only, or public
+• Report + block flows + moderation queue on every surface
+• Your location never leaves your device
+
+FREE FOR STUDENTS. NO ADS. NO DATA SELLING.
+
+Have feedback? hi@buzz.app
+Privacy: buzz.app/legal/privacy

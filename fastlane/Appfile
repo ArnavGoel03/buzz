@@ -1,0 +1,5 @@
+app_identifier("com.buzz.app")
+apple_id(ENV["APPLE_ID"])          # your Apple Developer account email
+team_id(ENV["APPLE_TEAM_ID"])      # your 10-char team id
+
+# itc_team_id("xxxxxx")            # fill if multiple App Store Connect teams

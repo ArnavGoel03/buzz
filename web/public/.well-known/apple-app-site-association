@@ -1,0 +1,21 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["TEAMID.com.buzz.app"],
+        "components": [
+          { "/": "/e/*", "comment": "Event preview" },
+          { "/": "/o/*", "comment": "Organization page" },
+          { "/": "/u/*", "comment": "User profile" }
+        ]
+      }
+    ]
+  },
+  "appclips": {
+    "apps": ["TEAMID.com.buzz.app.Clip"]
+  },
+  "webcredentials": {
+    "apps": ["TEAMID.com.buzz.app"]
+  }
+}

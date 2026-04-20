@@ -1,0 +1,119 @@
+name: Buzz
+options:
+  bundleIdPrefix: com.buzz
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: "2.0.0"
+
+targets:
+  Buzz:
+    type: application
+    # True multiplatform SwiftUI: one target compiled natively for both iOS and macOS.
+    # No Catalyst layer. UIKit-specific code is wrapped in `#if canImport(UIKit)`;
+    # iOS-only SwiftUI modifiers go through helpers in `PlatformModifiers.swift`.
+    supportedDestinations:
+      - iOS
+      - macOS
+    sources:
+      - path: Buzz
+    resources:
+      - path: Buzz/Resources
+    dependencies:
+      - package: Supabase
+        product: Supabase
+    info:
+      path: Buzz/Info.plist
+      properties:
+        CFBundleDisplayName: Buzz
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        NSLocationWhenInUseUsageDescription: "Buzz uses your location to show events happening near you on campus."
+        NSLocationAlwaysAndWhenInUseUsageDescription: "Buzz uses your location to surface events within walking distance and notify you when something nearby matches your interests."
+        NSCalendarsWriteOnlyAccessUsageDescription: "Buzz adds events you RSVP to your calendar so you don't miss them."
+        UIBackgroundModes:
+          - location
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIUserInterfaceStyle: Dark
+        ITSAppUsesNonExemptEncryption: false
+        com.apple.developer.associated-domains:
+          - applinks:buzz.app
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.arnavgoel.buzz
+        # 1=iPhone, 2=iPad. macOS uses the same target via supportedDestinations above.
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_STRICT_CONCURRENCY: complete
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+
+  BuzzAppClip:
+    type: application.on-demand-install-capable
+    platform: iOS
+    sources:
+      - path: BuzzAppClip
+    info:
+      path: BuzzAppClip/Info.plist
+      properties:
+        CFBundleDisplayName: Buzz
+        UIUserInterfaceStyle: Dark
+        UILaunchScreen: {}
+        NSAppClip:
+          NSAppClipRequestEphemeralUserNotification: false
+        com.apple.developer.associated-domains:
+          - appclips:buzz.app
+          - applinks:buzz.app
+        com.apple.developer.parent-application-identifiers:
+          - $(AppIdentifierPrefix)com.arnavgoel.buzz
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.arnavgoel.buzz.Clip
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "5.10"
+
+  BuzzTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: BuzzTests
+    dependencies:
+      - target: Buzz
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.arnavgoel.buzz.tests
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_STRICT_CONCURRENCY: complete
+        BUNDLE_LOADER: $(TEST_HOST)
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Buzz.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Buzz
+
+schemes:
+  Buzz:
+    build:
+      targets:
+        Buzz: all
+        BuzzTests: [test]
+    test:
+      targets:
+        - BuzzTests
+      gatherCoverageData: true
+      coverageTargets:
+        - Buzz

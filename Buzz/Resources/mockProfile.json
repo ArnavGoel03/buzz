@@ -1,0 +1,84 @@
+{
+  "profile": {
+    "id": "C0FFEE00-0001-4000-8000-000000000001",
+    "displayName": "Yash Goel",
+    "handle": "yashgoel",
+    "pronouns": "he/him",
+    "bio": "CS @ UCSD. Building Buzz so I never miss a free-food event again.",
+    "avatarURL": null,
+    "accentHex": "#FFD60A",
+    "primaryAffiliationID": "AFF00000-0001-4000-8000-00000000F001",
+    "affiliations": [
+      {
+        "id": "AFF00000-0001-4000-8000-00000000F001",
+        "campus": "ucsd",
+        "subCampus": "warren",
+        "role": "student",
+        "program": "undergraduate",
+        "status": "active",
+        "year": "sophomore",
+        "major": "Computer Science",
+        "minors": ["Cognitive Science"],
+        "verifiedAt": "2024-09-15T00:00:00Z",
+        "startDate": "2024-09-22T00:00:00Z",
+        "endDate": null
+      }
+    ]
+  },
+  "memberships": [
+    {
+      "id": "D0DA1100-0001-4000-8000-000000000001",
+      "profileID": "C0FFEE00-0001-4000-8000-000000000001",
+      "organizationID": "9B2E4F2C-0001-4000-8000-00000000A005",
+      "role": "founder",
+      "since": "2025-03-15T00:00:00Z",
+      "endedAt": null,
+      "isVisible": true
+    },
+    {
+      "id": "D0DA1100-0001-4000-8000-000000000002",
+      "profileID": "C0FFEE00-0001-4000-8000-000000000001",
+      "organizationID": "9B2E4F2C-0001-4000-8000-00000000A001",
+      "role": "vicePresident",
+      "since": "2025-09-01T00:00:00Z",
+      "endedAt": null,
+      "isVisible": true
+    },
+    {
+      "id": "D0DA1100-0001-4000-8000-000000000003",
+      "profileID": "C0FFEE00-0001-4000-8000-000000000001",
+      "organizationID": "9B2E4F2C-0001-4000-8000-00000000A003",
+      "role": "treasurer",
+      "since": "2025-10-12T00:00:00Z",
+      "endedAt": null,
+      "isVisible": true
+    },
+    {
+      "id": "D0DA1100-0001-4000-8000-000000000004",
+      "profileID": "C0FFEE00-0001-4000-8000-000000000001",
+      "organizationID": "9B2E4F2C-0001-4000-8000-00000000A002",
+      "role": "member",
+      "since": "2024-09-22T00:00:00Z",
+      "endedAt": null,
+      "isVisible": true
+    },
+    {
+      "id": "D0DA1100-0001-4000-8000-000000000005",
+      "profileID": "C0FFEE00-0001-4000-8000-000000000001",
+      "organizationID": "9B2E4F2C-0001-4000-8000-00000000A007",
+      "role": "member",
+      "since": "2024-10-04T00:00:00Z",
+      "endedAt": null,
+      "isVisible": true
+    },
+    {
+      "id": "D0DA1100-0001-4000-8000-000000000006",
+      "profileID": "C0FFEE00-0001-4000-8000-000000000001",
+      "organizationID": "9B2E4F2C-0001-4000-8000-00000000A006",
+      "role": "member",
+      "since": "2025-01-18T00:00:00Z",
+      "endedAt": null,
+      "isVisible": false
+    }
+  ]
+}

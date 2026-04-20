@@ -1,0 +1,6 @@
+# Code-signing via match: stores certs + profiles in a private repo, shared across team.
+# Set MATCH_GIT_URL and MATCH_PASSWORD as env vars (or in CI secrets).
+git_url(ENV["MATCH_GIT_URL"])
+storage_mode("git")
+type("appstore")
+app_identifier(["com.buzz.app"])

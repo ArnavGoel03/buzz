@@ -1,0 +1,48 @@
+/* Buzz — English base strings. Every user-facing string should live here, referenced
+   via String(localized:). Add other locales in sibling *.lproj folders (es.lproj, hi.lproj, etc.) */
+
+// Tabs
+"tab.map" = "Map";
+"tab.clubs" = "Clubs";
+"tab.profile" = "Profile";
+
+// Time filters
+"time.now" = "Now";
+"time.tonight" = "Tonight";
+"time.tomorrow" = "Tomorrow";
+"time.week" = "This Week";
+
+// Event detail
+"event.rsvp.going" = "You're going";
+"event.rsvp.invite" = "Count me in";
+"event.live" = "LIVE";
+"event.starts.now" = "Starting now";
+"event.starts.live" = "Live now";
+
+// Profile
+"profile.badges" = "Badges";
+"profile.badges.empty.title" = "No badges yet";
+"profile.badges.empty.body" = "Find your clubs in the Clubs tab and you'll see your memberships here.";
+"profile.badge.visibility.title" = "Show on my profile";
+"profile.badge.visibility.public" = "Others can see this badge.";
+"profile.badge.visibility.private" = "Only you can see this badge.";
+
+// Clubs
+"clubs.search.placeholder" = "Search clubs, Greek life, honor societies…";
+"clubs.trending.title" = "Trending this week";
+"clubs.category.all" = "All";
+
+// Organization
+"org.about" = "About";
+"org.members" = "Members";
+"org.events.upcoming" = "Upcoming events";
+"org.events.empty" = "Nothing scheduled. Check back soon.";
+"org.follow" = "Follow";
+"org.following" = "Following";
+
+// Onboarding (v0.3)
+"onboarding.welcome" = "Welcome to Buzz";
+"onboarding.pickCampus" = "Pick your campus";
+"onboarding.verify.title" = "Verify you're a student";
+"onboarding.verify.edu" = "Use your school email";
+"onboarding.verify.idCard" = "Scan your student ID";

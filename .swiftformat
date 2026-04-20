@@ -1,0 +1,28 @@
+# SwiftFormat — rules tuned for SwiftUI + Swift 6
+--swiftversion 5.10
+--indent 4
+--commas inline
+--trimwhitespace always
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--wrapconditions after-first
+--self remove
+--importgrouping alpha
+--stripunusedargs closure-only
+--semicolons never
+--ifdef no-indent
+--emptybraces no-space
+--ranges no-space
+--operatorfunc no-space
+--elseposition same-line
+--guardelse same-line
+--funcattributes prev-line
+--typeattributes prev-line
+--storedvarattrs same-line
+--computedvarattrs prev-line
+--extensionacl on-declarations
+--patternlet inline
+--redundanttype inferred
+
+--exclude Buzz.xcodeproj,DerivedData,.build

@@ -1,0 +1,35 @@
+title = "Buzz — secret scanning config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "supabase-anon-key"
+description = "Supabase anon JWT"
+regex = '''eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}'''
+tags = ["supabase", "jwt"]
+
+[[rules]]
+id = "sentry-dsn"
+description = "Sentry DSN with secret"
+regex = '''https://[a-f0-9]{32,}@o?\d+\.ingest\.sentry\.io/\d+'''
+tags = ["sentry"]
+
+[[rules]]
+id = "posthog-key"
+description = "PostHog project API key"
+regex = '''phc_[A-Za-z0-9]{32,}'''
+tags = ["posthog"]
+
+[allowlist]
+description = "Example/template files"
+paths = [
+  '''Secrets\.plist\.example''',
+  '''\.env\.example''',
+  '''README\.md''',
+  '''docs/''',
+]
+regexes = [
+  '''REPLACE_ME''',
+  '''YOUR-PROJECT''',
+]

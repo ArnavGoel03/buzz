@@ -1,0 +1,123 @@
+[
+  {
+    "id": "ucsd", "displayName": "University of California, San Diego", "shortName": "UCSD",
+    "country": "US", "state": "CA", "city": "La Jolla",
+    "kind": "research", "domains": ["ucsd.edu"], "preferredVerification": ["eduOTP"],
+    "subCampuses": [
+      { "id": "revelle", "displayName": "Revelle College" },
+      { "id": "muir", "displayName": "John Muir College" },
+      { "id": "marshall", "displayName": "Thurgood Marshall College" },
+      { "id": "warren", "displayName": "Earl Warren College" },
+      { "id": "roosevelt", "displayName": "Eleanor Roosevelt College" },
+      { "id": "sixth", "displayName": "Sixth College" },
+      { "id": "seventh", "displayName": "Seventh College" },
+      { "id": "eighth", "displayName": "Eighth College" }
+    ],
+    "latitude": 32.8812, "longitude": -117.2374
+  },
+  { "id": "ucla", "displayName": "University of California, Los Angeles", "shortName": "UCLA", "country": "US", "state": "CA", "city": "Los Angeles", "kind": "research", "domains": ["ucla.edu", "g.ucla.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 34.0689, "longitude": -118.4452 },
+  { "id": "ucb", "displayName": "University of California, Berkeley", "shortName": "Berkeley", "country": "US", "state": "CA", "city": "Berkeley", "kind": "research", "domains": ["berkeley.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 37.8719, "longitude": -122.2585 },
+  {
+    "id": "ucsc", "displayName": "University of California, Santa Cruz", "shortName": "UCSC",
+    "country": "US", "state": "CA", "city": "Santa Cruz",
+    "kind": "research", "domains": ["ucsc.edu"], "preferredVerification": ["eduOTP"],
+    "subCampuses": [
+      { "id": "cowell", "displayName": "Cowell College" },
+      { "id": "stevenson", "displayName": "Stevenson College" },
+      { "id": "crown", "displayName": "Crown College" },
+      { "id": "merrill", "displayName": "Merrill College" },
+      { "id": "porter", "displayName": "Porter College" },
+      { "id": "kresge", "displayName": "Kresge College" },
+      { "id": "oakes", "displayName": "Oakes College" },
+      { "id": "rachel-carson", "displayName": "Rachel Carson College" },
+      { "id": "colnine", "displayName": "College Nine" },
+      { "id": "colten", "displayName": "John R. Lewis College" }
+    ],
+    "latitude": 36.9916, "longitude": -122.0583
+  },
+  { "id": "stanford", "displayName": "Stanford University", "shortName": "Stanford", "country": "US", "state": "CA", "city": "Stanford", "kind": "research", "domains": ["stanford.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 37.4275, "longitude": -122.1697 },
+  { "id": "mit", "displayName": "Massachusetts Institute of Technology", "shortName": "MIT", "country": "US", "state": "MA", "city": "Cambridge", "kind": "research", "domains": ["mit.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 42.3601, "longitude": -71.0942 },
+  {
+    "id": "harvard", "displayName": "Harvard University", "shortName": "Harvard",
+    "country": "US", "state": "MA", "city": "Cambridge",
+    "kind": "research", "domains": ["harvard.edu", "college.harvard.edu", "hbs.edu", "hls.harvard.edu"],
+    "preferredVerification": ["eduOTP"],
+    "subCampuses": [
+      { "id": "adams", "displayName": "Adams House" }, { "id": "currier", "displayName": "Currier House" },
+      { "id": "eliot", "displayName": "Eliot House" }, { "id": "kirkland", "displayName": "Kirkland House" },
+      { "id": "leverett", "displayName": "Leverett House" }, { "id": "lowell", "displayName": "Lowell House" },
+      { "id": "mather", "displayName": "Mather House" }, { "id": "pfoho", "displayName": "Pforzheimer House" },
+      { "id": "quincy", "displayName": "Quincy House" }, { "id": "winthrop", "displayName": "Winthrop House" },
+      { "id": "dunster", "displayName": "Dunster House" }, { "id": "cabot", "displayName": "Cabot House" }
+    ],
+    "latitude": 42.3770, "longitude": -71.1167
+  },
+  {
+    "id": "yale", "displayName": "Yale University", "shortName": "Yale",
+    "country": "US", "state": "CT", "city": "New Haven",
+    "kind": "research", "domains": ["yale.edu"], "preferredVerification": ["eduOTP"],
+    "subCampuses": [
+      { "id": "benfranklin", "displayName": "Benjamin Franklin College" },
+      { "id": "berkeley", "displayName": "Berkeley College" },
+      { "id": "branford", "displayName": "Branford College" },
+      { "id": "davenport", "displayName": "Davenport College" },
+      { "id": "murray", "displayName": "Pauli Murray College" }
+    ],
+    "latitude": 41.3163, "longitude": -72.9223
+  },
+  { "id": "princeton", "displayName": "Princeton University", "shortName": "Princeton", "country": "US", "state": "NJ", "city": "Princeton", "kind": "research", "domains": ["princeton.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 40.3431, "longitude": -74.6551 },
+  { "id": "columbia", "displayName": "Columbia University", "shortName": "Columbia", "country": "US", "state": "NY", "city": "New York", "kind": "research", "domains": ["columbia.edu", "barnard.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 40.8075, "longitude": -73.9626 },
+  { "id": "nyu", "displayName": "New York University", "shortName": "NYU", "country": "US", "state": "NY", "city": "New York", "kind": "research", "domains": ["nyu.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 40.7295, "longitude": -73.9965 },
+  { "id": "umich", "displayName": "University of Michigan", "shortName": "Michigan", "country": "US", "state": "MI", "city": "Ann Arbor", "kind": "research", "domains": ["umich.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 42.2780, "longitude": -83.7382 },
+  { "id": "utaustin", "displayName": "University of Texas at Austin", "shortName": "UT Austin", "country": "US", "state": "TX", "city": "Austin", "kind": "research", "domains": ["utexas.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 30.2849, "longitude": -97.7341 },
+  { "id": "uw", "displayName": "University of Washington", "shortName": "UW", "country": "US", "state": "WA", "city": "Seattle", "kind": "research", "domains": ["uw.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 47.6553, "longitude": -122.3035 },
+  { "id": "uiuc", "displayName": "University of Illinois Urbana-Champaign", "shortName": "UIUC", "country": "US", "state": "IL", "city": "Urbana", "kind": "research", "domains": ["illinois.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 40.1020, "longitude": -88.2272 },
+  { "id": "gatech", "displayName": "Georgia Institute of Technology", "shortName": "Georgia Tech", "country": "US", "state": "GA", "city": "Atlanta", "kind": "technical", "domains": ["gatech.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 33.7756, "longitude": -84.3963 },
+  { "id": "cmu", "displayName": "Carnegie Mellon University", "shortName": "CMU", "country": "US", "state": "PA", "city": "Pittsburgh", "kind": "research", "domains": ["cmu.edu", "andrew.cmu.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 40.4433, "longitude": -79.9436 },
+  { "id": "uchicago", "displayName": "University of Chicago", "shortName": "UChicago", "country": "US", "state": "IL", "city": "Chicago", "kind": "research", "domains": ["uchicago.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 41.7886, "longitude": -87.5987 },
+  { "id": "duke", "displayName": "Duke University", "shortName": "Duke", "country": "US", "state": "NC", "city": "Durham", "kind": "research", "domains": ["duke.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 36.0014, "longitude": -78.9382 },
+  { "id": "howard", "displayName": "Howard University", "shortName": "Howard", "country": "US", "state": "DC", "city": "Washington", "kind": "hbcu", "domains": ["howard.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 38.9227, "longitude": -77.0194 },
+  { "id": "spelman", "displayName": "Spelman College", "shortName": "Spelman", "country": "US", "state": "GA", "city": "Atlanta", "kind": "hbcu", "domains": ["spelman.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 33.7463, "longitude": -84.4120 },
+  { "id": "pomona", "displayName": "Pomona College", "shortName": "Pomona", "country": "US", "state": "CA", "city": "Claremont", "kind": "liberalArts", "domains": ["pomona.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 34.0968, "longitude": -117.7123 },
+  { "id": "williams", "displayName": "Williams College", "shortName": "Williams", "country": "US", "state": "MA", "city": "Williamstown", "kind": "liberalArts", "domains": ["williams.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 42.7127, "longitude": -73.2037 },
+  { "id": "smcc", "displayName": "Santa Monica College", "shortName": "SMC", "country": "US", "state": "CA", "city": "Santa Monica", "kind": "communityCollege", "domains": ["smc.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 34.0169, "longitude": -118.4716 },
+  { "id": "miradacc", "displayName": "Mira Costa College", "shortName": "MiraCosta", "country": "US", "state": "CA", "city": "Oceanside", "kind": "communityCollege", "domains": ["miracosta.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 33.2133, "longitude": -117.3797 },
+  { "id": "asu-online", "displayName": "Arizona State University — Online", "shortName": "ASU Online", "country": "US", "state": "AZ", "city": "Tempe", "kind": "onlineOnly", "domains": ["asu.edu"], "preferredVerification": ["eduOTP"], "subCampuses": [], "latitude": 33.4242, "longitude": -111.9281 },
+
+  { "id": "iit-bombay", "displayName": "Indian Institute of Technology Bombay", "shortName": "IIT Bombay", "country": "IN", "state": "MH", "city": "Mumbai", "kind": "technical", "domains": ["iitb.ac.in"], "preferredVerification": ["institutionalEmailDomain", "idCardScan"], "subCampuses": [{ "id": "h1", "displayName": "Hostel 1" }, { "id": "h4", "displayName": "Hostel 4" }, { "id": "h12", "displayName": "Hostel 12" }, { "id": "h15", "displayName": "Hostel 15" }, { "id": "h16", "displayName": "Hostel 16" }], "latitude": 19.1334, "longitude": 72.9133 },
+  { "id": "iit-delhi", "displayName": "Indian Institute of Technology Delhi", "shortName": "IIT Delhi", "country": "IN", "state": "DL", "city": "New Delhi", "kind": "technical", "domains": ["iitd.ac.in"], "preferredVerification": ["institutionalEmailDomain", "idCardScan"], "subCampuses": [], "latitude": 28.5450, "longitude": 77.1926 },
+  { "id": "iit-madras", "displayName": "Indian Institute of Technology Madras", "shortName": "IIT Madras", "country": "IN", "state": "TN", "city": "Chennai", "kind": "technical", "domains": ["iitm.ac.in"], "preferredVerification": ["institutionalEmailDomain", "idCardScan"], "subCampuses": [], "latitude": 12.9915, "longitude": 80.2336 },
+  { "id": "iit-kanpur", "displayName": "Indian Institute of Technology Kanpur", "shortName": "IIT Kanpur", "country": "IN", "state": "UP", "city": "Kanpur", "kind": "technical", "domains": ["iitk.ac.in"], "preferredVerification": ["institutionalEmailDomain", "idCardScan"], "subCampuses": [], "latitude": 26.5123, "longitude": 80.2329 },
+  { "id": "bits-pilani", "displayName": "Birla Institute of Technology and Science, Pilani", "shortName": "BITS Pilani", "country": "IN", "state": "RJ", "city": "Pilani", "kind": "technical", "domains": ["pilani.bits-pilani.ac.in", "bits-pilani.ac.in"], "preferredVerification": ["institutionalEmailDomain", "idCardScan"], "subCampuses": [], "latitude": 28.3639, "longitude": 75.5879 },
+  { "id": "du-srcc", "displayName": "Shri Ram College of Commerce, University of Delhi", "shortName": "SRCC", "country": "IN", "state": "DL", "city": "New Delhi", "kind": "fourYear", "domains": ["srcc.du.ac.in"], "preferredVerification": ["idCardScan", "manualReview"], "subCampuses": [], "latitude": 28.6919, "longitude": 77.2089 },
+  { "id": "iisc", "displayName": "Indian Institute of Science", "shortName": "IISc", "country": "IN", "state": "KA", "city": "Bengaluru", "kind": "research", "domains": ["iisc.ac.in"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 13.0218, "longitude": 77.5671 },
+  { "id": "aiims-delhi", "displayName": "All India Institute of Medical Sciences, Delhi", "shortName": "AIIMS Delhi", "country": "IN", "state": "DL", "city": "New Delhi", "kind": "research", "domains": ["aiims.edu"], "preferredVerification": ["institutionalEmailDomain", "idCardScan"], "subCampuses": [], "latitude": 28.5672, "longitude": 77.2100 },
+
+  { "id": "oxford", "displayName": "University of Oxford", "shortName": "Oxford", "country": "GB", "state": "ENG", "city": "Oxford", "kind": "research", "domains": ["ox.ac.uk"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [{ "id": "balliol", "displayName": "Balliol College" }, { "id": "magdalen", "displayName": "Magdalen College" }, { "id": "merton", "displayName": "Merton College" }, { "id": "newcollege", "displayName": "New College" }, { "id": "stjohns", "displayName": "St John's College" }], "latitude": 51.7548, "longitude": -1.2544 },
+  { "id": "cambridge", "displayName": "University of Cambridge", "shortName": "Cambridge", "country": "GB", "state": "ENG", "city": "Cambridge", "kind": "research", "domains": ["cam.ac.uk"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [{ "id": "kings", "displayName": "King's College" }, { "id": "trinity", "displayName": "Trinity College" }, { "id": "stjohns", "displayName": "St John's College" }, { "id": "queens", "displayName": "Queens' College" }], "latitude": 52.2043, "longitude": 0.1149 },
+  { "id": "imperial", "displayName": "Imperial College London", "shortName": "Imperial", "country": "GB", "state": "ENG", "city": "London", "kind": "technical", "domains": ["imperial.ac.uk"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 51.4988, "longitude": -0.1749 },
+  { "id": "ucl", "displayName": "University College London", "shortName": "UCL", "country": "GB", "state": "ENG", "city": "London", "kind": "research", "domains": ["ucl.ac.uk"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 51.5246, "longitude": -0.1340 },
+  { "id": "edinburgh", "displayName": "University of Edinburgh", "shortName": "Edinburgh", "country": "GB", "state": "SCT", "city": "Edinburgh", "kind": "research", "domains": ["ed.ac.uk"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 55.9445, "longitude": -3.1892 },
+
+  { "id": "utoronto", "displayName": "University of Toronto", "shortName": "U of T", "country": "CA", "state": "ON", "city": "Toronto", "kind": "research", "domains": ["utoronto.ca", "mail.utoronto.ca"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [{ "id": "stgeorge", "displayName": "St. George" }, { "id": "utm", "displayName": "Mississauga" }, { "id": "utsc", "displayName": "Scarborough" }], "latitude": 43.6629, "longitude": -79.3957 },
+  { "id": "ubc", "displayName": "University of British Columbia", "shortName": "UBC", "country": "CA", "state": "BC", "city": "Vancouver", "kind": "research", "domains": ["ubc.ca", "student.ubc.ca"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 49.2606, "longitude": -123.2460 },
+  { "id": "mcgill", "displayName": "McGill University", "shortName": "McGill", "country": "CA", "state": "QC", "city": "Montréal", "kind": "research", "domains": ["mcgill.ca", "mail.mcgill.ca"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 45.5048, "longitude": -73.5772 },
+  { "id": "waterloo", "displayName": "University of Waterloo", "shortName": "Waterloo", "country": "CA", "state": "ON", "city": "Waterloo", "kind": "technical", "domains": ["uwaterloo.ca"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 43.4723, "longitude": -80.5449 },
+
+  { "id": "melbourne", "displayName": "University of Melbourne", "shortName": "Melbourne", "country": "AU", "state": "VIC", "city": "Melbourne", "kind": "research", "domains": ["unimelb.edu.au", "student.unimelb.edu.au"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": -37.7964, "longitude": 144.9612 },
+  { "id": "sydney", "displayName": "University of Sydney", "shortName": "USyd", "country": "AU", "state": "NSW", "city": "Sydney", "kind": "research", "domains": ["sydney.edu.au", "uni.sydney.edu.au"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": -33.8886, "longitude": 151.1873 },
+  { "id": "anu", "displayName": "Australian National University", "shortName": "ANU", "country": "AU", "state": "ACT", "city": "Canberra", "kind": "research", "domains": ["anu.edu.au"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": -35.2777, "longitude": 149.1185 },
+
+  { "id": "nus", "displayName": "National University of Singapore", "shortName": "NUS", "country": "SG", "state": "", "city": "Singapore", "kind": "research", "domains": ["nus.edu.sg", "u.nus.edu"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 1.2966, "longitude": 103.7764 },
+  { "id": "ntu-sg", "displayName": "Nanyang Technological University", "shortName": "NTU", "country": "SG", "state": "", "city": "Singapore", "kind": "technical", "domains": ["ntu.edu.sg", "e.ntu.edu.sg"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 1.3483, "longitude": 103.6831 },
+
+  { "id": "tum", "displayName": "Technische Universität München", "shortName": "TUM", "country": "DE", "state": "BY", "city": "Munich", "kind": "technical", "domains": ["tum.de", "mytum.de"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 48.1497, "longitude": 11.5681 },
+  { "id": "ethz", "displayName": "ETH Zürich", "shortName": "ETH", "country": "CH", "state": "ZH", "city": "Zürich", "kind": "technical", "domains": ["ethz.ch", "student.ethz.ch"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 47.3763, "longitude": 8.5481 },
+  { "id": "epfl", "displayName": "École Polytechnique Fédérale de Lausanne", "shortName": "EPFL", "country": "CH", "state": "VD", "city": "Lausanne", "kind": "technical", "domains": ["epfl.ch"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 46.5191, "longitude": 6.5668 },
+
+  { "id": "utokyo", "displayName": "University of Tokyo", "shortName": "Todai", "country": "JP", "state": "13", "city": "Tokyo", "kind": "research", "domains": ["u-tokyo.ac.jp"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 35.7128, "longitude": 139.7625 },
+  { "id": "snu", "displayName": "Seoul National University", "shortName": "SNU", "country": "KR", "state": "11", "city": "Seoul", "kind": "research", "domains": ["snu.ac.kr"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 37.4602, "longitude": 126.9520 },
+
+  { "id": "tec-mty", "displayName": "Tecnológico de Monterrey", "shortName": "Tec de Monterrey", "country": "MX", "state": "NLE", "city": "Monterrey", "kind": "research", "domains": ["tec.mx"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": 25.6515, "longitude": -100.2891 },
+  { "id": "usp", "displayName": "Universidade de São Paulo", "shortName": "USP", "country": "BR", "state": "SP", "city": "São Paulo", "kind": "research", "domains": ["usp.br"], "preferredVerification": ["institutionalEmailDomain"], "subCampuses": [], "latitude": -23.5587, "longitude": -46.7299 }
+]

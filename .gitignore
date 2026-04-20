@@ -1,0 +1,52 @@
+## Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata
+!*.xcworkspace/contents.xcworkspacedata
+*.xcuserstate
+xcuserdata/
+DerivedData/
+build/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+
+## macOS
+.DS_Store
+
+## Secrets
+*.env
+*.env.local
+Buzz/Secrets.plist
+supabase/.env
+
+## XcodeGen output (regenerate on demand)
+Buzz.xcodeproj/
+
+## Next.js / Node (web/)
+node_modules/
+.next/
+out/
+next-env.d.ts
+
+## Vercel
+.vercel
+
+## Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

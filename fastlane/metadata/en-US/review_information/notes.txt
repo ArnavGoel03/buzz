@@ -1,0 +1,16 @@
+Reviewer notes for Buzz v0.1.0:
+
+WHAT IT DOES: Buzz is a live discovery app for college events. Users verify they're a student at a specific college, see a map of what's happening on/near campus tonight, RSVP, and connect with friends at the same school.
+
+TEST ACCOUNT: A pre-verified mock account is active in the build — tap "Continue with Apple" and the flow will land you at UCSD with sample events, clubs, and a profile populated with badges. No real backend calls are made in the build submitted.
+
+DEMO CONTENT: All events, clubs, and profiles visible in the submitted build are mock data seeded locally. No UGC is possible until real Supabase backend is wired post-review. The content moderation queue, report flow, and block controls are implemented and exercisable in-app (tap ••• on any event / org / profile).
+
+GUIDELINE COMPLIANCE:
+• 4.8 Sign in with Apple — present as primary option alongside Google + email.
+• 5.1.1(v) Account Deletion — Settings → Delete account, fully permanent, no phone call required.
+• 1.2 Moderation for UGC — Report flow on every event/org/profile; Report model persists; admin moderation queue backed by `reports` table. User block is accessible from Settings.
+• 3.1.1 Payments — Paid tickets use Stripe Checkout (external web flow per 2024 guideline update); no digital goods / IAP used.
+• 17.5 Age Rating — 12+ (user-generated content possible, alcohol references possible in 21+ events which are explicitly flagged).
+
+CONTACT: hi@buzz.app for any review questions.
