@@ -8,6 +8,7 @@ import { formatFullDate } from "@/lib/format";
 import RSVPButton from "@/components/RSVPButton";
 import EventMap from "@/components/EventMap";
 import OpenInApp from "@/components/OpenInApp";
+import EventHero from "@/components/EventHero";
 
 type Params = Promise<{ id: string }>;
 
@@ -35,6 +36,7 @@ export default async function EventDetail({ params }: { params: Params }) {
   if (!event) notFound();
 
   const { color, soft } = categoryColor(event.category);
+  void color; void soft; // used by legacy code paths; kept for future referrals
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -51,38 +53,15 @@ export default async function EventDetail({ params }: { params: Params }) {
   };
 
   return (
-    <article className="max-w-3xl mx-auto px-4 md:px-8 py-6">
+    <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div
-        className="relative h-44 md:h-56 rounded-2xl overflow-hidden border border-[var(--color-border)]"
-        style={{ background: `linear-gradient(135deg, ${soft}, transparent 80%), ${color}15` }}
-      >
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{ backgroundImage: `radial-gradient(circle at 30% 20%, ${color}, transparent 60%)` }}
-        />
-      </div>
+      <EventHero event={event} />
 
-      <div className="mt-5 flex items-center gap-2">
-        <span
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
-          style={{ background: soft, color }}
-        >
-          {event.is_live && <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-live)] pulse-live" />}
-          {categoryLabel(event.category)}
-        </span>
-      </div>
-
-      <h1
-        className="mt-3 text-3xl md:text-4xl font-black tracking-tight"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        {event.title}
-      </h1>
-      <p className="mt-3 text-base md:text-lg text-[var(--color-text-secondary)]">
-        {event.summary}
-      </p>
+      <div className="max-w-3xl mx-auto px-4 md:px-8 -mt-2">
+        <p className="text-base md:text-lg text-[var(--color-text-secondary)]">
+          {event.summary}
+        </p>
 
       <div className="mt-6 grid gap-2">
         <InfoRow icon={<Calendar size={16} />} label={formatFullDate(event.starts_at)} />
@@ -151,6 +130,7 @@ export default async function EventDetail({ params }: { params: Params }) {
       <p className="mt-10 text-xs text-[var(--color-text-tertiary)] text-center">
         Event ID: {event.id}
       </p>
+      </div>
     </article>
   );
 }

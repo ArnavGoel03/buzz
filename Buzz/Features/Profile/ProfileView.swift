@@ -37,7 +37,13 @@ struct ProfileView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            .background(BuzzColor.background.ignoresSafeArea())
+            .background(
+                ZStack {
+                    MetalGradientBackground(intensity: 0.4)
+                    BuzzColor.background.opacity(0.72)
+                }
+                .ignoresSafeArea()
+            )
             .iosNavigationInline()
             .iosHideNavigationBackground()
             // VULN #87 patch: actually navigate to the org page when "View [Org]" is tapped

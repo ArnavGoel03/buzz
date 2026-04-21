@@ -58,7 +58,13 @@ struct OrganizationView: View {
             }
         }
         .scrollIndicators(.hidden)
-        .background(BuzzColor.background.ignoresSafeArea())
+        .background(
+            ZStack {
+                MetalGradientBackground(intensity: 0.4)
+                BuzzColor.background.opacity(0.72)
+            }
+            .ignoresSafeArea()
+        )
         .iosNavigationInline()
         .task {
             if viewModel == nil {
