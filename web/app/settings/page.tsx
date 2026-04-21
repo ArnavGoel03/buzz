@@ -9,12 +9,16 @@ export default async function Settings() {
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <div className="max-w-2xl mx-auto px-4 md:px-8 py-6">
+    <div className="max-w-2xl mx-auto px-4 md:px-8 py-10">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)]">
+        § Settings
+      </p>
       <h1
-        className="text-2xl md:text-3xl font-black tracking-tight"
+        className="mt-3 font-display font-medium tracking-[-0.02em] leading-[1] text-4xl md:text-5xl"
         style={{ fontFamily: "var(--font-display)" }}
       >
-        Settings
+        Your account,{" "}
+        <span className="italic text-[var(--color-accent)]" style={{ fontVariationSettings: "'SOFT' 80, 'WONK' 1" }}>your rules.</span>
       </h1>
 
       <Section title="Account">
@@ -65,11 +69,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section className="mt-8">
       {title && (
-        <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2 px-1">
-          {title}
-        </h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)] mb-2 px-1">
+          § {title}
+        </p>
       )}
-      <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] divide-y divide-[var(--color-border)]">
+      <div className="rim rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] divide-y divide-[var(--color-border)] overflow-hidden">
         {children}
       </div>
     </section>

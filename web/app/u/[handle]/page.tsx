@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { Flame, CalendarCheck, Award } from "lucide-react";
+import { Flame, CalendarCheck, Award, Clock } from "lucide-react";
+import ProfileHero from "@/components/ProfileHero";
+import CountUp from "@/components/landing/CountUp";
 
 type Params = Promise<{ handle: string }>;
 
@@ -31,51 +33,63 @@ export default async function UserProfile({ params }: { params: Params }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 py-6">
-      <div className="flex items-start gap-5">
-        <div
-          className="w-24 h-24 rounded-full flex items-center justify-center text-4xl font-black border-2 border-[var(--color-border-strong)]"
-          style={{ background: "linear-gradient(135deg, var(--color-accent), #ff9500)", color: "#000", fontFamily: "var(--font-display)" }}
-        >
-          {profile.display_name[0]}
-        </div>
-        <div className="min-w-0 flex-1">
-          <h1
-            className="text-2xl md:text-3xl font-black tracking-tight"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            {profile.display_name}
-          </h1>
-          <p className="text-sm text-[var(--color-text-tertiary)]">@{profile.handle} · {profile.campus}</p>
-          <p className="mt-2 text-sm">{profile.bio}</p>
-        </div>
-      </div>
+    <article>
+      <ProfileHero
+        displayName={profile.display_name}
+        handle={profile.handle}
+        campus={profile.campus}
+        bio={profile.bio}
+      />
 
-      <div className="mt-8 grid grid-cols-3 gap-3">
-        <Stat icon={<Flame size={18} />} label="Streak" value={`${profile.streak} days`} />
-        <Stat icon={<CalendarCheck size={18} />} label="Attended" value={`${profile.events_attended}`} />
-        <Stat icon={<Award size={18} />} label="Badges" value={`${profile.badges}`} />
-      </div>
+      <div className="max-w-3xl mx-auto px-4 md:px-8 -mt-4 relative z-10">
+        <div className="grid grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)]">
+          <Stat icon={<Flame size={14} />} label="Streak" value={<><CountUp value={profile.streak} /> <span className="text-base font-normal text-[var(--color-text-tertiary)]">days</span></>} />
+          <Stat icon={<CalendarCheck size={14} />} label="Attended" value={<CountUp value={profile.events_attended} />} />
+          <Stat icon={<Award size={14} />} label="Badges" value={<CountUp value={profile.badges} />} accent />
+        </div>
 
-      <section className="mt-10">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
-          Recent activity
-        </h2>
-        <p className="text-sm text-[var(--color-text-tertiary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
-          Activity feed hydrates from your RSVPs and check-ins in Phase 2.
-        </p>
-      </section>
-      <div className="h-16 md:h-0" />
-    </div>
+        <section className="mt-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)] mb-3">
+            § Recent activity
+          </p>
+          <div className="rim rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-6 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[var(--color-accent-dim)] text-[var(--color-accent)] flex items-center justify-center">
+              <Clock size={18} />
+            </div>
+            <div>
+              <p className="font-semibold text-sm">Activity feed rendering in Phase 2</p>
+              <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
+                Streaks, check-ins and RSVPs hydrate from Supabase once env vars are wired.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="h-16 md:h-8" />
+      </div>
+    </article>
   );
 }
 
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function Stat({
+  icon, label, value, accent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+  accent?: boolean;
+}) {
   return (
-    <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] p-4">
-      <div className="text-[var(--color-accent)]">{icon}</div>
-      <p className="mt-2 text-lg font-black">{value}</p>
-      <p className="text-xs text-[var(--color-text-tertiary)]">{label}</p>
+    <div className="bg-[var(--color-surface)] p-5">
+      <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
+        {icon} {label}
+      </div>
+      <div
+        className={`mt-2 font-display tabular text-3xl md:text-4xl font-medium leading-none ${accent ? "text-[var(--color-accent)]" : ""}`}
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        {value}
+      </div>
     </div>
   );
 }

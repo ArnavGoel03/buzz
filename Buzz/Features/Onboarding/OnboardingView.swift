@@ -10,16 +10,38 @@ struct OnboardingView: View {
     @State private var isSubmitting = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            CampusPickerStep(selection: $selectedCampus, suggested: suggestedCampus)
+        ZStack {
+            MetalGradientBackground(intensity: 0.9)
+                .overlay(BuzzColor.background.opacity(0.45))
+            VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
+                    Text("STEP 1 · YOUR CAMPUS")
+                        .font(BuzzFont.monoSmall)
+                        .tracking(2.2)
+                        .foregroundStyle(BuzzColor.textTertiary)
+                    RevealingText(
+                        text: "Which school?",
+                        font: BuzzFont.display,
+                        foreground: BuzzColor.textPrimary
+                    )
+                    Text("We'll filter every event and club to this campus. You can transfer later.")
+                        .font(BuzzFont.body)
+                        .foregroundStyle(BuzzColor.textSecondary)
+                }
                 .padding(.horizontal, BuzzSpacing.lg)
                 .padding(.top, BuzzSpacing.xxl)
-            Spacer()
-            continueButton
-                .padding(.horizontal, BuzzSpacing.lg)
-                .padding(.bottom, BuzzSpacing.xl)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                CampusPickerStep(selection: $selectedCampus, suggested: suggestedCampus)
+                    .padding(.horizontal, BuzzSpacing.lg)
+                    .padding(.top, BuzzSpacing.lg)
+
+                Spacer()
+                continueButton
+                    .padding(.horizontal, BuzzSpacing.lg)
+                    .padding(.bottom, BuzzSpacing.xl)
+            }
         }
-        .background(BuzzColor.background.ignoresSafeArea())
         .task { suggestNearbyCampus() }
     }
 
@@ -49,6 +71,7 @@ struct OnboardingView: View {
         }
         .buttonStyle(.plain)
         .disabled(selectedCampus == nil || isSubmitting)
+        .magneticPress()
     }
 
     private func suggestNearbyCampus() {
