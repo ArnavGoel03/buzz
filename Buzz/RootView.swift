@@ -4,6 +4,7 @@ struct RootView: View {
     @Environment(AppServices.self) private var services
     @Environment(AuthSession.self) private var auth
     @State private var selection: Tab = .live
+    @State private var splashDone = false
 
     enum Tab: Hashable { case live, map, clubs, profile }
 
@@ -13,6 +14,13 @@ struct RootView: View {
             if !services.network.isOnline {
                 OfflineBanner()
                     .zIndex(1)
+            }
+            if !splashDone {
+                SplashView(onFinish: {
+                    withAnimation(.smooth(duration: 0.5)) { splashDone = true }
+                })
+                .transition(.opacity)
+                .zIndex(2)
             }
         }
         .animation(.snappy(duration: 0.25), value: services.network.isOnline)

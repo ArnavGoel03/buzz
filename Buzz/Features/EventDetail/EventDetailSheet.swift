@@ -6,24 +6,38 @@ struct EventDetailSheet: View {
     let viewModel: MapViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: BuzzSpacing.lg) {
-            header
-            ScrollView {
-                VStack(alignment: .leading, spacing: BuzzSpacing.lg) {
-                    if !event.summary.isEmpty {
-                        Text(event.summary)
-                            .font(BuzzFont.body)
-                            .foregroundStyle(BuzzColor.textPrimary)
+        ZStack(alignment: .top) {
+            // Category-tinted Metal gradient bleeds into the top third as ambient chrome.
+            MetalGradientBackground(intensity: 0.4)
+                .overlay(
+                    LinearGradient(
+                        colors: [event.category.tint.opacity(0.35), BuzzColor.background],
+                        startPoint: .top, endPoint: .bottom
+                    )
+                )
+                .frame(height: 260)
+                .blur(radius: 30)
+                .opacity(0.8)
+
+            VStack(alignment: .leading, spacing: BuzzSpacing.lg) {
+                header
+                ScrollView {
+                    VStack(alignment: .leading, spacing: BuzzSpacing.lg) {
+                        if !event.summary.isEmpty {
+                            Text(event.summary)
+                                .font(BuzzFont.body)
+                                .foregroundStyle(BuzzColor.textPrimary)
+                        }
+                        metaBlock
+                        if !event.tags.isEmpty { tagsRow }
                     }
-                    metaBlock
-                    if !event.tags.isEmpty { tagsRow }
+                    .padding(.horizontal, BuzzSpacing.lg)
                 }
-                .padding(.horizontal, BuzzSpacing.lg)
+                Spacer(minLength: 0)
+                rsvpFooter
             }
-            Spacer(minLength: 0)
-            rsvpFooter
+            .padding(.top, BuzzSpacing.lg)
         }
-        .padding(.top, BuzzSpacing.lg)
         .presentationCornerRadius(32)
     }
 
@@ -43,9 +57,7 @@ struct EventDetailSheet: View {
                 AttendeePill(count: event.rsvpCount, capacity: event.capacity)
                 Spacer()
             }
-            Text(event.title)
-                .font(BuzzFont.title)
-                .foregroundStyle(BuzzColor.textPrimary)
+            RevealingText(text: event.title, font: BuzzFont.display, foreground: BuzzColor.textPrimary)
             Text("by \(event.hostName)")
                 .font(BuzzFont.caption)
                 .foregroundStyle(BuzzColor.textSecondary)
