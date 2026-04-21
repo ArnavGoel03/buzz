@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import { Sparkles } from "lucide-react";
+import AppStoreBadges from "@/components/AppStoreBadges";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -71,6 +72,16 @@ export default function SignIn() {
           {error && <p className="text-sm text-[var(--color-live)]">{error}</p>}
         </form>
       )}
+
+      <div className="mt-10 pt-8 border-t border-[var(--color-border)]">
+        <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
+          Or skip the web
+        </p>
+        <p className="text-sm text-[var(--color-text-secondary)] mb-4">
+          The Buzz app signs you in with Apple in one tap. Push, chat, check-in — all native.
+        </p>
+        <AppStoreBadges layout="stack" />
+      </div>
 
       <p className="mt-8 text-xs text-[var(--color-text-tertiary)]">
         By continuing you agree to the{" "}

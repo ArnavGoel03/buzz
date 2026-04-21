@@ -7,6 +7,7 @@ import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatFullDate } from "@/lib/format";
 import RSVPButton from "@/components/RSVPButton";
 import EventMap from "@/components/EventMap";
+import OpenInApp from "@/components/OpenInApp";
 
 type Params = Promise<{ id: string }>;
 
@@ -107,6 +108,16 @@ export default async function EventDetail({ params }: { params: Params }) {
         <ShareButton title={event.title} url={`https://buzz.app/e/${event.id}`} />
       </div>
 
+      <div className="mt-3 p-4 rounded-xl bg-[var(--color-accent-dim)] border border-[var(--color-accent)]/30 flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-bold">Get notified when it starts</p>
+          <p className="text-xs text-[var(--color-text-secondary)]">
+            Push alerts, chat with attendees, check-in — all in the app.
+          </p>
+        </div>
+        <OpenInApp kind="e" id={event.id} label="Open" />
+      </div>
+
       {event.latitude != null && event.longitude != null && (
         <section className="mt-8">
           <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
@@ -138,8 +149,7 @@ export default async function EventDetail({ params }: { params: Params }) {
       )}
 
       <p className="mt-10 text-xs text-[var(--color-text-tertiary)] text-center">
-        Event ID: {event.id} ·{" "}
-        <a href={`buzz://e/${event.id}`} className="underline">Open in the native app</a>
+        Event ID: {event.id}
       </p>
     </article>
   );

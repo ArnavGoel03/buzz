@@ -5,6 +5,27 @@ import Foundation
 enum EventVisibility: String, Codable, CaseIterable, Hashable, Sendable {
     case publicEvent        // anyone on Buzz can see & RSVP
     case campusOnly         // only verified members of the host campus
-    case inviteOnly         // only users the host adds or who have the direct link
-    case officersOnly       // internal org planning events — not visible to general members
+    case memberOnly         // active members of the host organization
+    case officersOnly       // officers / board of the host organization
+    case inviteOnly         // only users on the explicit invite list
+
+    var displayName: String {
+        switch self {
+        case .publicEvent:  "Public · anyone on Buzz"
+        case .campusOnly:   "Everyone at my campus"
+        case .memberOnly:   "Members of my club"
+        case .officersOnly: "Board only"
+        case .inviteOnly:   "Invite only"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .publicEvent:  "globe"
+        case .campusOnly:   "building.columns"
+        case .memberOnly:   "person.3.fill"
+        case .officersOnly: "star.square.fill"
+        case .inviteOnly:   "envelope.fill"
+        }
+    }
 }

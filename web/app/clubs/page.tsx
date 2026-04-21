@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2, Users } from "lucide-react";
 import { getOrgs } from "@/lib/data";
+import AppPushStrip from "@/components/AppPushStrip";
 
 export const revalidate = 300;
 export const metadata = { title: "Clubs & organizations" };
@@ -51,6 +52,7 @@ export default async function Clubs() {
           </Link>
         ))}
       </div>
+      <AppPushStrip />
       <div className="h-16 md:h-0" />
     </div>
   );

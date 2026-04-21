@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import EventMap from "@/components/EventMap";
 import CampusPicker from "@/components/CampusPicker";
+import AppPushStrip from "@/components/AppPushStrip";
 import { getFeedEvents, getActiveCampus } from "@/lib/data";
 
 export const revalidate = 60;
@@ -77,6 +78,8 @@ export default async function Home() {
       {laterThisWeek.length > 0 && (
         <Feed title="Later this week" events={laterThisWeek} />
       )}
+
+      <AppPushStrip />
 
       <div className="h-16 md:h-0" />
     </div>

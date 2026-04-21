@@ -4,6 +4,7 @@ import { CheckCircle2, Users, Globe2 } from "lucide-react";
 import { getOrg, getEventsByOrg } from "@/lib/data";
 import EventCard from "@/components/EventCard";
 import FollowButton from "@/components/FollowButton";
+import OpenInApp from "@/components/OpenInApp";
 
 type Params = Promise<{ handle: string }>;
 
@@ -73,8 +74,9 @@ export default async function OrgDetail({ params }: { params: Params }) {
           {org.campus && <span className="flex items-center gap-1">· <Globe2 size={12} /> {org.campus.toUpperCase()}</span>}
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 flex flex-wrap items-center gap-3">
           <FollowButton handle={org.handle} />
+          <OpenInApp kind="o" id={org.handle} label="Open in app" />
         </div>
 
         {org.description && (

@@ -3,6 +3,7 @@ import "./globals.css";
 import { PWAInstaller } from "@/components/PWAInstaller";
 import AppShell from "@/components/AppShell";
 import MobileTabBar from "@/components/MobileTabBar";
+import AppBanner from "@/components/AppBanner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://buzz.app"),
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-itunes-app" content="app-id=TBD" />
       </head>
       <body>
+        <AppBanner />
         <AppShell>{children}</AppShell>
         <MobileTabBar />
         <PWAInstaller />
