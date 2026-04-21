@@ -10,32 +10,38 @@ struct SignInSheet: View {
     @State private var email = ""
 
     var body: some View {
-        VStack(spacing: BuzzSpacing.lg) {
-            header
-            Spacer()
-            buttons
-            Spacer()
-            footerNote
+        ZStack {
+            MetalGradientBackground(intensity: 0.8)
+                .overlay(BuzzColor.background.opacity(0.45))
+            VStack(spacing: BuzzSpacing.lg) {
+                header
+                Spacer()
+                buttons
+                Spacer()
+                footerNote
+            }
+            .padding(BuzzSpacing.xl)
         }
-        .padding(BuzzSpacing.xl)
-        .background(BuzzColor.background.ignoresSafeArea())
         .presentationCornerRadius(32)
     }
 
     private var header: some View {
-        VStack(spacing: BuzzSpacing.sm) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 40, weight: .bold))
-                .foregroundStyle(BuzzColor.accent)
-                .padding(.top, BuzzSpacing.xl)
-            Text("Join Buzz")
-                .font(BuzzFont.largeTitle)
-                .foregroundStyle(BuzzColor.textPrimary)
-            Text("Takes 3 taps. No passwords, no forms.")
+        VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
+            Text("SIGN IN · 3 TAPS")
+                .font(BuzzFont.monoSmall)
+                .tracking(2.2)
+                .foregroundStyle(BuzzColor.textTertiary)
+            RevealingText(
+                text: "Join Buzz.",
+                font: BuzzFont.displayXL,
+                foreground: BuzzColor.textPrimary
+            )
+            Text("No passwords, no profile forms. Apple or school email — switch devices later and still land in the same account.")
                 .font(BuzzFont.body)
                 .foregroundStyle(BuzzColor.textSecondary)
-                .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, BuzzSpacing.lg)
     }
 
     private var buttons: some View {

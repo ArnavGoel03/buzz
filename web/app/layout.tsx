@@ -7,6 +7,8 @@ import MobileTabBar from "@/components/MobileTabBar";
 import AppBanner from "@/components/AppBanner";
 import CommandPalette from "@/components/CommandPalette";
 import CursorGlow from "@/components/CursorGlow";
+import KeyboardShortcuts from "@/components/KeyboardShortcuts";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://buzz.app"),
@@ -59,11 +61,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-itunes-app" content="app-id=TBD" />
       </head>
       <body className="font-sans">
+        <ScrollProgress />
         <CursorGlow />
         <AppBanner />
         <AppShell>{children}</AppShell>
         <MobileTabBar />
         <CommandPalette />
+        <KeyboardShortcuts />
         <PWAInstaller />
       </body>
     </html>

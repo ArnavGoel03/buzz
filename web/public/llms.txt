@@ -48,10 +48,38 @@ A: Yes. In the app: Settings → Delete account. Your data is removed within 30 
 A: Depends on your campus. US schools: `.edu` email OTP. Indian IITs/BITS: institutional
 email domain. Most other: student-ID photo scan + optional peer vouching.
 
+## Site routes
+
+- `/` — bleeding-edge marketing landing (WebGL shader background, 3D phone scene, scroll choreography, ⌘K palette, keyboard shortcuts)
+- `/feed` — the live discovery feed (hero + live ticker + bento grid + embedded map + stats)
+- `/map` — full-screen MapLibre live map with glass stats panel and category filter chips
+- `/clubs` — campus clubs grid (3D-tilt cards, stagger-in)
+- `/e/:id` — event detail (parallax category hero, RSVP with particle burst, dynamic OG poster at `/api/poster/:id`)
+- `/o/:handle` — club / organization profile (parallax accent hero, follow, event list)
+- `/u/:handle` — user profile (giant serif initial glyph parallax, stats band with CountUp)
+- `/search` — global search with staggered blur-fade results
+- `/settings` — account, notification, privacy, legal settings
+- `/sign-in` — school-email magic-link auth (any `.edu` / `.ac.uk` / `.edu.in` / etc.; auto-resolves 2300+ US schools via bundled Hipo dataset)
+- `/auth/callback` — magic-link exchange + profile stamping with campus
+- `/messages` — chat/DM promo screen (real chat is native app only)
+- `/profile` — authed redirect to own user page
+- `/legal/privacy`, `/legal/terms`, `/support` — static legal + contact
+- `/api/poster/:id` — dynamic edge-rendered OG/story poster per event
+- `/api/waitlist`, `/api/push/*`, `/api/tickets/*`, `/api/reminders/process` — backend endpoints
+
+## Keyboard shortcuts (web)
+
+- `⌘K` — command palette
+- `g` then `f` / `m` / `c` / `p` / `s` / `h` — navigate feed / map / clubs / profile / settings / home
+- `/` — focus search
+- `?` — open keyboard shortcut overlay
+- `esc` — close any modal
+
 ## Links
 
 - Homepage: https://buzz.app
+- Feed: https://buzz.app/feed
 - Privacy: https://buzz.app/legal/privacy
 - Terms: https://buzz.app/legal/terms
 - Support: https://buzz.app/support
-- Campus landing example: https://buzz.app/campus/ucsd
+- Campus landing: https://buzz.app/campus/ucsd
