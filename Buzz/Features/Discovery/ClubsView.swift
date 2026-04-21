@@ -13,7 +13,8 @@ struct ClubsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AmbientBackground()
+                MetalGradientBackground(intensity: 0.5)
+                    .overlay(BuzzColor.background.opacity(0.6))
                 ScrollView {
                     VStack(alignment: .leading, spacing: BuzzSpacing.lg) {
                         hero
@@ -56,10 +57,7 @@ struct ClubsView: View {
                 .font(BuzzFont.monoSmall)
                 .tracking(1.4)
                 .foregroundStyle(BuzzColor.textTertiary)
-            Text("Clubs")
-                .font(BuzzFont.displayXL)
-                .foregroundStyle(BuzzColor.textPrimary)
-                .kerning(-0.8)
+            RevealingText(text: "Clubs", font: BuzzFont.displayXL, foreground: BuzzColor.textPrimary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -89,6 +87,8 @@ struct ClubsView: View {
                 ForEach(vm.filtered) { org in
                     NavigationLink(value: org.id) {
                         ClubCard(organization: org)
+                            .scrollRevealCard()
+                            .magneticPress()
                     }
                     .buttonStyle(.plain)
                 }

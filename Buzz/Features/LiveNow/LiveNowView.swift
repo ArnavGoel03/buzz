@@ -12,7 +12,8 @@ struct LiveNowView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AmbientBackground()
+                MetalGradientBackground(intensity: 0.6)
+                    .overlay(BuzzColor.background.opacity(0.55))
                 ScrollView {
                     VStack(alignment: .leading, spacing: BuzzSpacing.xl) {
                         hero
@@ -40,10 +41,11 @@ struct LiveNowView: View {
                 .font(BuzzFont.monoSmall)
                 .tracking(1.4)
                 .foregroundStyle(BuzzColor.textTertiary)
-            Text(liveEvents.isEmpty ? "Bored?" : "Tonight")
-                .font(BuzzFont.displayXL)
-                .foregroundStyle(BuzzColor.textPrimary)
-                .kerning(-0.8)
+            RevealingText(
+                text: liveEvents.isEmpty ? "Bored?" : "Tonight",
+                font: BuzzFont.displayXL,
+                foreground: BuzzColor.textPrimary
+            )
             Text(heroSubtitle)
                 .font(BuzzFont.body)
                 .foregroundStyle(BuzzColor.textSecondary)
@@ -68,6 +70,8 @@ struct LiveNowView: View {
         VStack(spacing: BuzzSpacing.md) {
             ForEach(liveEvents) { event in
                 row(event)
+                    .scrollRevealCard()
+                    .magneticPress()
             }
         }
     }
