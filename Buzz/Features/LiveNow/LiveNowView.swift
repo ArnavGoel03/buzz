@@ -1,8 +1,9 @@
 import SwiftUI
 
 /// "Bored Right Now" — the one-tap discovery primitive. Filters to events live or
-/// starting in the next 30 min, within walking distance. Sorted by friend density first,
-/// then proximity. Designed to replace the "what's even happening rn" group chat.
+/// starting in the next 30 min, within walking distance. Sorted by friend density,
+/// then proximity. Polished to mirror buzz.app: serif display title, mono meta,
+/// rim-lit cards, ambient gradient background.
 struct LiveNowView: View {
     @Environment(AppServices.self) private var services
     @State private var liveEvents: [Event] = []
@@ -10,37 +11,65 @@ struct LiveNowView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: BuzzSpacing.md) {
-                    header
-                    if liveEvents.isEmpty && loaded {
-                        emptyState
-                    } else {
-                        ForEach(liveEvents) { event in
-                            row(event)
+            ZStack {
+                AmbientBackground()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: BuzzSpacing.xl) {
+                        hero
+                        if liveEvents.isEmpty && loaded {
+                            emptyState
+                        } else {
+                            eventList
                         }
                     }
+                    .padding(.horizontal, BuzzSpacing.lg)
+                    .padding(.top, BuzzSpacing.sm)
+                    .padding(.bottom, BuzzSpacing.xxl)
                 }
-                .padding(BuzzSpacing.lg)
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
-            .background(BuzzColor.background.ignoresSafeArea())
-            .navigationTitle("Bored?")
+            .toolbar { ToolbarItem(placement: .principal) { WordmarkView(size: 20) } }
             .iosNavigationInline()
         }
         .task { await load() }
     }
 
-    private var header: some View {
-        VStack(spacing: BuzzSpacing.xs) {
-            Text("Live within 10 min walk")
-                .font(BuzzFont.title)
+    private var hero: some View {
+        VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
+            Text(metaLabel)
+                .font(BuzzFont.monoSmall)
+                .tracking(1.4)
+                .foregroundStyle(BuzzColor.textTertiary)
+            Text(liveEvents.isEmpty ? "Bored?" : "Tonight")
+                .font(BuzzFont.displayXL)
                 .foregroundStyle(BuzzColor.textPrimary)
-            Text("Tap one. Go. No more group chat polling.")
+                .kerning(-0.8)
+            Text(heroSubtitle)
                 .font(BuzzFont.body)
                 .foregroundStyle(BuzzColor.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var metaLabel: String {
+        let now = Date().formatted(.dateTime.weekday(.wide))
+        let live = liveEvents.filter { $0.isLive }.count
+        return "\(now.uppercased()) · \(live) LIVE · 10 MIN WALK"
+    }
+
+    private var heroSubtitle: String {
+        if liveEvents.isEmpty {
+            return "Nothing live in walking distance right now. Check back in a bit."
+        }
+        return "Live right now or starting in the next 30 min. Tap one. Go."
+    }
+
+    private var eventList: some View {
+        VStack(spacing: BuzzSpacing.md) {
+            ForEach(liveEvents) { event in
+                row(event)
+            }
+        }
     }
 
     private var emptyState: some View {
@@ -48,46 +77,20 @@ struct LiveNowView: View {
             Image(systemName: "moon.zzz.fill")
                 .font(.system(size: 36, weight: .semibold))
                 .foregroundStyle(BuzzColor.textTertiary)
-            Text("Nothing live right now")
+            Text("Quiet hour")
                 .font(BuzzFont.headline)
-            Text("Quiet hour. Try again in a bit, or check the full map.")
+            Text("Try again in a bit, or open the full map.")
                 .font(BuzzFont.caption)
                 .foregroundStyle(BuzzColor.textSecondary)
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity).padding(BuzzSpacing.xxl)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, BuzzSpacing.xxl)
+        .rimCard()
     }
 
     private func row(_ event: Event) -> some View {
-        VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
-            HStack {
-                Image(systemName: event.category.icon)
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(event.category.tint)
-                Text(event.title)
-                    .font(BuzzFont.headline)
-                    .foregroundStyle(BuzzColor.textPrimary)
-                Spacer()
-                if event.isLive { LiveBadge() }
-            }
-            HStack(spacing: BuzzSpacing.sm) {
-                Label(event.location.name, systemImage: "mappin")
-                    .font(BuzzFont.caption)
-                    .foregroundStyle(BuzzColor.textSecondary)
-                FriendsGoingBadge(friends: [], totalCount: event.rsvpCount)
-            }
-        }
-        .padding(BuzzSpacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: BuzzSpacing.cornerMedium)
-                .fill(LinearGradient(colors: [event.category.tint.opacity(0.18), BuzzColor.surface],
-                                     startPoint: .topLeading, endPoint: .bottomTrailing))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: BuzzSpacing.cornerMedium)
-                .stroke(event.category.tint.opacity(0.35), lineWidth: 1)
-        )
+        LiveEventRow(event: event)
     }
 
     private func load() async {

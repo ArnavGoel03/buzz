@@ -1,5 +1,7 @@
 import SwiftUI
 
+/// Polished club tile — serif display name, mono meta row, rim-lit card with a
+/// subtle color wash from the club's accent. One visual language with the web.
 struct ClubCard: View {
     let organization: Organization
 
@@ -16,8 +18,9 @@ struct ClubCard: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(organization.name)
-                    .font(BuzzFont.bodyEmphasis)
+                    .font(BuzzFont.displaySM)
                     .foregroundStyle(BuzzColor.textPrimary)
+                    .kerning(-0.3)
                     .lineLimit(1)
                 Text(organization.tagline)
                     .font(BuzzFont.caption)
@@ -29,25 +32,28 @@ struct ClubCard: View {
                 Image(systemName: "person.3.fill")
                     .font(.system(size: 10, weight: .semibold))
                 Text("\(organization.memberCount)")
-                    .font(BuzzFont.micro)
+                    .font(BuzzFont.monoSmall)
                 Spacer()
-                Image(systemName: organization.category.icon)
-                    .font(.system(size: 10, weight: .semibold))
-                Text(organization.category.displayName)
-                    .font(BuzzFont.micro)
+                Text(organization.category.displayName.uppercased())
+                    .font(BuzzFont.monoSmall)
+                    .tracking(0.8)
             }
             .foregroundStyle(BuzzColor.textTertiary)
         }
         .padding(BuzzSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: BuzzSpacing.cornerMedium)
-                .fill(LinearGradient(colors: [organization.accent.opacity(0.08), BuzzColor.surface],
-                                     startPoint: .topLeading, endPoint: .bottomTrailing))
+            LinearGradient(
+                colors: [organization.accent.opacity(0.10), BuzzColor.surface],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         )
+        .rimCard()
         .overlay(
-            RoundedRectangle(cornerRadius: BuzzSpacing.cornerMedium)
-                .stroke(organization.accent.opacity(0.18), lineWidth: 1)
+            // Faint accent-colored rim on top of the rim-card for brand tint
+            RoundedRectangle(cornerRadius: BuzzSpacing.cornerLarge, style: .continuous)
+                .stroke(organization.accent.opacity(0.14), lineWidth: 1)
         )
     }
 }

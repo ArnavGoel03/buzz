@@ -12,21 +12,26 @@ struct ClubsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: BuzzSpacing.lg) {
-                    search
-                    categories
-                    if let vm = viewModel, vm.query.isEmpty, vm.categoryFilter == nil {
-                        TrendingClubsRail(orgs: vm.trending)
+            ZStack {
+                AmbientBackground()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: BuzzSpacing.lg) {
+                        hero
+                            .padding(.horizontal, BuzzSpacing.lg)
+                            .padding(.top, BuzzSpacing.sm)
+                        search
+                        categories
+                        if let vm = viewModel, vm.query.isEmpty, vm.categoryFilter == nil {
+                            TrendingClubsRail(orgs: vm.trending)
+                        }
+                        grid
+                        Spacer(minLength: BuzzSpacing.xxl)
                     }
-                    grid
-                    Spacer(minLength: BuzzSpacing.xxl)
                 }
-                .padding(.top, BuzzSpacing.sm)
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
-            .background(BuzzColor.background.ignoresSafeArea())
-            .navigationTitle("Clubs")
+            .toolbar { ToolbarItem(placement: .principal) { WordmarkView(size: 20) } }
+            .iosNavigationInline()
             .navigationDestination(for: UUID.self) { id in
                 OrganizationView(organizationID: id)
             }
@@ -43,6 +48,20 @@ struct ClubsView: View {
         .onChange(of: auth.currentProfileID) { _, _ in
             viewModel = nil
         }
+    }
+
+    private var hero: some View {
+        VStack(alignment: .leading, spacing: BuzzSpacing.xs) {
+            Text("CAMPUS · \(viewModel?.filtered.count ?? 0) ORGS")
+                .font(BuzzFont.monoSmall)
+                .tracking(1.4)
+                .foregroundStyle(BuzzColor.textTertiary)
+            Text("Clubs")
+                .font(BuzzFont.displayXL)
+                .foregroundStyle(BuzzColor.textPrimary)
+                .kerning(-0.8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder

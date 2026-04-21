@@ -8,9 +8,11 @@ enum BuzzSpacing {
     static let lg: CGFloat = 16
     static let xl: CGFloat = 24
     static let xxl: CGFloat = 32
+    static let xxxl: CGFloat = 48
 
     static let cornerSmall: CGFloat = 10
     static let cornerMedium: CGFloat = 16
     static let cornerLarge: CGFloat = 22
+    static let cornerXL: CGFloat = 28
     static let cornerPill: CGFloat = 999
 }
