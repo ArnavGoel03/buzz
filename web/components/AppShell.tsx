@@ -8,7 +8,7 @@ import {
 import Wordmark from "./Wordmark";
 
 const primary = [
-  { href: "/",         label: "Feed",     icon: Compass,       shortcut: "F" },
+  { href: "/feed",     label: "Feed",     icon: Compass,       shortcut: "F" },
   { href: "/map",      label: "Map",      icon: MapIcon,       shortcut: "M" },
   { href: "/clubs",    label: "Clubs",    icon: Users,         shortcut: "C" },
   { href: "/messages", label: "Messages", icon: MessageCircle, shortcut: "I" },
@@ -20,6 +20,12 @@ const secondary = [
 ];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  // Landing and route-less pages render without the app chrome so they can go
+  // full-bleed (shader canvas, 3D hero, etc.).
+  if (pathname === "/" || pathname === "/sign-in" || pathname?.startsWith("/auth/")) {
+    return <>{children}</>;
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <TopBar />
