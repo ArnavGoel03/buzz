@@ -25,28 +25,41 @@ struct ProfileHeader: View {
     }
 
     private var backdrop: some View {
-        LinearGradient(
-            colors: [profile.accent.opacity(0.35), profile.accent.opacity(0.08), .clear],
-            startPoint: .top, endPoint: .bottom
-        )
-        .frame(height: 140)
+        ZStack {
+            // Giant serif initial parallax in the background — matches web ProfileHero
+            Text(profile.displayName.prefix(1).uppercased())
+                .font(.system(size: 260, weight: .medium, design: .serif))
+                .kerning(-12)
+                .foregroundStyle(profile.accent.opacity(0.28))
+                .offset(x: 90, y: -24)
+                .clipped()
+
+            LinearGradient(
+                colors: [profile.accent.opacity(0.35), profile.accent.opacity(0.08), .clear],
+                startPoint: .top, endPoint: .bottom
+            )
+        }
+        .frame(height: 160)
+        .clipped()
     }
 
     private var nameBlock: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: BuzzSpacing.xs) {
             HStack(spacing: BuzzSpacing.xs) {
                 Text(profile.displayName)
-                    .font(BuzzFont.title)
+                    .font(BuzzFont.display)
+                    .kerning(-0.4)
                     .foregroundStyle(BuzzColor.textPrimary)
                 if let p = profile.pronouns {
                     Text("(\(p))")
-                        .font(BuzzFont.caption)
+                        .font(BuzzFont.monoSmall)
                         .foregroundStyle(BuzzColor.textTertiary)
                 }
             }
-            Text(profile.displayHandle)
-                .font(BuzzFont.caption)
-                .foregroundStyle(BuzzColor.textSecondary)
+            Text(profile.displayHandle.uppercased())
+                .font(BuzzFont.monoSmall)
+                .tracking(1.4)
+                .foregroundStyle(BuzzColor.textTertiary)
         }
     }
 

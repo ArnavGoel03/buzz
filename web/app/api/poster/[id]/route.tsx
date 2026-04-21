@@ -1,23 +1,59 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "next/og";
-import { mockEvent } from "@/lib/supabase";
+import { mockEvents } from "@/lib/mock-data";
 
 /**
- * Generates a 1080×1920 Story-format poster for an event. Officer hits the URL,
- * gets a JPEG suitable for Instagram Stories / TikTok / WhatsApp Status.
+ * Dynamic event poster — two formats via `?format=`:
+ *   - `og` (default, 1200×630): used by <meta> OpenGraph/Twitter; shown in iMessage,
+ *     Discord, Slack, and as a fallback when someone shares the event link.
+ *   - `story` (1080×1920): downloadable Story-format for officers to post to
+ *     Instagram / TikTok.
  *
- *   GET /api/poster/<event-id>
- *
- * Uses Vercel's @vercel/og (re-exported as next/og) for edge-rendered SVG → PNG.
+ * Falls back to a generic "Buzz — event on campus" card if the ID doesn't match
+ * anything, so shared links always render a branded card instead of 404ing.
  */
 export const runtime = "edge";
 
+const CATEGORY_PALETTES: Record<string, { from: string; via: string; to: string; label: string }> = {
+  party:    { from: "#FFD60A", via: "#FF2D92", to: "#0a0a10", label: "PARTY" },
+  free_food:{ from: "#FFD60A", via: "#34C759", to: "#0a0a10", label: "FREE FOOD" },
+  greek:    { from: "#BF5AF2", via: "#6F4BE8", to: "#0a0a10", label: "GREEK" },
+  sports:   { from: "#FF9500", via: "#FF4059", to: "#0a0a10", label: "SPORTS" },
+  academic: { from: "#5AC8FA", via: "#0A84FF", to: "#0a0a10", label: "ACADEMIC" },
+  career:   { from: "#0A84FF", via: "#5AC8FA", to: "#0a0a10", label: "CAREER" },
+  club:     { from: "#FFD60A", via: "#FF9500", to: "#0a0a10", label: "CLUB" },
+  other:    { from: "#FFD60A", via: "#FF2D92", to: "#0a0a10", label: "ON BUZZ" },
+};
+
+const DEFAULT_FALLBACK = {
+  title: "An event on Buzz",
+  summary: "Live discovery for college events.",
+  location_name: "Your campus",
+  starts_at: new Date().toISOString(),
+  category: "other" as const,
+};
+
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const event = mockEvent(id);
+  const { searchParams } = new URL(req.url);
+  const format = searchParams.get("format") === "story" ? "story" : "og";
+
+  // Resolve the event: real mock-data match, else graceful fallback
+  const event =
+    mockEvents.find((e) => e.id === id) ??
+    { ...DEFAULT_FALLBACK, id };
+
+  const palette = CATEGORY_PALETTES[event.category] ?? CATEGORY_PALETTES.other;
+  const startLabel = new Date(event.starts_at).toLocaleDateString("en-US", {
+    weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
+  });
+
+  const isStory = format === "story";
+  const width = isStory ? 1080 : 1200;
+  const height = isStory ? 1920 : 630;
 
   return new ImageResponse(
     (
@@ -25,37 +61,72 @@ export async function GET(
         style={{
           width: "100%",
           height: "100%",
-          background: "linear-gradient(135deg, #FFD60A 0%, #FF2D92 50%, #000 100%)",
+          background: `linear-gradient(135deg, ${palette.from} 0%, ${palette.via} 45%, ${palette.to} 100%)`,
           display: "flex",
           flexDirection: "column",
-          padding: "120px 80px",
+          justifyContent: "space-between",
+          padding: isStory ? "120px 80px" : "64px 72px",
           color: "white",
           fontFamily: "system-ui, -apple-system",
         }}
       >
-        <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: 4, opacity: 0.85 }}>
-          ON BUZZ
-        </div>
-        <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
-          <div style={{ fontSize: 110, fontWeight: 900, lineHeight: 1.05 }}>
-            {event.title}
+        {/* Grain layer */}
+        <div
+          style={{
+            position: "absolute", inset: 0,
+            background:
+              "radial-gradient(circle at 22% 18%, rgba(255,255,255,0.14), transparent 40%)",
+            display: "flex",
+          }}
+        />
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div
+            style={{
+              fontSize: isStory ? 28 : 22,
+              fontWeight: 900,
+              letterSpacing: 4,
+              padding: "8px 16px",
+              background: "rgba(0,0,0,0.35)",
+              borderRadius: 999,
+              display: "flex",
+            }}
+          >
+            {palette.label}
+          </div>
+          <div style={{ fontSize: isStory ? 26 : 20, fontWeight: 700, opacity: 0.9, display: "flex" }}>
+            on Buzz
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <Row icon="📅" text={new Date(event.starts_at).toLocaleString()} />
-          <Row icon="📍" text={event.location_name} />
-          <Row icon="✨" text="Scan to RSVP" />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div
+            style={{
+              fontSize: isStory ? 110 : 76,
+              fontWeight: 900,
+              lineHeight: 1.02,
+              letterSpacing: -2,
+              maxWidth: isStory ? 900 : 1000,
+              textShadow: "0 4px 32px rgba(0,0,0,0.3)",
+            }}
+          >
+            {event.title}
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Row icon="▸" text={startLabel} size={isStory ? 36 : 26} />
+            <Row icon="◉" text={event.location_name} size={isStory ? 36 : 26} />
+          </div>
         </div>
       </div>
     ),
-    { width: 1080, height: 1920 }
+    { width, height }
   );
 }
 
-function Row({ icon, text }: { icon: string; text: string }) {
+function Row({ icon, text, size }: { icon: string; text: string; size: number }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 36, fontWeight: 700 }}>
-      <span>{icon}</span>
+    <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: size, fontWeight: 700, opacity: 0.96 }}>
+      <span style={{ color: "#FFD60A" }}>{icon}</span>
       <span>{text}</span>
     </div>
   );
