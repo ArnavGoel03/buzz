@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { mockOrg } from "@/lib/supabase";
+import { notFound } from "next/navigation";
+import { CheckCircle2, Users, Globe2 } from "lucide-react";
+import { getOrg, getEventsByOrg } from "@/lib/data";
+import EventCard from "@/components/EventCard";
+import FollowButton from "@/components/FollowButton";
 
 type Params = Promise<{ handle: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { handle } = await params;
-  const org = mockOrg(handle);
+  const org = await getOrg(handle);
+  if (!org) return { title: "Club" };
   return {
     title: `${org.name} · Buzz`,
     description: org.tagline,
@@ -19,9 +24,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function OrgPreview({ params }: { params: Params }) {
+export default async function OrgDetail({ params }: { params: Params }) {
   const { handle } = await params;
-  const org = mockOrg(handle);
+  const [org, events] = await Promise.all([getOrg(handle), getEventsByOrg(handle)]);
+  if (!org) notFound();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -29,35 +36,73 @@ export default async function OrgPreview({ params }: { params: Params }) {
     description: org.tagline,
     url: `https://buzz.app/o/${handle}`,
   };
+
   return (
-    <main className="min-h-screen">
+    <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <div
-        className="h-40"
-        style={{ background: `linear-gradient(135deg, ${org.accent_hex}55, transparent 70%)` }}
+        className="h-48 md:h-64"
+        style={{
+          background: `linear-gradient(135deg, ${org.accent_hex}66 0%, transparent 60%), radial-gradient(circle at 75% 25%, ${org.accent_hex}44, transparent 50%)`,
+        }}
       />
-      <div className="px-6 -mt-12 max-w-2xl mx-auto">
+
+      <div className="max-w-3xl mx-auto px-4 md:px-8 -mt-16">
         <div
-          className="w-24 h-24 rounded-full flex items-center justify-center text-4xl font-black border-4 border-black"
-          style={{ background: org.accent_hex, color: "#000" }}
+          className="w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-black border-4 border-[var(--color-bg)] shadow-xl"
+          style={{ background: org.accent_hex, color: "#000", fontFamily: "var(--font-display)" }}
         >
           {org.name[0]}
         </div>
-        <h1
-          className="mt-4 text-3xl font-black tracking-tight"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          {org.name}
-        </h1>
-        <p className="text-[var(--color-text-secondary)]">{org.tagline}</p>
-        <p className="mt-6 text-sm">{org.description}</p>
-        <a
-          href={`buzz://o/${handle}`}
-          className="mt-10 block text-center px-6 py-4 rounded-2xl bg-[var(--color-accent)] text-black font-bold"
-        >
-          Follow on Buzz
-        </a>
+
+        <div className="mt-4 flex items-center gap-2">
+          <h1
+            className="text-3xl md:text-4xl font-black tracking-tight"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {org.name}
+          </h1>
+          {org.verified && <CheckCircle2 size={20} className="text-[var(--color-accent)]" />}
+        </div>
+        <p className="mt-1 text-base text-[var(--color-text-secondary)]">{org.tagline}</p>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-[var(--color-text-tertiary)]">
+          <span className="flex items-center gap-1"><Users size={12} /> {org.member_count.toLocaleString()} members</span>
+          {org.category && <span>· {org.category}</span>}
+          {org.campus && <span className="flex items-center gap-1">· <Globe2 size={12} /> {org.campus.toUpperCase()}</span>}
+        </div>
+
+        <div className="mt-5">
+          <FollowButton handle={org.handle} />
+        </div>
+
+        {org.description && (
+          <section className="mt-8">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">About</h2>
+            <p className="text-[var(--color-text-secondary)] leading-relaxed">{org.description}</p>
+          </section>
+        )}
+
+        <section className="mt-10">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
+            Upcoming events
+          </h2>
+          {events.length === 0 ? (
+            <p className="text-sm text-[var(--color-text-tertiary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+              No events scheduled yet.
+            </p>
+          ) : (
+            <div className="grid gap-3 md:grid-cols-2">
+              {events.map((e) => (
+                <EventCard key={e.id} event={e} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <div className="h-16 md:h-0" />
       </div>
-    </main>
+    </article>
   );
 }

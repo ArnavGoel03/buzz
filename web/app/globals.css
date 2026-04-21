@@ -1,14 +1,24 @@
 @import "tailwindcss";
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 @theme {
   --color-bg: #0a0a0f;
   --color-surface: #16161c;
+  --color-surface-2: #1f1f28;
   --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
   --color-text: #ffffff;
   --color-text-secondary: rgba(255, 255, 255, 0.64);
   --color-text-tertiary: rgba(255, 255, 255, 0.40);
   --color-accent: #ffd60a;
+  --color-accent-dim: rgba(255, 214, 10, 0.14);
   --color-live: #ff4059;
+  --color-party: #ff2d92;
+  --color-food: #34c759;
+  --color-greek: #bf5af2;
+  --color-sports: #ff9500;
+  --color-academic: #5ac8fa;
+  --color-career: #0a84ff;
 
   --font-display: ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
   --font-body: -apple-system, "SF Pro Text", system-ui, sans-serif;
@@ -20,3 +30,19 @@ html, body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
+
+*::selection { background: var(--color-accent); color: #000; }
+
+.scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+
+@keyframes pulseLive {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 64, 89, 0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 64, 89, 0); }
+}
+.pulse-live { animation: pulseLive 1.8s ease-out infinite; }
+
+.maplibregl-canvas { outline: none !important; }
+.maplibregl-ctrl-attrib { background: rgba(10, 10, 15, 0.6) !important; }
+.maplibregl-ctrl-attrib a { color: rgba(255, 255, 255, 0.5) !important; }

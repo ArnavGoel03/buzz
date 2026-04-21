@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import EventCard from "@/components/EventCard";
+import EventMap from "@/components/EventMap";
+import CampusPicker from "@/components/CampusPicker";
+import { getFeedEvents, getActiveCampus } from "@/lib/data";
 
-// SEO + AEO: MobileApplication + FAQPage + Organization schema on the home page. Puts
-// Buzz in Google App Pack results + AI Overviews when users ask "best college events app"
-// type queries.
+export const revalidate = 60;
+
 const homeJsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -16,151 +20,90 @@ const homeJsonLd = {
       aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", ratingCount: "1" },
       url: "https://buzz.app",
     },
-    {
-      "@type": "Organization",
-      name: "Buzz",
-      url: "https://buzz.app",
-      logo: "https://buzz.app/icon-512.png",
-      sameAs: [],
-    },
-    {
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is Buzz?",
-          acceptedAnswer: { "@type": "Answer", text: "Buzz is a live map of every college event happening tonight on your campus — parties, clubs, sports, free food, study sessions, and academic talks. Free for students, available on iOS, macOS, and web." },
-        },
-        {
-          "@type": "Question",
-          name: "Is Buzz free?",
-          acceptedAnswer: { "@type": "Answer", text: "Yes, free for students with no ads and no data sales. Clubs can optionally sell paid tickets through Stripe." },
-        },
-        {
-          "@type": "Question",
-          name: "What colleges does Buzz work at?",
-          acceptedAnswer: { "@type": "Answer", text: "50+ campuses across 12 countries at launch — including UCSD, UCLA, Stanford, Harvard, MIT, IIT Bombay, Oxford, Toronto, and more. New campuses launch via a waitlist once they hit ~20 sign-ups + one ambassador." },
-        },
-      ],
-    },
+    { "@type": "Organization", name: "Buzz", url: "https://buzz.app", logo: "https://buzz.app/icon-512.png" },
   ],
 };
 
-export default function Home() {
+export default async function Home() {
+  const [events, campus] = await Promise.all([getFeedEvents(), getActiveCampus()]);
+  const live = events.filter((e) => e.is_live);
+  const happeningSoon = events
+    .filter((e) => !e.is_live && new Date(e.starts_at).getTime() < Date.now() + 6 * 3600_000)
+    .slice(0, 6);
+  const laterThisWeek = events
+    .filter((e) => new Date(e.starts_at).getTime() >= Date.now() + 6 * 3600_000)
+    .slice(0, 8);
+
   return (
-    <main className="min-h-screen flex flex-col">
+    <div className="min-h-[calc(100vh-3.5rem)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
-      <Hero />
-      <Features />
-      <DownloadStrip />
-      <Footer />
-    </main>
+
+      <section className="px-4 md:px-8 pt-6 pb-4 flex items-center justify-between gap-3">
+        <div>
+          <h1
+            className="text-2xl md:text-3xl font-black tracking-tight"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Tonight on campus
+          </h1>
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+            {events.length} events · {live.length} live now
+          </p>
+        </div>
+        <CampusPicker name={campus.name} />
+      </section>
+
+      <section className="px-4 md:px-8">
+        <div className="h-72 md:h-80 rounded-2xl overflow-hidden border border-[var(--color-border)]">
+          <EventMap
+            events={events}
+            center={{ lat: campus.center_lat, lng: campus.center_lng }}
+          />
+        </div>
+        <Link
+          href="/map"
+          className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-accent)]"
+        >
+          Open full map <ArrowRight size={14} />
+        </Link>
+      </section>
+
+      {live.length > 0 && (
+        <Feed title="Live now" badge={`${live.length}`} events={live} />
+      )}
+      {happeningSoon.length > 0 && (
+        <Feed title="Happening soon" events={happeningSoon} />
+      )}
+      {laterThisWeek.length > 0 && (
+        <Feed title="Later this week" events={laterThisWeek} />
+      )}
+
+      <div className="h-16 md:h-0" />
+    </div>
   );
 }
 
-function Hero() {
+function Feed({ title, badge, events }: { title: string; badge?: string; events: Parameters<typeof EventCard>[0]["event"][] }) {
   return (
-    <section className="px-6 pt-24 pb-32 text-center max-w-3xl mx-auto">
-      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/8 border border-[var(--color-border)] text-xs font-semibold tracking-wide">
-        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
-        IN DEVELOPMENT
-      </span>
-      <h1
-        className="mt-6 text-5xl md:text-6xl font-black tracking-tight"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        Every college event,{" "}
-        <span className="text-[var(--color-accent)]">on one map.</span>
-      </h1>
-      <p className="mt-6 text-lg text-[var(--color-text-secondary)]">
-        Live discovery for parties, clubs, sports, free food, and academic events
-        happening tonight on and around your campus. iOS, Mac, and the web.
-      </p>
-      <div className="mt-10 flex items-center justify-center gap-3">
-        <Link
-          href="#download"
-          className="px-6 py-3 rounded-2xl bg-[var(--color-accent)] text-black font-bold"
-        >
-          Get Buzz
-        </Link>
-        <Link
-          href="#features"
-          className="px-6 py-3 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] font-semibold"
-        >
-          See what's inside
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-function Features() {
-  const items = [
-    { title: "Live map", body: "Pins for every event happening now or soon — color-coded by category, pulsing when live." },
-    { title: "Tap-to-RSVP", body: "Going to that boba night? One tap. We add it to your calendar so you don't forget." },
-    { title: "Club badges", body: "Member, Officer, President — earn badges as you join. Show them off or hide them." },
-    { title: "All clubs, one place", body: "Greek life, honor societies, cultural orgs, intramurals, free food. Search the whole roster." },
-    { title: "Tabling Mode", body: "Club officers run a QR-poster display from any iPad, Mac, or iPhone — no more printing flyers." },
-    { title: "Works at every college", body: "USA, India, UK, Canada, Australia, and more. One profile follows you across transfers." },
-  ];
-  return (
-    <section id="features" className="px-6 py-24 bg-[var(--color-surface)]">
-      <div className="max-w-5xl mx-auto">
+    <section className="px-4 md:px-8 mt-10">
+      <header className="flex items-center justify-between mb-4">
         <h2
-          className="text-3xl md:text-4xl font-black"
+          className="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          What's inside
+          {title}
+          {badge && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-live)]/20 text-[var(--color-live)] font-bold">
+              {badge}
+            </span>
+          )}
         </h2>
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((item) => (
-            <div
-              key={item.title}
-              className="p-6 rounded-2xl bg-black/30 border border-[var(--color-border)]"
-            >
-              <h3 className="font-bold text-lg" style={{ fontFamily: "var(--font-display)" }}>
-                {item.title}
-              </h3>
-              <p className="mt-2 text-[var(--color-text-secondary)] text-sm">{item.body}</p>
-            </div>
-          ))}
-        </div>
+      </header>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {events.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
       </div>
     </section>
-  );
-}
-
-function DownloadStrip() {
-  return (
-    <section id="download" className="px-6 py-24 text-center">
-      <h2
-        className="text-3xl md:text-4xl font-black"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        Get Buzz on every device.
-      </h2>
-      <p className="mt-3 text-[var(--color-text-secondary)]">
-        TestFlight is open. Mac and Web are next.
-      </p>
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <a className="px-5 py-3 rounded-xl bg-white text-black font-semibold" href="#">
-          App Store (soon)
-        </a>
-        <a className="px-5 py-3 rounded-xl bg-white text-black font-semibold" href="#">
-          Mac App Store (soon)
-        </a>
-        <a className="px-5 py-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] font-semibold" href="#">
-          Use on the web
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="px-6 py-12 text-center text-[var(--color-text-tertiary)] text-sm">
-      © {new Date().getFullYear()} Buzz · Built for college life.
-    </footer>
   );
 }
