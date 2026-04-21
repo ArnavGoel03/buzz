@@ -26,22 +26,6 @@ export default function SignIn() {
     e.preventDefault();
     if (!canSubmit) return;
 
-    // If the email is .edu but campus isn't in our allowlist, funnel to waitlist
-    // instead of firing an auth link for a campus we aren't live at yet.
-    if (!campus) {
-      setStatus("waitlist");
-      try {
-        await fetch("/api/waitlist", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-      } catch {
-        // soft-fail: the UI already promised them the list
-      }
-      return;
-    }
-
     setStatus("sending");
     setError("");
     try {
@@ -50,7 +34,7 @@ export default function SignIn() {
         email,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
-          data: { campus_id: campus.campusId },
+          data: { campus_id: campus?.campusId },
         },
       });
       if (error) throw error;
@@ -80,8 +64,6 @@ export default function SignIn() {
 
       {status === "sent" ? (
         <SuccessState email={email} campusName={campus?.campusName ?? "your campus"} />
-      ) : status === "waitlist" ? (
-        <WaitlistState email={email} />
       ) : (
         <form onSubmit={handleSubmit} className="mt-8 space-y-3">
           <div className="relative">
@@ -162,17 +144,3 @@ function SuccessState({ email, campusName }: { email: string; campusName: string
   );
 }
 
-function WaitlistState({ email }: { email: string }) {
-  return (
-    <div className="mt-8 p-5 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border-strong)]">
-      <p className="text-base font-bold">You&apos;re on the waitlist</p>
-      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-        We don&apos;t support your campus yet, but we saved <span className="font-semibold text-white">{email}</span>.
-        Buzz launches at a new school once we hit ~20 sign-ups and one ambassador.
-      </p>
-      <p className="mt-3 text-xs text-[var(--color-text-tertiary)]">
-        Want to skip the line? Reply to our welcome email — we&apos;ll fast-track your campus if you can help recruit.
-      </p>
-    </div>
-  );
-}

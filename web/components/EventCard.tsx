@@ -1,53 +1,59 @@
 import Link from "next/link";
-import { MapPin, Clock, Users } from "lucide-react";
+import { MapPin, Users, ArrowUpRight } from "lucide-react";
 import type { Event } from "@/lib/types";
 import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatRelativeTime } from "@/lib/format";
 
+// Secondary event card — used outside the bento grid (club pages, search). Still
+// carries the category bar + mono time for brand consistency.
 export default function EventCard({ event }: { event: Event }) {
   const { color, soft } = categoryColor(event.category);
-  const time = formatRelativeTime(event.starts_at);
 
   return (
     <Link
       href={`/e/${event.id}`}
-      className="block rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] p-5 transition-colors"
+      className="group relative rim block rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] hover:-translate-y-0.5 transition-all overflow-hidden"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-2">
+      <div className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: color }} />
+      <div className="relative p-5 pl-6">
+        <div className="flex items-center justify-between gap-3">
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
+            className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-[0.1em]"
             style={{ background: soft, color }}
           >
-            {event.is_live && <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-live)] pulse-live" />}
+            {event.is_live && <span className="w-1.5 h-1.5 rounded-full pulse-live" style={{ background: color }} />}
             {categoryLabel(event.category)}
           </span>
-        </div>
-        {typeof event.attendee_count === "number" && (
-          <span className="flex items-center gap-1 text-xs text-[var(--color-text-tertiary)]">
-            <Users size={12} />
-            {event.attendee_count}
+          <span className="font-mono text-[10px] text-[var(--color-text-tertiary)] tabular">
+            {formatRelativeTime(event.starts_at)}
           </span>
+        </div>
+        <h3
+          className="mt-3 font-display text-xl leading-[1.1] tracking-[-0.015em] font-medium"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {event.title}
+        </h3>
+        {event.summary && (
+          <p className="mt-1.5 text-sm text-[var(--color-text-secondary)] line-clamp-2">{event.summary}</p>
         )}
-      </div>
-      <h3
-        className="mt-3 text-xl font-black tracking-tight leading-tight"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        {event.title}
-      </h3>
-      <p className="mt-1.5 text-sm text-[var(--color-text-secondary)] line-clamp-2">
-        {event.summary}
-      </p>
-      <div className="mt-4 flex items-center gap-4 text-xs text-[var(--color-text-tertiary)]">
-        <span className="flex items-center gap-1.5">
-          <Clock size={12} />
-          {time}
-        </span>
-        <span className="flex items-center gap-1.5 truncate">
-          <MapPin size={12} />
-          {event.location_name}
-        </span>
+        <div className="mt-4 flex items-center gap-3 text-xs text-[var(--color-text-tertiary)]">
+          <span className="flex items-center gap-1.5 truncate">
+            <MapPin size={12} /> {event.location_name}
+          </span>
+          {typeof event.attendee_count === "number" && (
+            <>
+              <span>·</span>
+              <span className="flex items-center gap-1 font-mono tabular">
+                <Users size={12} /> {event.attendee_count}
+              </span>
+            </>
+          )}
+          <ArrowUpRight
+            size={14}
+            className="ml-auto transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </div>
       </div>
     </Link>
   );

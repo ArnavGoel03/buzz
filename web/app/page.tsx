@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import EventCard from "@/components/EventCard";
+import HeroBanner from "@/components/HeroBanner";
+import LiveTicker from "@/components/LiveTicker";
+import BentoFeed from "@/components/BentoFeed";
+import StatBand from "@/components/StatBand";
 import EventMap from "@/components/EventMap";
-import CampusPicker from "@/components/CampusPicker";
 import AppPushStrip from "@/components/AppPushStrip";
 import { getFeedEvents, getActiveCampus } from "@/lib/data";
 
@@ -28,85 +28,54 @@ const homeJsonLd = {
 export default async function Home() {
   const [events, campus] = await Promise.all([getFeedEvents(), getActiveCampus()]);
   const live = events.filter((e) => e.is_live);
-  const happeningSoon = events
-    .filter((e) => !e.is_live && new Date(e.starts_at).getTime() < Date.now() + 6 * 3600_000)
-    .slice(0, 6);
-  const laterThisWeek = events
-    .filter((e) => new Date(e.starts_at).getTime() >= Date.now() + 6 * 3600_000)
-    .slice(0, 8);
+  const soon = events.filter((e) => !e.is_live);
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)]">
+    <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
 
-      <section className="px-4 md:px-8 pt-6 pb-4 flex items-center justify-between gap-3">
-        <div>
-          <h1
-            className="text-2xl md:text-3xl font-black tracking-tight"
+      <HeroBanner campusName={campus.name} eventCount={events.length} liveCount={live.length} />
+
+      <LiveTicker events={events} />
+
+      <section className="px-4 md:px-8 py-10">
+        <header className="flex items-baseline justify-between mb-4 md:mb-6">
+          <h2
+            className="font-display text-2xl md:text-3xl tracking-[-0.02em]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Tonight on campus
-          </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-            {events.length} events · {live.length} live now
-          </p>
-        </div>
-        <CampusPicker name={campus.name} />
+            Happening now
+          </h2>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
+            {events.length} total · {live.length} live
+          </span>
+        </header>
+        <BentoFeed events={[...live, ...soon]} />
       </section>
 
-      <section className="px-4 md:px-8">
-        <div className="h-72 md:h-80 rounded-2xl overflow-hidden border border-[var(--color-border)]">
+      <section className="px-4 md:px-8 py-6">
+        <div className="h-[360px] rim rounded-2xl overflow-hidden border border-[var(--color-border)]">
           <EventMap
             events={events}
             center={{ lat: campus.center_lat, lng: campus.center_lng }}
           />
         </div>
-        <Link
-          href="/map"
-          className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-accent)]"
-        >
-          Open full map <ArrowRight size={14} />
-        </Link>
       </section>
 
-      {live.length > 0 && (
-        <Feed title="Live now" badge={`${live.length}`} events={live} />
-      )}
-      {happeningSoon.length > 0 && (
-        <Feed title="Happening soon" events={happeningSoon} />
-      )}
-      {laterThisWeek.length > 0 && (
-        <Feed title="Later this week" events={laterThisWeek} />
-      )}
+      <section className="px-4 md:px-8 py-10">
+        <StatBand
+          items={[
+            { label: "Events this week", value: events.length, accent: true },
+            { label: "Live right now", value: live.length },
+            { label: "Verified students", value: "1.2k" },
+            { label: "Campuses live", value: 1 },
+          ]}
+        />
+      </section>
 
       <AppPushStrip />
 
-      <div className="h-16 md:h-0" />
+      <div className="h-16 md:h-8" />
     </div>
-  );
-}
-
-function Feed({ title, badge, events }: { title: string; badge?: string; events: Parameters<typeof EventCard>[0]["event"][] }) {
-  return (
-    <section className="px-4 md:px-8 mt-10">
-      <header className="flex items-center justify-between mb-4">
-        <h2
-          className="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          {title}
-          {badge && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-live)]/20 text-[var(--color-live)] font-bold">
-              {badge}
-            </span>
-          )}
-        </h2>
-      </header>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {events.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </div>
-    </section>
   );
 }

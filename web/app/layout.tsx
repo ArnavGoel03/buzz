@@ -1,15 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { fontDisplay, fontSans, fontMono } from "./fonts";
 import { PWAInstaller } from "@/components/PWAInstaller";
 import AppShell from "@/components/AppShell";
 import MobileTabBar from "@/components/MobileTabBar";
 import AppBanner from "@/components/AppBanner";
+import CommandPalette from "@/components/CommandPalette";
+import CursorGlow from "@/components/CursorGlow";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://buzz.app"),
-  title: { default: "Buzz — every college event, on one map", template: "%s · Buzz" },
+  title: { default: "Buzz — every college event, one feed", template: "%s · Buzz" },
   description:
-    "Live discovery for college students. See parties, clubs, sports, free food, and academic events happening tonight on and around campus. Free on iOS, macOS, and web.",
+    "Live discovery for college students. Parties, clubs, sports, free food, and academic events happening tonight on and around campus. Free on iOS, macOS, and web.",
   keywords: [
     "college events", "university events", "campus events", "college app",
     "rush week", "greek life", "college parties", "student app", "free food",
@@ -19,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Buzz",
-    title: "Buzz — every college event, on one map",
+    title: "Buzz — every college event, one feed",
     description: "Live discovery for college students. Free. iOS, macOS, and web.",
     url: "https://buzz.app",
     locale: "en_US",
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Buzz — every college event, on one map",
+    title: "Buzz — every college event, one feed",
     description: "Live discovery for college students.",
     images: ["/og.png"],
   },
@@ -48,14 +51,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable}`}
+    >
       <head>
         <meta name="apple-itunes-app" content="app-id=TBD" />
       </head>
-      <body>
+      <body className="font-sans">
+        <CursorGlow />
         <AppBanner />
         <AppShell>{children}</AppShell>
         <MobileTabBar />
+        <CommandPalette />
         <PWAInstaller />
       </body>
     </html>

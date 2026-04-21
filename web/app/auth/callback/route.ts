@@ -24,15 +24,21 @@ export async function GET(request: Request) {
   const campus = resolveCampus(email);
   if (campus) {
     try {
+      // Auto-provision the campus row if we've never seen this school before.
+      // Featured + bundled schools are pre-seeded by migrations; derived ones
+      // (new accreditation, long-tail) get created here on first student sign-in.
+      await supabase.from("campuses").upsert(
+        {
+          id: campus.campusId,
+          name: campus.campusName,
+          country: campus.country,
+        },
+        { onConflict: "id", ignoreDuplicates: true }
+      );
       await supabase
         .from("profiles")
         .upsert(
-          {
-            id: data.user.id,
-            email,
-            campus: campus.campusId,
-            verified: true,
-          },
+          { id: data.user.id, email, campus: campus.campusId, verified: true },
           { onConflict: "id" }
         );
       await supabase.from("campus_affiliations").upsert(
@@ -46,7 +52,7 @@ export async function GET(request: Request) {
         { onConflict: "profile_id,campus" }
       );
     } catch {
-      // Profile stamping is best-effort — don't block sign-in on write failure.
+      // best-effort — don't block sign-in on write failure
     }
   }
   return NextResponse.redirect(`${origin}${next}`);
