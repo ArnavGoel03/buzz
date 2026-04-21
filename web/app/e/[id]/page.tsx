@@ -18,6 +18,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!event) return { title: "Event" };
   const title = `${event.title} · Buzz`;
   const description = `${event.summary} — ${event.location_name}`;
+  // Dynamic OG card rendered at /api/poster/[id]. iMessage, Discord, Slack, etc
+  // all pull this when the link is shared — it's how the event visualizes before
+  // the click.
+  const ogImage = `https://buzz.app/api/poster/${id}`;
   return {
     title, description,
     openGraph: {
@@ -25,8 +29,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       type: "article",
       siteName: "Buzz",
       url: `https://buzz.app/e/${id}`,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: event.title }],
     },
-    twitter: { card: "summary_large_image", title, description },
+    twitter: { card: "summary_large_image", title, description, images: [ogImage] },
   };
 }
 

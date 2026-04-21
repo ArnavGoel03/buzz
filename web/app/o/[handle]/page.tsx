@@ -5,6 +5,7 @@ import { getOrg, getEventsByOrg } from "@/lib/data";
 import EventCard from "@/components/EventCard";
 import FollowButton from "@/components/FollowButton";
 import OpenInApp from "@/components/OpenInApp";
+import OrgHero from "@/components/OrgHero";
 
 type Params = Promise<{ handle: string }>;
 
@@ -42,29 +43,19 @@ export default async function OrgDetail({ params }: { params: Params }) {
     <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div
-        className="h-48 md:h-64"
-        style={{
-          background: `linear-gradient(135deg, ${org.accent_hex}66 0%, transparent 60%), radial-gradient(circle at 75% 25%, ${org.accent_hex}44, transparent 50%)`,
-        }}
-      />
+      <OrgHero org={org} />
 
-      <div className="max-w-3xl mx-auto px-4 md:px-8 -mt-16">
+      <div className="max-w-3xl mx-auto px-4 md:px-8 -mt-12 relative z-10">
         <div
-          className="w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-black border-4 border-[var(--color-bg)] shadow-xl"
+          className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-black border-4 border-[var(--color-bg)] shadow-2xl"
           style={{ background: org.accent_hex, color: "#000", fontFamily: "var(--font-display)" }}
         >
           {org.name[0]}
         </div>
 
         <div className="mt-4 flex items-center gap-2">
-          <h1
-            className="text-3xl md:text-4xl font-black tracking-tight"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            {org.name}
-          </h1>
-          {org.verified && <CheckCircle2 size={20} className="text-[var(--color-accent)]" />}
+          {org.verified && <CheckCircle2 size={18} className="text-[var(--color-accent)]" />}
+          <span className="text-sm font-semibold text-[var(--color-text-secondary)]">@{org.handle}</span>
         </div>
         <p className="mt-1 text-base text-[var(--color-text-secondary)]">{org.tagline}</p>
 
