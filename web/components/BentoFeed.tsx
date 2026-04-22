@@ -3,6 +3,7 @@ import { MapPin, Users, ArrowUpRight } from "lucide-react";
 import type { Event } from "@/lib/types";
 import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatRelativeTime } from "@/lib/format";
+import { eventUrgency, urgencyColor } from "@/lib/urgency";
 
 // Bento-box feed: first card spans 2×, live events get rim glow, mono timestamps,
 // category color bar on the left. Varied visual rhythm beats a uniform grid for
@@ -23,6 +24,8 @@ export default function BentoFeed({ events }: { events: Event[] }) {
 function BentoCard({ event, span, featured }: { event: Event; span: string; featured?: boolean }) {
   const { color, soft } = categoryColor(event.category);
   const isLive = event.is_live;
+  const urgency = eventUrgency(event.starts_at, event.ends_at, isLive);
+  const urgencyFill = urgencyColor(urgency);
   return (
     <Link
       href={`/e/${event.id}`}
@@ -33,6 +36,11 @@ function BentoCard({ event, span, featured }: { event: Event; span: string; feat
           : undefined
       }
     >
+      <div
+        className="absolute left-0 right-0 top-0 h-[2px]"
+        style={{ background: urgencyFill, opacity: urgency === "past" ? 0.5 : 1 }}
+        aria-hidden
+      />
       <div
         className="absolute left-0 top-0 bottom-0 w-[3px]"
         style={{ background: color }}

@@ -14,8 +14,31 @@ struct Organization: Identifiable, Codable, Hashable, Sendable {
     var coverURL: URL?
     var accentHex: String               // hex like "#FF2D92" — drives the org's visual identity
     var isVerified: Bool
+    var instagramHandle: String?        // bare handle, no "@" — e.g. "acm.ucsd"
+    var websiteURL: URL?                // org's canonical site
 
     var accent: Color { Color(hex: accentHex) ?? .accentColor }
+
+    // Canonicalised Instagram URL. Nil when we don't trust the handle (prevents phishing via
+    // raw user-entered "insta.sketchy/login" style values sneaking through).
+    var instagramURL: URL? {
+        guard let raw = instagramHandle?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !raw.isEmpty else { return nil }
+        let cleaned = raw.hasPrefix("@") ? String(raw.dropFirst()) : raw
+        // Instagram allows letters, numbers, periods, underscores. Reject anything else.
+        let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "._"))
+        guard !cleaned.isEmpty, cleaned.unicodeScalars.allSatisfy({ allowed.contains($0) }) else {
+            return nil
+        }
+        return URL(string: "https://instagram.com/\(cleaned)")
+    }
+
+    // Only surface https websites — a club link shouldn't deep-link into sketchy schemes.
+    var safeWebsiteURL: URL? {
+        guard let url = websiteURL, let scheme = url.scheme?.lowercased(),
+              scheme == "https" || scheme == "http" else { return nil }
+        return url
+    }
 }
 
 // Tiny hex helper colocated since it's only used by Organization right now.

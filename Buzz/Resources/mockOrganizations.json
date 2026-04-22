@@ -12,7 +12,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#0A84FF",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "acmucsd",
+    "websiteURL": "https://acmucsd.com"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A002",
@@ -27,7 +29,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#FF6B35",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "isa.ucsd",
+    "websiteURL": "https://isaucsd.org"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A003",
@@ -42,7 +46,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#FFB400",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "tbp.ucsd",
+    "websiteURL": "https://tbp.ucsd.edu"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A004",
@@ -57,7 +63,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#30D158",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "tritonrobotics",
+    "websiteURL": "https://tritonrobotics.org"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A005",
@@ -72,7 +80,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#FFD60A",
-    "isVerified": false
+    "isVerified": false,
+    "instagramHandle": "buzz.app",
+    "websiteURL": "https://buzz.app"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A006",
@@ -87,7 +97,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#1F4E79",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "sigmachi.ucsd",
+    "websiteURL": "https://sigmachi.com"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A007",
@@ -102,7 +114,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#34C759",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "tritonoutdoors",
+    "websiteURL": "https://outdoors.ucsd.edu"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A008",
@@ -117,7 +131,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#FF2D92",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "amsa.ucsd",
+    "websiteURL": "https://amsaucsd.org"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A009",
@@ -132,7 +148,9 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#BF5AF2",
-    "isVerified": true
+    "isVerified": true,
+    "instagramHandle": "ucsdjazz",
+    "websiteURL": "https://music.ucsd.edu/ensembles/jazz"
   },
   {
     "id": "9B2E4F2C-0001-4000-8000-00000000A010",
@@ -147,6 +165,8 @@
     "logoURL": null,
     "coverURL": null,
     "accentHex": "#FF9500",
-    "isVerified": false
+    "isVerified": false,
+    "instagramHandle": "tritonclimb",
+    "websiteURL": null
   }
 ]

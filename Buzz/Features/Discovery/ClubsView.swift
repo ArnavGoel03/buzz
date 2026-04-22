@@ -23,7 +23,7 @@ struct ClubsView: View {
                         search
                         categories
                         if let vm = viewModel, vm.query.isEmpty, vm.categoryFilter == nil {
-                            TrendingClubsRail(orgs: vm.trending)
+                            TrendingClubsRail(orgs: vm.trending, buzzingOrgIDs: vm.buzzingOrgIDs)
                         }
                         grid
                         Spacer(minLength: BuzzSpacing.xxl)
@@ -39,10 +39,10 @@ struct ClubsView: View {
         }
         .task {
             if viewModel == nil {
-                viewModel = ClubsViewModel(orgs: services.orgs)
+                viewModel = ClubsViewModel(orgs: services.orgs, events: services.events)
             }
             let campus = try? await services.profiles.currentProfile().primaryAffiliation?.campus
-            await viewModel?.load(campus: campus ?? "ucsd")
+            await viewModel?.load(campus: campus ?? "ucsd", near: services.location.coordinate)
         }
         // VULN #110 patch: reset on auth change so we don't carry the previous user's
         // campus filter or cached results across an account switch.
@@ -86,7 +86,7 @@ struct ClubsView: View {
             LazyVGrid(columns: columns, spacing: BuzzSpacing.md) {
                 ForEach(vm.filtered) { org in
                     NavigationLink(value: org.id) {
-                        ClubCard(organization: org)
+                        ClubCard(organization: org, isBuzzing: vm.isBuzzing(org))
                             .scrollRevealCard()
                             .magneticPress()
                     }

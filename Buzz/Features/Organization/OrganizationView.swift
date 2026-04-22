@@ -24,6 +24,7 @@ struct OrganizationView: View {
                         }
                         .padding(.horizontal, BuzzSpacing.xs)
                         OrganizationStatsRow(organization: org)
+                        OrgExternalLinksRow(organization: org)
                         HStack(spacing: BuzzSpacing.sm) {
                             FollowButton(
                                 organization: org,

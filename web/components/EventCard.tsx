@@ -3,17 +3,25 @@ import { MapPin, Users, ArrowUpRight } from "lucide-react";
 import type { Event } from "@/lib/types";
 import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatRelativeTime } from "@/lib/format";
+import { eventUrgency, urgencyColor } from "@/lib/urgency";
 
 // Secondary event card — used outside the bento grid (club pages, search). Still
 // carries the category bar + mono time for brand consistency.
 export default function EventCard({ event }: { event: Event }) {
   const { color, soft } = categoryColor(event.category);
+  const urgency = eventUrgency(event.starts_at, event.ends_at, event.is_live);
+  const urgencyFill = urgencyColor(urgency);
 
   return (
     <Link
       href={`/e/${event.id}`}
       className="group relative rim block rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] hover:-translate-y-0.5 transition-all overflow-hidden"
     >
+      <div
+        className="absolute left-0 right-0 top-0 h-[2px]"
+        style={{ background: urgencyFill, opacity: urgency === "past" ? 0.5 : 1 }}
+        aria-hidden
+      />
       <div className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: color }} />
       <div className="relative p-5 pl-6">
         <div className="flex items-center justify-between gap-3">

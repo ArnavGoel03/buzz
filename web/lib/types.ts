@@ -38,6 +38,8 @@ export type Organization = {
   campus?: string;
   verified?: boolean;
   logo_url?: string | null;
+  instagram_handle?: string | null;
+  website_url?: string | null;
 };
 
 export type Profile = {

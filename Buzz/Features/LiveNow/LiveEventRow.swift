@@ -7,25 +7,28 @@ struct LiveEventRow: View {
     let event: Event
 
     var body: some View {
-        HStack(spacing: 0) {
-            // Category rim bar
-            Rectangle()
-                .fill(event.category.tint)
-                .frame(width: 3)
-                .frame(maxHeight: .infinity)
+        VStack(spacing: 0) {
+            EventUrgencyBar(urgency: event.urgency)
+            HStack(spacing: 0) {
+                // Category rim bar
+                Rectangle()
+                    .fill(event.category.tint)
+                    .frame(width: 3)
+                    .frame(maxHeight: .infinity)
 
-            VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
-                topRow
-                Text(event.title)
-                    .font(BuzzFont.displaySM)
-                    .foregroundStyle(BuzzColor.textPrimary)
-                    .kerning(-0.3)
-                    .lineLimit(2)
-                bottomRow
+                VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
+                    topRow
+                    Text(event.title)
+                        .font(BuzzFont.displaySM)
+                        .foregroundStyle(BuzzColor.textPrimary)
+                        .kerning(-0.3)
+                        .lineLimit(2)
+                    bottomRow
+                }
+                .padding(.horizontal, BuzzSpacing.lg)
+                .padding(.vertical, BuzzSpacing.md)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, BuzzSpacing.lg)
-            .padding(.vertical, BuzzSpacing.md)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .rimCard()
         .overlay(

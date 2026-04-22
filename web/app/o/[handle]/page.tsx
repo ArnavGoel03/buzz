@@ -6,6 +6,7 @@ import EventCard from "@/components/EventCard";
 import FollowButton from "@/components/FollowButton";
 import OpenInApp from "@/components/OpenInApp";
 import OrgHero from "@/components/OrgHero";
+import OrgExternalLinks from "@/components/OrgExternalLinks";
 
 type Params = Promise<{ handle: string }>;
 
@@ -31,12 +32,25 @@ export default async function OrgDetail({ params }: { params: Params }) {
   const [org, events] = await Promise.all([getOrg(handle), getEventsByOrg(handle)]);
   if (!org) notFound();
 
+  const sameAs: string[] = [];
+  if (org.instagram_handle) {
+    const raw = org.instagram_handle.replace(/^@/, "");
+    if (/^[A-Za-z0-9._]+$/.test(raw)) sameAs.push(`https://instagram.com/${raw}`);
+  }
+  if (org.website_url) {
+    try {
+      const u = new URL(org.website_url);
+      if (u.protocol === "https:" || u.protocol === "http:") sameAs.push(u.toString());
+    } catch {}
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: org.name,
     description: org.tagline,
     url: `https://buzz.app/o/${handle}`,
+    ...(sameAs.length ? { sameAs } : {}),
   };
 
   return (
@@ -69,6 +83,8 @@ export default async function OrgDetail({ params }: { params: Params }) {
           <FollowButton handle={org.handle} />
           <OpenInApp kind="o" id={org.handle} label="Open in app" />
         </div>
+
+        <OrgExternalLinks org={org} />
 
         {org.description && (
           <section className="mt-8">

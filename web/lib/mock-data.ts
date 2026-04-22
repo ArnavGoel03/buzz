@@ -118,6 +118,8 @@ export const mockOrgs: Organization[] = [
     category: "Academic / Tech",
     campus: "ucsd",
     verified: true,
+    instagram_handle: "acmucsd",
+    website_url: "https://acmucsd.com",
   },
   {
     id: "fiji",
@@ -131,6 +133,8 @@ export const mockOrgs: Organization[] = [
     category: "Greek Life",
     campus: "ucsd",
     verified: true,
+    instagram_handle: "fiji.ucsd",
+    website_url: "https://phigam.org",
   },
   {
     id: "warren-council",
@@ -144,6 +148,8 @@ export const mockOrgs: Organization[] = [
     category: "Student Government",
     campus: "ucsd",
     verified: true,
+    instagram_handle: "warrencollegeucsd",
+    website_url: "https://warren.ucsd.edu",
   },
 ];
 

@@ -4,6 +4,7 @@ struct EventDetailSheet: View {
     @Environment(AppServices.self) private var services
     let event: Event
     let viewModel: MapViewModel
+    @State private var friendsGoing: [Profile] = []
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -39,6 +40,13 @@ struct EventDetailSheet: View {
             .padding(.top, BuzzSpacing.lg)
         }
         .presentationCornerRadius(32)
+        .task(id: event.id) {
+            // Guest users don't have a friend graph to join against.
+            guard auth.isAuthenticated else { return }
+            if let friends = try? await services.events.friendsGoing(eventID: event.id) {
+                friendsGoing = friends
+            }
+        }
     }
 
     private var header: some View {
@@ -50,10 +58,10 @@ struct EventDetailSheet: View {
                 EventShareButton(event: event)
                 ReportMenuButton(target: .event(event.id))
             }
-            // Social proof — replaces just-a-count with friend faces. Production replaces
-            // the empty `friends:` arg with the result of `friends_going_to_event` view.
+            // Social proof — friend faces first, raw count second. Friends are loaded async
+            // from EventRepository.friendsGoing (RLS-gated server-side).
             HStack(spacing: BuzzSpacing.sm) {
-                FriendsGoingBadge(friends: [], totalCount: event.rsvpCount)
+                FriendsGoingBadge(friends: friendsGoing, totalCount: event.rsvpCount)
                 AttendeePill(count: event.rsvpCount, capacity: event.capacity)
                 Spacer()
             }

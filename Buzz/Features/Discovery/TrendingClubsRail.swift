@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TrendingClubsRail: View {
     let orgs: [Organization]
+    var buzzingOrgIDs: Set<UUID> = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: BuzzSpacing.sm) {
@@ -18,7 +19,7 @@ struct TrendingClubsRail: View {
                 HStack(spacing: BuzzSpacing.md) {
                     ForEach(orgs) { org in
                         NavigationLink(value: org.id) {
-                            ClubCard(organization: org)
+                            ClubCard(organization: org, isBuzzing: buzzingOrgIDs.contains(org.id))
                                 .frame(width: 220)
                         }
                         .buttonStyle(.plain)
