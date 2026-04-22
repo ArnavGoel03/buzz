@@ -68,13 +68,17 @@ Grouped by what they actually do for a student / club officer / campus.
 
 ### 🫂 Social
 - **Friend graph** — mutual accept, "5 friends going" on every event card
+- **Friend-face social proof** — `FriendsGoingBadge` shows actual friends' avatars + names (not vanity counts); RLS-gated server-side, respects `hide_attendees`
 - **Direct messages** — 1:1 DMs, event group chats, auto class-group chats
 - **Streaks** — consecutive-week attendance, Snapchat-style flame counter
 - **Stories** — photo strip from events; only attendees upload
+- **Time-density urgency bar** — 2px color stripe on every event card (LIVE / STARTING / SOON / UPCOMING / PAST), iOS + web in sync
 
 ### 🏛 Organizations
 - Verified student orgs + **Buzz Official** (CAPS, Athletics, Dining, Safety, etc.)
 - Profile with cover, logo, members, upcoming events, follow
+- **External links** — sanitized Instagram + website pills on every org profile; schema.org `sameAs` in JSON-LD for cross-surface SEO
+- **Buzzing dot** — pulsing accent on Club grid cards when the org has an event currently live or starting within 30 min (Discovery becomes "who's active tonight," not a static directory)
 - Print-ready QR poster (replaces paper flyers)
 - Per-org "paper saved" counter
 - Tabling Mode full-screen display for club fairs
@@ -181,29 +185,117 @@ Grouped by what they actually do for a student / club officer / campus.
 
 ## Running it
 
+### Prereqs (one time)
+```bash
+brew install xcodegen vercel-cli supabase/tap/supabase
+```
+
 ### iOS + Mac
 ```bash
-brew install xcodegen
 cd /Users/arnavgoel/Documents/Buzz
+cp Buzz/Secrets.plist.example Buzz/Secrets.plist   # fill values (see "Backend setup" below)
 xcodegen generate
 open Buzz.xcodeproj
 ```
-Pick an iPhone simulator, My Mac (Mac), or any iPad destination → Cmd+R.
+Pick an iPhone simulator, My Mac (Mac), or any iPad destination → Cmd+R. App boots against `MockEventRepository` by default — it's fully interactive without any backend. Swap `AppServices` init to `SupabaseEventRepository()` when you're ready to point at the live DB.
 
 ### Web + PWA
 ```bash
 cd /Users/arnavgoel/Documents/Buzz/web
 npm install
-npm run dev   # → http://localhost:3000
+vercel link                    # one-time, links local dir to your Vercel project
+vercel env pull .env.local     # pulls SUPABASE_* + any other integration-managed vars
+npm run dev                    # → http://localhost:3000
 ```
 
-### Supabase
+### Supabase (local emulator for offline dev)
 ```bash
 cd /Users/arnavgoel/Documents/Buzz
-supabase init
-supabase start
+supabase start                 # spins up local Postgres + Auth + Storage + Realtime
 psql -h localhost -p 54322 -U postgres -d postgres -f supabase/schema.sql
 ```
+Local emulator is optional — if you already have a dev project on supabase.com it's cheaper to just point at that.
+
+---
+
+## Backend setup (Supabase + Vercel)
+
+The production backend is **one Supabase project** shared by iOS, the App Clip, the web app, and the PWA. RLS is on every table — the clients go direct, no middleman API.
+
+### 1. Create the Supabase project
+
+supabase.com → New Project. Settings that matter:
+
+| Field | Value |
+|---|---|
+| Organization | `Buzz` |
+| Project name | `buzz-prod` |
+| Region | Closest to your users (launching at UCSD → **West US (North California)**) |
+| Enable Data API | ✅ on (required for `supabase-js` / `supabase-swift`) |
+| Auto-expose new tables | ❌ **off** — lock new tables down by default |
+| Enable automatic RLS | ✅ **on** — any new table gets RLS enforcement on creation |
+| Database password | Generate via dashboard, store in 1Password / keychain |
+
+The project ref is the subdomain in your URL (e.g. `eadedtvmpucpoywbzqff`).
+
+### 2. Apply the schema
+
+```bash
+supabase login                                    # browser OAuth, one-time
+supabase link --project-ref <your-project-ref>
+supabase db push                                  # applies supabase/schema.sql + migrations/
+```
+This lands ~50 tables, RLS policies, triggers, and every red-team patch in one go. Halts cleanly on any error — safe to re-run.
+
+### 3. Link Vercel to Supabase
+
+In the Vercel dashboard → **Integrations** → **Supabase** → **Install**. Pick **"Link Existing Supabase Account"** (not "Create New / Vercel Native" — you want to own the Supabase project independently of your web host). Scope to just your `web` project. Complete OAuth.
+
+Vercel auto-injects into your web env (Production + Preview + Development):
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Pull them locally so dev matches prod:
+```bash
+cd web
+vercel env pull .env.local
+```
+
+**Security line**: `SUPABASE_SERVICE_ROLE_KEY` lives **only** in Vercel server env + your local `.env.local`. Never in iOS, never prefixed with `NEXT_PUBLIC_*`, never in a browser bundle. Server routes under `web/app/api/` (push fan-out, Stripe webhooks, inbound email) are the only consumers.
+
+### 4. iOS / macOS credentials
+
+The iOS app reads secrets from `Buzz/Secrets.plist` (gitignored) via `SecretsLoader.swift`. Two values needed:
+
+```xml
+<key>SUPABASE_URL</key>
+<string>https://your-ref.supabase.co</string>
+<key>SUPABASE_ANON_KEY</key>
+<string>eyJhbGc...</string>
+```
+
+Grab both from Supabase dashboard → Settings → API. The anon key is safe to ship in the app binary — all privilege checks happen via RLS server-side.
+
+Or, with the CLI:
+```bash
+supabase projects api-keys --project-ref <your-project-ref>
+```
+
+### 5. Other Vercel integrations (recommended order)
+
+| Integration | When to enable |
+|---|---|
+| **Supabase** | Day one (above) — your backend |
+| **Vercel Cron** (native, `vercel.json`) | Day one — runs `/api/reminders/process` + daily digest |
+| **Stripe** | The day you flip ticketed events on |
+| **Sentry** | TestFlight launch — unified iOS + web error visibility |
+| **Upstash Redis** | When rate-limit load shows up in Postgres perf |
+| **Resend** | Already in the stack for outbound email |
+
+Skip Vercel AI, Neon (you're on Supabase Postgres — don't split), and Edge Config until you hit a specific need.
 
 ---
 
@@ -244,14 +336,19 @@ supabase/
 
 **Ship TestFlight at UCSD** → first 100 users → iterate based on real engagement data. Everything else is already built; this is a "wire credentials + ship it" exercise.
 
-1. Wire real Supabase project (SUPABASE_URL + anon key)
-2. Replace SIWA / Google / email OTP stubs with real Supabase Auth calls
-3. APNs p8 + FCM service account env vars
-4. Stripe test-mode keys + Connect onboarding for first 3 paid-event orgs
-5. Mailgun MX record for `events.buzz.app` → inbound-email route
-6. VAPID keypair generation + env vars for web push
-7. Deploy `web/` to Vercel, point `buzz.app` DNS
-8. App Store + Mac App Store submissions
-9. First ambassador at UCSD seeds 20 events for launch week
+- [x] Supabase project provisioned (`buzz-prod`, us-west-1, automatic RLS on, auto-expose off)
+- [x] Vercel ↔ Supabase integration linked to the `web` project
+- [x] `SupabaseEventRepository` scaffold parallel to `MockEventRepository`
+- [ ] `supabase db push` — apply `supabase/schema.sql` + `migrations/` to `buzz-prod`
+- [ ] Populate `Buzz/Secrets.plist` with `SUPABASE_URL` + anon key
+- [ ] Flip `AppServices` init to `SupabaseEventRepository()` for staging builds
+- [ ] Replace SIWA / Google / email OTP stubs with real Supabase Auth calls
+- [ ] APNs p8 + FCM service account env vars
+- [ ] Stripe test-mode keys + Connect onboarding for first 3 paid-event orgs
+- [ ] Mailgun MX record for `events.buzz.app` → inbound-email route
+- [ ] VAPID keypair generation + env vars for web push
+- [ ] `buzz.app` DNS → Vercel
+- [ ] App Store + Mac App Store submissions
+- [ ] First ambassador at UCSD seeds 20 events for launch week
 
-**File count: ~310** across iOS/Mac app + Next.js web + AppClip + Supabase schema. Single backend. Five surfaces. One product.
+**File count: ~315** across iOS/Mac app + Next.js web + AppClip + Supabase schema. Single backend. Five surfaces. One product.
