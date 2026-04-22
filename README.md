@@ -211,8 +211,9 @@ npm run dev                    # → http://localhost:3000
 ### Supabase (local emulator for offline dev)
 ```bash
 cd /Users/arnavgoel/Documents/Buzz
-supabase start                 # spins up local Postgres + Auth + Storage + Realtime
-psql -h localhost -p 54322 -U postgres -d postgres -f supabase/schema.sql
+supabase start                                    # local Postgres + Auth + Storage + Realtime
+psql -h localhost -p 54322 -U postgres -d postgres -f supabase/migrations/0000_initial_schema.sql
+psql -h localhost -p 54322 -U postgres -d postgres -f supabase/migrations/0001_campus_waitlist.sql
 ```
 Local emulator is optional — if you already have a dev project on supabase.com it's cheaper to just point at that.
 
@@ -238,14 +239,19 @@ supabase.com → New Project. Settings that matter:
 
 The project ref is the subdomain in your URL (e.g. `eadedtvmpucpoywbzqff`).
 
-### 2. Apply the schema
+### 2. Apply the schema (via GitHub integration — no CLI login required)
 
+Supabase dashboard → project → **Settings** → **Integrations** → **GitHub Integration** → **Enable**. Point at `ArnavGoel03/buzz` with working directory `.` and production branch `main`. Keep **Deploy to production** on.
+
+Once enabled, Supabase watches `supabase/migrations/*.sql` on `main` and applies any new files on push. First push applies `0000_initial_schema.sql` (~50 tables, RLS policies, triggers, 110+ red-team patches) and `0001_campus_waitlist.sql` automatically.
+
+For later migrations, just:
 ```bash
-supabase login                                    # browser OAuth, one-time
-supabase link --project-ref <your-project-ref>
-supabase db push                                  # applies supabase/schema.sql + migrations/
+supabase migration new add_something      # creates a stamped file in migrations/
+# edit the file
+git add supabase/migrations/ && git commit -m "..." && git push origin main
 ```
-This lands ~50 tables, RLS policies, triggers, and every red-team patch in one go. Halts cleanly on any error — safe to re-run.
+Supabase auto-applies on push. Skip `supabase login` entirely.
 
 ### 3. Link Vercel to Supabase
 
@@ -327,7 +333,9 @@ web/                         # Next.js 15 marketing site + PWA + admin dashboard
   components/                # PWAInstaller
   lib/                       # supabase, parse-event-email, web-push
 supabase/
-  schema.sql                 # ~50 tables/views/triggers, RLS-locked end-to-end
+  migrations/
+    0000_initial_schema.sql  # ~50 tables/views/triggers, RLS-locked end-to-end (GitHub integration applies on push)
+    0001_campus_waitlist.sql # waitlist table for unsupported campuses
 ```
 
 ---
@@ -338,9 +346,11 @@ supabase/
 
 - [x] Supabase project provisioned (`buzz-prod`, us-west-1, automatic RLS on, auto-expose off)
 - [x] Vercel ↔ Supabase integration linked to the `web` project
+- [x] Supabase ↔ GitHub integration enabled (auto-applies `migrations/*.sql` on push to `main`)
 - [x] `SupabaseEventRepository` scaffold parallel to `MockEventRepository`
-- [ ] `supabase db push` — apply `supabase/schema.sql` + `migrations/` to `buzz-prod`
-- [ ] Populate `Buzz/Secrets.plist` with `SUPABASE_URL` + anon key
+- [x] `Buzz/Secrets.plist` populated with `SUPABASE_URL` + anon key (gitignored)
+- [ ] First push lands `0000_initial_schema.sql` + `0001_campus_waitlist.sql` against `buzz-prod`
+- [ ] Vercel Root Directory set to `web` (dashboard → Settings → Build and Deployment)
 - [ ] Flip `AppServices` init to `SupabaseEventRepository()` for staging builds
 - [ ] Replace SIWA / Google / email OTP stubs with real Supabase Auth calls
 - [ ] APNs p8 + FCM service account env vars

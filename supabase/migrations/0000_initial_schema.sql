@@ -1,3 +1,8 @@
+-- Initial schema — moved from supabase/schema.sql so the Supabase GitHub
+-- integration picks it up on first push. Everything below was the monolithic
+-- schema file; the campus_waitlist block at the old line 545-550 was removed
+-- because migration 0001_campus_waitlist.sql owns the authoritative shape.
+
 -- Buzz — Supabase schema
 -- Postgres + PostGIS. Run after `supabase init && supabase start`.
 
@@ -542,12 +547,6 @@ create table if not exists public.campus_ambassadors (
 alter table public.campus_ambassadors enable row level security;
 create policy "ca_read_authed" on public.campus_ambassadors for select using (auth.role() = 'authenticated');
 
-create table if not exists public.campus_waitlist (
-  email            text primary key check (email ~ '@'),
-  requested_campus text,
-  requested_at     timestamptz not null default now(),
-  notified_at      timestamptz
-);
 
 -- ═══ ROUND 2: SAFETY ══════════════════════════════════════════════════════════
 create table if not exists public.emergency_contacts (
