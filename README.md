@@ -1,5 +1,7 @@
 # Buzz
 
+[![CI](https://github.com/ArnavGoel03/buzz/actions/workflows/ci.yml/badge.svg)](https://github.com/ArnavGoel03/buzz/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 The all-in-one college companion. Live discovery, social network, club operating system, student marketplace, and safety layer — on iOS, macOS, and the web, backed by one Supabase.
 
 > One profile for your entire college life, anywhere in the world. Handles transfers (incl. international), dual enrollment, study abroad, joint degrees, gap years, alumni, and faculty/staff. Profile creation is one-time; affiliations stack over time.
