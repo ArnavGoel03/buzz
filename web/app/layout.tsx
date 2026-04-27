@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { fontDisplay, fontSans, fontMono } from "./fonts";
 import { PWAInstaller } from "@/components/PWAInstaller";
@@ -69,6 +71,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CommandPalette />
         <KeyboardShortcuts />
         <PWAInstaller />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
