@@ -29,18 +29,34 @@ final class AuthSession {
     /// `supabase.auth.signInWithIdToken(provider: .apple, idToken: ...)`. Supabase verifies
     /// against Apple's JWKS and returns a session.
     func continueWithApple() async {
+        guardStubInRelease("continueWithApple")
+        #if DEBUG
         state = .onboarding
+        #endif
     }
 
     /// Same pattern with `provider: .google`.
     func continueWithGoogle() async {
+        guardStubInRelease("continueWithGoogle")
+        #if DEBUG
         state = .onboarding
+        #endif
     }
 
     /// Email OTP: `auth.signInWithOTP(email:)` sends a 6-digit code; `auth.verifyOTP(...)`
     /// exchanges it for a session.
     func continueWithEmail(_ email: String) async {
+        guardStubInRelease("continueWithEmail")
+        #if DEBUG
         state = .onboarding
+        #endif
+    }
+
+    /// Trip an assertion in debug, no-op in release. Release builds that hit this path
+    /// silently refuse to advance state — the user stays at `.guest` until the real
+    /// Supabase OAuth flow is wired. Preferable to a `preconditionFailure` per §1.
+    private func guardStubInRelease(_ name: String) {
+        assertionFailure("AuthSession.\(name) is a stub; wire Supabase before release.")
     }
 
     /// Called once onboarding collects the minimum (name + campus) and creates the profile.

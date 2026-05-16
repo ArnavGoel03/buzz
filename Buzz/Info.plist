@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
@@ -27,6 +27,8 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Buzz uses your location to surface events within walking distance and notify you when something nearby matches your interests.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Buzz uses your location to show events happening near you on campus.</string>
+	<key>NSLocationUsageDescription</key>
 	<string>Buzz uses your location to show events happening near you on campus.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -42,15 +44,18 @@
 		<key>UIColorName</key>
 		<string>LaunchBackground</string>
 	</dict>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
-	<key>com.apple.developer.associated-domains</key>
-	<array>
-		<string>applinks:buzz.app</string>
-	</array>
 </dict>
 </plist>

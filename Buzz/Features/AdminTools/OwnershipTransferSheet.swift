@@ -12,6 +12,7 @@ struct OwnershipTransferSheet: View {
     @State private var newOwnerID: UUID?
     @State private var typedConfirm = ""
     @State private var isTransferring = false
+    @State private var errorMessage: String?
 
     private var canConfirm: Bool {
         newOwnerID != nil && typedConfirm.lowercased() == "transfer"
@@ -82,9 +83,16 @@ struct OwnershipTransferSheet: View {
         guard let newID = newOwnerID else { return }
         isTransferring = true
         defer { isTransferring = false }
-        // Real call: supabase.rpc("transfer_org_ownership", ["p_org": organization.id, "p_new_owner": newID])
-        _ = newID
-        Haptics.success()
-        dismiss()
+        do {
+            _ = try await BuzzSupabase.shared.rpc("transfer_org_ownership", params: [
+                "p_org": organization.id.uuidString,
+                "p_new_owner": newID.uuidString,
+            ]).execute()
+            Haptics.success()
+            dismiss()
+        } catch {
+            Haptics.warning()
+            errorMessage = "Couldn't transfer ownership. \(error.localizedDescription)"
+        }
     }
 }

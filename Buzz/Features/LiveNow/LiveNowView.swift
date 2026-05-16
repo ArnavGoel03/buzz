@@ -26,6 +26,9 @@ struct LiveNowView: View {
                     .padding(.horizontal, BuzzSpacing.lg)
                     .padding(.top, BuzzSpacing.sm)
                     .padding(.bottom, BuzzSpacing.xxl)
+                    // Cap reading width on iPad/Mac so cards don't stretch across full width.
+                    .frame(maxWidth: 640)
+                    .frame(maxWidth: .infinity)
                 }
                 .scrollIndicators(.hidden)
             }
@@ -100,10 +103,7 @@ struct LiveNowView: View {
     private func load() async {
         let coord = services.location.coordinate
         let all = (try? await services.events.events(near: coord, radiusMeters: 800)) ?? []
-        let now = Date()
-        liveEvents = all
-            .filter { $0.isLive || ($0.startsAt > now && $0.startsAt < now.addingTimeInterval(1800)) }
-            .sorted { $0.startsAt < $1.startsAt }
+        liveEvents = LiveNowFilter.filter(all)
         loaded = true
     }
 }

@@ -1,1 +1,1 @@
-college,events,campus,clubs,university,rush,fraternity,sorority,greek,party,free food,dining,student,RSVP,tickets,rush week,school,freshman,tailgate
+campus,events,clubs,party,greek,rush,fraternity,sorority,RSVP,tickets,free food,college

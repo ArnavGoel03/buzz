@@ -14,7 +14,7 @@ platform :ios do
     )
   end
 
-  desc "Build + upload a new TestFlight build"
+  desc "Build + upload a new TestFlight build (iOS + iPadOS)"
   lane :beta do
     match(type: "appstore", readonly: true)
     build_app(
@@ -28,7 +28,7 @@ platform :ios do
     )
   end
 
-  desc "Cut a new production release"
+  desc "Cut a new production release (iOS + iPadOS)"
   lane :release do
     match(type: "appstore", readonly: true)
     build_app(project: "Buzz.xcodeproj", scheme: "Buzz", export_method: "app-store")
@@ -38,6 +38,24 @@ platform :ios do
       force: true,
       skip_screenshots: true,
       skip_metadata: false
+    )
+  end
+
+  desc "Build + upload a new Mac App Store build"
+  lane :mac_release do
+    match(type: "appstore", platform: "macos", readonly: true)
+    build_mac_app(
+      project: "Buzz.xcodeproj",
+      scheme: "Buzz",
+      export_method: "app-store"
+    )
+    upload_to_app_store(
+      platform: "osx",
+      submit_for_review: false,
+      automatic_release: false,
+      force: true,
+      skip_screenshots: true,
+      skip_metadata: true
     )
   end
 end

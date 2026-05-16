@@ -36,8 +36,7 @@ struct CampusWaitlistView: View {
                     .padding(.horizontal, BuzzSpacing.lg)
 
                 Button {
-                    Haptics.success()
-                    submitted = true
+                    Task { await submitWaitlist() }
                 } label: {
                     Text("Add me")
                         .font(BuzzFont.headline)
@@ -53,5 +52,22 @@ struct CampusWaitlistView: View {
             Spacer()
         }
         .background(BuzzColor.background.ignoresSafeArea())
+    }
+
+    /// POST the email to `/api/waitlist`. Rate-limited server-side (5/min/IP). Always
+    /// shows `submitted=true` on success — duplicate inserts are silent by design so
+    /// the response can't be used as an email-existence oracle.
+    private func submitWaitlist() async {
+        guard !email.isEmpty, email.contains("@") else { return }
+        let url = URL(string: "https://buzz.app/api/waitlist")! // invariant: hardcoded host
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["email": email])
+        _ = try? await URLSession.shared.data(for: req)
+        await MainActor.run {
+            Haptics.success()
+            submitted = true
+        }
     }
 }

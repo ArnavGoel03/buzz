@@ -6,21 +6,26 @@ import UIKit
 
 /// Apple's in-app review prompt (3 per year hard limit). Best practice: trigger after
 /// a positive moment (RSVP'd 3+ events, attended 1, streak ≥ 2 weeks). Never on first
-/// launch, never after an error. Fires via a single @AppStorage counter.
+/// launch, never after an error. Fires via a single UserDefaults counter.
 @MainActor
 enum ReviewPromptController {
-    private static let key = "buzz.review.positiveMoments"
+    static let key = "buzz.review.positiveMoments"
+    static let triggerAt = 5
 
     /// Call after any positive moment (successful RSVP, badge accepted, check-in, etc.).
     /// We throttle internally; Apple throttles further.
-    static func recordPositiveMoment() {
-        let defaults = UserDefaults.standard
+    /// - Returns: `true` if this call hit the trigger threshold and a review prompt was
+    ///   requested. Lets tests verify the throttle without mocking StoreKit.
+    @discardableResult
+    static func recordPositiveMoment(defaults: UserDefaults = .standard) -> Bool {
         let count = defaults.integer(forKey: key) + 1
         defaults.set(count, forKey: key)
-        // Ask at the 5th positive moment — past the "accidental tap" noise, before delight fades.
-        if count == 5 {
+        // Ask at the Nth positive moment — past the "accidental tap" noise, before delight fades.
+        if count == triggerAt {
             requestReviewIfPossible()
+            return true
         }
+        return false
     }
 
     private static func requestReviewIfPossible() {
@@ -30,7 +35,8 @@ enum ReviewPromptController {
             .first(where: { $0.activationState == .foregroundActive })
         else { return }
         AppStore.requestReview(in: scene)
+        #elseif os(macOS)
+        AppStore.requestReview()
         #endif
-        // On macOS the Mac App Store app itself handles review prompts — no-op here.
     }
 }

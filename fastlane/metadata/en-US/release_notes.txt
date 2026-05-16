@@ -1,1 +1,1 @@
-First public TestFlight of Buzz. Live event map, clubs discovery, badges, RSVPs, friends, streaks, free-food alerts, tabling kit for club officers, and 50+ pre-seeded campuses. Feedback welcome at hi@buzz.app.
+First release of Buzz. Live event map, club discovery, badges and streaks, friend RSVPs, free-food alerts, and a tabling kit for club officers — preloaded across 50+ campuses.

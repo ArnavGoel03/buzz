@@ -31,6 +31,9 @@ struct EmergencySOSButton: View {
         .frame(width: 120, height: 120)
         .shadow(color: BuzzColor.live.opacity(0.5), radius: 20)
         .gesture(longPress)
+        .help("Hold 3 seconds to send an SOS to campus safety and your emergency contacts.")
+        .accessibilityLabel("Emergency SOS")
+        .accessibilityHint("Hold for 3 seconds to send an SOS.")
     }
 
     private var longPress: some Gesture {

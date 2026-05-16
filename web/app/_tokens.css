@@ -1,0 +1,48 @@
+/* GENERATED from design/tokens.json — do not edit by hand.
+   Run `node scripts/sync-tokens.mjs` after editing tokens. */
+
+:root {
+  /* Brand */
+  --color-accent: #FFD60A;
+  --color-accent-bright: #FFE34A;
+  --color-accent-dim: #22FFD60A;
+  --color-accent-ink: #000000;
+  /* Surface */
+  --color-background: #080808;
+  --color-background-elevated: #141418;
+  --color-surface: #1C1C22;
+  --color-surface-2: #242429;
+  --color-surface-3: #2D2D34;
+  /* Border */
+  --color-border: #1F1F1F;
+  --color-border-strong: #2A2A2A;
+  --color-border-bright: #3D3D3D;
+  /* Text */
+  --color-text-primary: #F5F5F7;
+  --color-text-secondary: #A8A8AE;
+  --color-text-tertiary: #6B6B72;
+  --color-text-quaternary: #48484A;
+  /* Status */
+  --color-live: #FF3B30;
+  /* Category */
+  --color-category-party: #FF2D92;
+  --color-category-academic: #0A85FF;
+  --color-category-sports: #30D158;
+  --color-category-food: #FF9F0A;
+  --color-category-club: #BF59F2;
+  --color-category-arts: #63D2FF;
+  --color-category-music: #BFF233;
+  --color-category-study: #5E5CE6;
+  --color-category-wellness: #FF7373;
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}

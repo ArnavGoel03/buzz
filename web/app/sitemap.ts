@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
-import { mockEvents, mockOrgs } from "@/lib/mock-data";
+import { createClient } from "@/lib/supabase-server";
 
 /**
- * SEO sitemap. Priority weights tuned so Google treats Buzz as an event-discovery
- * site, not a "random Next.js app":
+ * SEO sitemap. Pulls real published events + orgs from Supabase; falls back to an
+ * empty list when Supabase isn't configured (local dev without env). Priority weights
+ * are tuned so Google treats Buzz as an event-discovery site:
  *   1.0   = landing (/)
  *   0.92  = feed (most-RSVP'd user-facing index)
- *   0.85  = per-campus landing pages + clubs index
- *   0.78  = per-event pages (high churn, huge volume in prod)
+ *   0.85  = per-campus / clubs index
+ *   0.78  = per-event pages
  *   0.70  = per-org, per-user profiles
  *   0.50  = support
  *   0.30  = legal
@@ -16,25 +17,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://buzz.app";
   const now = new Date();
 
+  const supabase = await createClient();
+
+  type EventRow = { id: string; starts_at: string };
+  type OrgRow   = { handle: string };
+  type ProfileRow = { handle: string };
+
+  const [events, orgs, profiles] = await Promise.all([
+    supabase
+      .from("events")
+      .select("id, starts_at")
+      .eq("status", "published")
+      .gt("ends_at", now.toISOString())
+      .order("starts_at", { ascending: true })
+      .limit(5000)
+      .then((r) => (r.data ?? []) as EventRow[])
+      .catch(() => [] as EventRow[]),
+    supabase
+      .from("organizations")
+      .select("handle")
+      .limit(5000)
+      .then((r) => (r.data ?? []) as OrgRow[])
+      .catch(() => [] as OrgRow[]),
+    supabase
+      .from("profiles")
+      .select("handle")
+      .eq("verified", true)
+      .not("handle", "is", null)
+      .limit(5000)
+      .then((r) => (r.data ?? []) as ProfileRow[])
+      .catch(() => [] as ProfileRow[]),
+  ]);
+
   const campuses = [
     "ucsd","ucla","ucb","stanford","mit","harvard","yale","princeton","columbia","nyu",
     "umich","utaustin","uw","uiuc","gatech","cmu","uchicago","duke","howard","spelman",
     "iit-bombay","iit-delhi","oxford","cambridge","utoronto","ubc","nus",
   ];
-
-  const eventEntries: MetadataRoute.Sitemap = mockEvents.map((e) => ({
-    url: `${base}/e/${e.id}`,
-    lastModified: new Date(e.starts_at),
-    changeFrequency: "hourly",
-    priority: 0.78,
-  }));
-
-  const orgEntries: MetadataRoute.Sitemap = mockOrgs.map((o) => ({
-    url: `${base}/o/${o.handle}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
 
   return [
     { url: `${base}/`,       lastModified: now, changeFrequency: "daily",  priority: 1.0 },
@@ -52,7 +71,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.85,
     })),
-    ...eventEntries,
-    ...orgEntries,
+    ...events.map((e) => ({
+      url: `${base}/e/${e.id}`,
+      lastModified: new Date(e.starts_at),
+      changeFrequency: "hourly" as const,
+      priority: 0.78,
+    })),
+    ...orgs.map((o) => ({
+      url: `${base}/o/${o.handle}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+    ...profiles.map((p) => ({
+      url: `${base}/u/${p.handle}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })),
   ];
 }

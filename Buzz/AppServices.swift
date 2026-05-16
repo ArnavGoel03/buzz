@@ -9,6 +9,7 @@ final class AppServices {
     private(set) var events: EventRepository
     private(set) var orgs: OrganizationRepository
     private(set) var profiles: ProfileRepository
+    private(set) var invites: InvitesRepository
     let location: LocationService
     let network: NetworkMonitor
     let calendar: CalendarService
@@ -17,6 +18,7 @@ final class AppServices {
         events: EventRepository = MockEventRepository(),
         orgs: OrganizationRepository = MockOrganizationRepository(),
         profiles: ProfileRepository = MockProfileRepository(),
+        invites: InvitesRepository = MockInvitesRepository(),
         location: LocationService = LocationService(),
         network: NetworkMonitor = NetworkMonitor(),
         calendar: CalendarService = CalendarService()
@@ -24,6 +26,7 @@ final class AppServices {
         self.events = events
         self.orgs = orgs
         self.profiles = profiles
+        self.invites = invites
         self.location = location
         self.network = network
         self.calendar = calendar
@@ -37,5 +40,6 @@ final class AppServices {
         events = MockEventRepository()
         orgs = MockOrganizationRepository()
         profiles = MockProfileRepository()
+        invites = MockInvitesRepository()
     }
 }

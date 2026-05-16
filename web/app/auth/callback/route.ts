@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolveCampus } from "@/lib/campus-domains";
+import { safeRelativePath } from "@/lib/security";
 
 // Magic-link handler. After exchanging the code for a session, we attach the
 // user's verified campus (derived from their school email domain) to their
@@ -8,7 +9,9 @@ import { resolveCampus } from "@/lib/campus-domains";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/profile";
+  // Crit-#16 patch: open-redirect via unchecked `next` (e.g. `?next=@evil.com` →
+  // `https://buzz.app@evil.com` post-auth). Only same-origin relative paths survive.
+  const next = safeRelativePath(searchParams.get("next"), "/profile");
 
   if (!code) {
     return NextResponse.redirect(`${origin}/sign-in?error=no_code`);
@@ -24,15 +27,8 @@ export async function GET(request: Request) {
   const campus = resolveCampus(email);
   if (campus) {
     try {
-      // Auto-provision the campus row if we've never seen this school before.
-      // Featured + bundled schools are pre-seeded by migrations; derived ones
-      // (new accreditation, long-tail) get created here on first student sign-in.
       await supabase.from("campuses").upsert(
-        {
-          id: campus.campusId,
-          name: campus.campusName,
-          country: campus.country,
-        },
+        { id: campus.campusId, name: campus.campusName, country: campus.country },
         { onConflict: "id", ignoreDuplicates: true }
       );
       await supabase

@@ -4,25 +4,25 @@ import Foundation
 /// entitlement + apple-app-site-association at buzz.app, so taps open in-app rather than Safari.
 enum BuzzLink {
     static let host = "buzz.app"
+    /// Safe fallback used when interpolation would produce an invalid URL. Tapping it just
+    /// opens the homepage — never a phishing surface.
+    private static let homepage = URL(string: "https://buzz.app")! // invariant: hardcoded literal
 
     static func event(_ id: UUID) -> URL {
-        URL(string: "https://\(host)/e/\(id.uuidString.lowercased())")!
+        URL(string: "https://\(host)/e/\(id.uuidString.lowercased())") ?? homepage
     }
 
     static func organization(handle: String) -> URL {
-        // VULN #102 patch: percent-encode for defense-in-depth (schema CHECK keeps the
-        // canonical form `[a-z0-9-]+`, but the link builder can't assume that's enforced
-        // when invoked from mock data, tests, or future input paths).
+        // VULN #102 patch: percent-encode for defense-in-depth.
         let safe = handle.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-        return URL(string: "https://\(host)/o/\(safe)")!
+        return URL(string: "https://\(host)/o/\(safe)") ?? homepage
     }
 
     static func profile(handle: String) -> URL {
-        // VULN #84 patch: strip ALL leading @ (not just one), then percent-encode the rest
-        // so a maliciously crafted handle can't break out of the path component.
+        // VULN #84 patch: strip ALL leading @, then percent-encode the rest.
         let stripped = handle.drop(while: { $0 == "@" })
         let safe = String(stripped).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-        return URL(string: "https://\(host)/u/\(safe)")!
+        return URL(string: "https://\(host)/u/\(safe)") ?? homepage
     }
 
     /// Before opening a scanned QR / pasted URL in-app, verify it actually belongs to Buzz —

@@ -79,15 +79,17 @@ actor SupabaseEventRepository: EventRepository {
     }
 }
 
-/// Single shared Supabase client. Lazily built from Secrets.plist on first access.
-/// Crash early if secrets are missing — better than silently falling back to a
-/// pointless "empty app" state in a real build.
+/// Single shared Supabase client. Per DEVELOP_RULES §1: don't crash on misconfig —
+/// fall back to a placeholder host so requests fail fast with network errors that
+/// views can render, instead of aborting the process on first read.
 enum BuzzSupabase {
     static let shared: SupabaseClient = {
         let urlString = SecretsLoader.require(.supabaseURL)
         let anonKey   = SecretsLoader.require(.supabaseAnon)
-        guard let url = URL(string: urlString) else {
-            preconditionFailure("SUPABASE_URL in Secrets.plist is not a valid URL: \(urlString)")
+        let fallback = URL(string: "https://invalid.local")! // invariant: hardcoded literal
+        let url = URL(string: urlString) ?? fallback
+        if url == fallback {
+            assertionFailure("SUPABASE_URL in Secrets.plist is not a valid URL: \(urlString)")
         }
         return SupabaseClient(supabaseURL: url, supabaseKey: anonKey)
     }()

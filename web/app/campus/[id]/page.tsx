@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/security";
 
 type Params = Promise<{ id: string }>;
 
@@ -89,7 +90,7 @@ export default async function CampusLanding({ params }: { params: Params }) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <main className="max-w-3xl mx-auto px-6 py-16">
         <nav className="text-sm text-[var(--color-text-tertiary)]">

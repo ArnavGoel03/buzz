@@ -9,6 +9,7 @@ struct BroadcastSheet: View {
     @State private var body_ = ""
     @State private var channel: Channel = .both
     @State private var isSending = false
+    @State private var errorMessage: String?
 
     enum Channel: String, CaseIterable, Identifiable {
         case push, email, both
@@ -82,9 +83,33 @@ struct BroadcastSheet: View {
     private func send() async {
         isSending = true
         defer { isSending = false }
-        // Real: insert into broadcasts; trigger fans out via push (FCM/APNs) + email (Postmark).
-        try? await Task.sleep(for: .milliseconds(400))
-        Haptics.success()
-        dismiss()
+        // Hits /api/broadcast — server verifies officer role + invokes the rate-limit
+        // trigger before fan-out. Surfaces failures so officers can retry; never fakes
+        // success with a haptic on a broadcast they didn't actually send.
+        do {
+            let payload: [String: Any] = [
+                "organization_id": organization.id.uuidString,
+                "channel": channel.rawValue,
+                "subject": subject,
+                "body": body_,
+            ]
+            let url = URL(string: "https://buzz.app/api/broadcast")! // invariant: hardcoded host
+            var req = URLRequest(url: url)
+            req.httpMethod = "POST"
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let jwt = try? await BuzzSupabase.shared.auth.session.accessToken {
+                req.setValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
+            }
+            req.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+            let (_, response) = try await URLSession.shared.data(for: req)
+            guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+                throw URLError(.badServerResponse)
+            }
+            Haptics.success()
+            dismiss()
+        } catch {
+            Haptics.warning()
+            errorMessage = "Couldn't send. \(error.localizedDescription)"
+        }
     }
 }

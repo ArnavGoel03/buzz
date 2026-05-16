@@ -1,10 +1,15 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Flame, CalendarCheck, Award, Settings as SettingsIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase-server";
 
 export const metadata = { title: "Your profile" };
 
+/**
+ * Authed: redirects to `/u/<handle>` looked up from the `profiles` table.
+ * Previously used `user.email?.split("@")[0]` which collides across schools and
+ * exposes the email local-part on a public URL. If no profile row exists yet,
+ * route to onboarding.
+ */
 export default async function MyProfile() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -28,5 +33,14 @@ export default async function MyProfile() {
     );
   }
 
-  redirect(`/u/${user.email?.split("@")[0] ?? "you"}`);
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("handle")
+    .eq("id", user.id)
+    .maybeSingle<{ handle: string | null }>();
+
+  if (profile?.handle) {
+    redirect(`/u/${profile.handle}`);
+  }
+  redirect("/onboarding");
 }

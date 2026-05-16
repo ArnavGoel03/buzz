@@ -99,6 +99,7 @@ struct WellnessCheckInSheet: View {
             Text("CAPS (free, confidential) at your campus · 24/7 crisis line · Peer support room schedule")
                 .font(BuzzFont.caption)
                 .foregroundStyle(BuzzColor.textSecondary)
+            // invariant: hardcoded sms scheme literal.
             Link("Text the Crisis Line (741741)", destination: URL(string: "sms:741741")!)
                 .font(BuzzFont.bodyEmphasis)
                 .foregroundStyle(BuzzColor.live)

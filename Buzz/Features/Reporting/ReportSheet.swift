@@ -8,6 +8,7 @@ struct ReportSheet: View {
     @State private var reason: ReportReason?
     @State private var notes = ""
     @State private var submitting = false
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -19,8 +20,7 @@ struct ReportSheet: View {
                             reason = r
                         } label: {
                             HStack {
-                                Text(r.displayName)
-                                    .foregroundStyle(BuzzColor.textPrimary)
+                                Text(r.displayName).foregroundStyle(BuzzColor.textPrimary)
                                 Spacer()
                                 if reason == r {
                                     Image(systemName: "checkmark.circle.fill").foregroundStyle(BuzzColor.accent)
@@ -34,8 +34,6 @@ struct ReportSheet: View {
                     TextField("Anything the moderator should know?", text: $notes, axis: .vertical)
                         .lineLimit(2...5)
                         .onChange(of: notes) { _, new in
-                            // VULN #90 patch: cap to schema's 1000-char limit at the input
-                            // layer so users don't waste typing.
                             if new.count > 1000 { notes = String(new.prefix(1000)) }
                         }
                         .listRowBackground(BuzzColor.surface)
@@ -44,6 +42,10 @@ struct ReportSheet: View {
                             .font(BuzzFont.micro)
                             .foregroundStyle(notes.count >= 1000 ? BuzzColor.live : BuzzColor.textTertiary)
                     }
+                }
+                if let errorMessage {
+                    Section { Text(errorMessage).foregroundStyle(BuzzColor.live) }
+                        .listRowBackground(BuzzColor.surface)
                 }
             }
             .scrollContentBackground(.hidden)
@@ -67,9 +69,28 @@ struct ReportSheet: View {
     private func submit() async {
         submitting = true
         defer { submitting = false }
-        // Production: insert into public.reports via Supabase client. MVP: fire-and-forget.
-        try? await Task.sleep(for: .milliseconds(200))
-        Haptics.success()
-        dismiss()
+        guard let reason else { return }
+        let (kind, id): (String, UUID) = {
+            switch target {
+            case .event(let i):        return ("event", i)
+            case .organization(let i): return ("organization", i)
+            case .profile(let i):      return ("profile", i)
+            }
+        }()
+        // Real insert into public.reports — never fire-and-forget on a safety surface.
+        let payload: [String: String] = [
+            "reason":     reason.rawValue,
+            "target_id":  id.uuidString,
+            "target_kind": kind,
+            "notes":      notes,
+        ]
+        do {
+            _ = try await BuzzSupabase.shared.from("reports").insert(payload).execute()
+            Haptics.success()
+            dismiss()
+        } catch {
+            Haptics.warning()
+            errorMessage = "Couldn't submit your report. Try again."
+        }
     }
 }

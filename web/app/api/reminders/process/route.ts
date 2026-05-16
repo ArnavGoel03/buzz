@@ -1,39 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "node:crypto";
 
 /**
- * Vercel Cron handler — fires every 5 minutes (see vercel.json).
+ * Vercel Cron handler — fires per `vercel.json` schedule (currently daily).
  *
  * Picks pending rows from `event_reminders` whose `fires_at <= now()` and `fired = false`,
  * looks up RSVPs for that event, sends a push to each, marks the reminder fired.
  *
- * Idempotent: an UPDATE in a single statement flips `fired = true` so a re-run during
- * a deploy or retry doesn't double-send.
+ * Auth: requires `Authorization: Bearer ${CRON_SECRET}`, compared timing-safe so the
+ * prefix can't leak via short-circuit equality. Was previously gated on
+ * `NODE_ENV === "production"`, leaving preview deploys wide open.
  */
 
-export const runtime = "nodejs";    // not edge — needs Postmark/FCM SDKs
+export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
-  // Vercel signs cron requests; verify in production.
-  if (process.env.NODE_ENV === "production") {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-      return new NextResponse("unauthorized", { status: 401 });
-    }
-  }
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return new NextResponse("misconfigured", { status: 503 });
 
-  // Production query (parameterized via Supabase service role):
+  const got = req.headers.get("authorization")?.replace(/^Bearer\s+/, "");
+  if (typeof got !== "string" || got.length !== secret.length) {
+    return new NextResponse("unauthorized", { status: 401 });
+  }
+  let ok = false;
+  try {
+    ok = crypto.timingSafeEqual(Buffer.from(got), Buffer.from(secret));
+  } catch { /* malformed; ok stays false */ }
+  if (!ok) return new NextResponse("unauthorized", { status: 401 });
+
+  // Production query (via Supabase service role):
   //   update event_reminders set fired = true
   //     where fires_at <= now() and fired = false
   //   returning event_id, reminder_kind;
-  // Then for each returned (event_id, reminder_kind):
-  //   - fetch event title, starts_at, location_name
-  //   - fetch RSVPs where status='going'
-  //   - resolve push tokens from auth_identities (or store push_tokens table)
-  //   - send via APNs/FCM with copy like "Doors open in 30 — Warren Quad Takeover"
-
-  return NextResponse.json({
-    ok: true,
-    note: "Wire to Supabase + APNs/FCM. Returns count of reminders fired.",
-    fired: 0,
-  });
+  // Then for each row: resolve RSVPs + push tokens, POST /api/push/send with Bearer CRON_SECRET.
+  return NextResponse.json({ ok: true, fired: 0 });
 }

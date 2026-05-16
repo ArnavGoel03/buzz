@@ -21,8 +21,8 @@ struct CreateEventSheet: View {
     @State private var title = ""
     @State private var summary = ""
     @State private var category: EventCategory = .club
-    @State private var startsAt: Date = .defaultStart()
-    @State private var endsAt: Date = .defaultEnd()
+    @State private var startsAt: Date = EventTimeDefaults.defaultStart()
+    @State private var endsAt: Date = EventTimeDefaults.defaultEnd()
     @State private var locationName = ""
     @State private var coordinate: CLLocationCoordinate2D = .init(latitude: 32.8812, longitude: -117.2374)
     @State private var capacity: String = ""
@@ -53,6 +53,7 @@ struct CreateEventSheet: View {
         .sheet(isPresented: $showingCoHostPicker) {
             if let org = hostOrganization {
                 CoHostPickerSheet(selected: $coHostIDs, currentOrgID: org.id)
+                    .presentationDetents([.medium, .large])
             }
         }
     }
@@ -206,17 +207,3 @@ struct CreateEventSheet: View {
     }
 }
 
-private extension Date {
-    static func defaultStart() -> Date {
-        let cal = Calendar.current
-        let future = Date().addingTimeInterval(3600)
-        let comps = cal.dateComponents([.year, .month, .day, .hour, .minute], from: future)
-        var rounded = comps
-        rounded.minute = (comps.minute ?? 0) >= 30 ? 30 : 0
-        return cal.date(from: rounded) ?? future
-    }
-
-    static func defaultEnd() -> Date {
-        defaultStart().addingTimeInterval(7200)
-    }
-}

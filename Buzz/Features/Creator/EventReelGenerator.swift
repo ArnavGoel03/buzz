@@ -1,12 +1,42 @@
 import SwiftUI
+#if os(iOS)
 import AVFoundation
+import Photos
+#endif
 
 /// Round 10 — auto-generate a shareable ~15s reel from event photos. Picks up to 8
 /// photos from `event_photos`, cross-fades them with a beat-matched cadence, burns in
 /// event metadata (title + date) on a last-card. Output saved to the user's camera roll
-/// for Instagram/TikTok. Full AVFoundation pipeline lives behind this view model —
-/// for MVP the view shows the preview grid + "Generate" CTA.
+/// for Instagram/TikTok. iOS-only — relies on AVFoundation's `UIImage` pipeline and
+/// `PHPhotoLibrary`. On macOS we render an explanatory placeholder.
 struct EventReelGenerator: View {
+    let event: Event
+    let photoURLs: [URL]
+
+    var body: some View {
+        #if os(iOS)
+        EventReelGeneratorIOS(event: event, photoURLs: photoURLs)
+        #else
+        VStack(spacing: BuzzSpacing.md) {
+            Image(systemName: "iphone.gen3")
+                .font(.system(size: 36, weight: .semibold))
+                .foregroundStyle(BuzzColor.textTertiary)
+            Text("Reel export — iPhone only")
+                .font(BuzzFont.headline)
+            Text("Open this event in the Buzz app on your iPhone to generate and share a 15-second reel.")
+                .font(BuzzFont.caption)
+                .foregroundStyle(BuzzColor.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(BuzzSpacing.xl)
+        .rimCard()
+        #endif
+    }
+}
+
+#if os(iOS)
+private struct EventReelGeneratorIOS: View {
     let event: Event
     let photoURLs: [URL]
     @State private var isRendering = false
@@ -63,3 +93,4 @@ struct EventReelGenerator: View {
         rendered = true
     }
 }
+#endif

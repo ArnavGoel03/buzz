@@ -2,13 +2,15 @@ import SwiftUI
 
 /// ScaleEffect + haptic-on-press modifier. Gives every interactive element a
 /// "there's a real object underneath my finger" tactile feel. iOS pendant to
-/// the web's magnetic button.
+/// the web's magnetic button. No-op on macOS — the platform's native button feel
+/// already provides press feedback and `LongPressGesture` shows no hover state.
 struct MagneticPressable: ViewModifier {
     @GestureState private var pressed = false
     var scale: CGFloat = 0.96
     var haptic: Bool = true
 
     func body(content: Content) -> some View {
+        #if os(iOS)
         content
             .scaleEffect(pressed ? scale : 1)
             .animation(.spring(response: 0.28, dampingFraction: 0.65), value: pressed)
@@ -19,6 +21,9 @@ struct MagneticPressable: ViewModifier {
                         state = true
                     }
             )
+        #else
+        content
+        #endif
     }
 }
 

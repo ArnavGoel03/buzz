@@ -18,7 +18,8 @@ const homeJsonLd = {
       applicationCategory: "SocialNetworkingApplication",
       description: "Live discovery of college events happening tonight on and around your campus.",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", ratingCount: "1" },
+      // aggregateRating removed — "4.9 of 1" is the kind of dishonesty Google flags.
+      // Re-add when there's a real review pipeline backing it.
       url: "https://buzz.app",
     },
     { "@type": "Organization", name: "Buzz", url: "https://buzz.app", logo: "https://buzz.app/icon-512.png" },

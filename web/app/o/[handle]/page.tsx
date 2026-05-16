@@ -7,6 +7,7 @@ import FollowButton from "@/components/FollowButton";
 import OpenInApp from "@/components/OpenInApp";
 import OrgHero from "@/components/OrgHero";
 import OrgExternalLinks from "@/components/OrgExternalLinks";
+import { safeJsonLd } from "@/lib/security";
 
 type Params = Promise<{ handle: string }>;
 
@@ -55,7 +56,7 @@ export default async function OrgDetail({ params }: { params: Params }) {
 
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
 
       <OrgHero org={org} />
 

@@ -1,33 +1,58 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { mockOrg } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase-server";
 
 type Params = Promise<{ handle: string }>;
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
-// Officer-only web dashboard. Bulk member ops, broadcast composer, analytics, drafts
-// queue (from inbound email), webhook config — anything that's painful on a phone.
-// Auth-gated server-side once Supabase is wired (verify session.user is officer of org).
+// Officer-only web dashboard. High-#22 patch: previously rendered for anyone who knew the
+// URL. Now requires an authenticated session AND active officer membership of `handle`.
 export default async function AdminDashboard({ params }: { params: Params }) {
   const { handle } = await params;
-  const org = mockOrg(handle);
+  // Web #35 / sanity: bound the path param shape so a malicious handle can't smuggle HTML
+  // characters into the embed snippet below.
+  if (!/^[a-z0-9-]{1,40}$/.test(handle)) notFound();
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect(`/sign-in?next=/admin/${handle}`);
+
+  // Membership uses organization_id (UUID); resolve the handle first.
+  const { data: org } = await supabase
+    .from("organizations")
+    .select("id")
+    .eq("handle", handle)
+    .maybeSingle();
+  if (!org) notFound();
+  const { data: officer } = await supabase
+    .from("memberships")
+    .select("role")
+    .eq("profile_id", user.id)
+    .eq("organization_id", org.id)
+    .in("role", ["president", "founder", "vicePresident", "officer"])
+    .maybeSingle();
+  if (!officer) notFound();
+
+  const orgView = mockOrg(handle);
 
   return (
     <main className="min-h-screen px-6 py-12 max-w-5xl mx-auto">
       <header className="flex items-center gap-4">
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center font-black"
-          style={{ background: org.accent_hex, color: "#000" }}
+          style={{ background: orgView.accent_hex, color: "#000" }}
         >
-          {org.name[0]}
+          {orgView.name[0]}
         </div>
         <div className="flex-1">
           <div className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-tertiary)]">
             Admin
           </div>
           <h1 className="text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>
-            {org.name}
+            {orgView.name}
           </h1>
         </div>
         <Link

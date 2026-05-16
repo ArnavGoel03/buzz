@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { VERSION } from "@/lib/version";
 import { usePathname } from "next/navigation";
 import {
   Compass, Map as MapIcon, Users, MessageCircle, User, Settings, Search, Bell,
@@ -64,6 +65,12 @@ function TopBar() {
           <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[var(--color-live)]" />
         </button>
         <Link
+          href="/download"
+          className="hidden md:inline-flex h-9 px-3 items-center rounded-lg border border-[var(--color-border)] hover:border-[var(--color-accent)] text-sm font-semibold"
+        >
+          Download
+        </Link>
+        <Link
           href="/sign-in"
           className="hidden md:inline-flex h-9 px-4 items-center rounded-lg bg-[var(--color-accent)] text-black font-semibold text-sm"
         >
@@ -89,7 +96,7 @@ function Sidebar() {
         ))}
       </div>
       <div className="mt-3 px-3 font-mono text-[10px] text-[var(--color-text-quaternary)] uppercase tracking-[0.18em]">
-        v0.1 · built at UCSD
+        v{VERSION} · built at UCSD
       </div>
     </nav>
   );

@@ -45,11 +45,13 @@ struct InviteListBuilderSheet: View {
                     sources.insert(.customPerson(profileID: p.id, displayName: p.displayName, email: p.email))
                 }
             }
+            .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showingPastEventPicker) {
             PastEventPickerSheet(events: pastEvents) { e in
                 sources.insert(.pastEventRSVPs(eventID: e.id, eventTitle: e.title, rsvpCount: e.rsvpCount))
             }
+            .presentationDetents([.medium, .large])
         }
     }
 

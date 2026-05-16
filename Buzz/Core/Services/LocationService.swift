@@ -87,4 +87,10 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // Silent fallback — we keep the default coordinate.
     }
+
+    deinit {
+        // Symmetric with the addObserver calls in init; without this, repeated init
+        // (account-switch reset, tests) leaks UIApplication observers.
+        NotificationCenter.default.removeObserver(self)
+    }
 }

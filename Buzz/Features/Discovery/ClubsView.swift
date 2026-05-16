@@ -5,9 +5,9 @@ struct ClubsView: View {
     @Environment(AuthSession.self) private var auth
     @State private var viewModel: ClubsViewModel?
 
+    // Adaptive grid: 2 cols on iPhone, 3 cols on iPad portrait, 3-4 on iPad landscape / Mac.
     private let columns = [
-        GridItem(.flexible(), spacing: BuzzSpacing.md),
-        GridItem(.flexible(), spacing: BuzzSpacing.md)
+        GridItem(.adaptive(minimum: 160), spacing: BuzzSpacing.md)
     ]
 
     var body: some View {

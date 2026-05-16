@@ -16,10 +16,11 @@ export function eventUrgency(startsAt: string, endsAt?: string | null, isLive?: 
 }
 
 export function urgencyColor(u: EventUrgency): string {
+  // CSS variables sourced from `_tokens.css` (generated from design/tokens.json).
   switch (u) {
-    case "live":     return "rgb(255,69,51)";
-    case "starting": return "rgb(255,149,0)";
-    case "soon":     return "rgb(48,209,88)";
+    case "live":     return "var(--color-live)";             // #FF3B30
+    case "starting": return "var(--color-category-food)";    // #FF9F0A
+    case "soon":     return "var(--color-category-sports)";  // #30D158
     case "upcoming": return "rgba(255,255,255,0.12)";
     case "past":     return "rgba(255,255,255,0.06)";
   }

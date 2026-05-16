@@ -3,7 +3,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { fontDisplay, fontSans, fontMono } from "./fonts";
-import { PWAInstaller } from "@/components/PWAInstaller";
 import AppShell from "@/components/AppShell";
 import MobileTabBar from "@/components/MobileTabBar";
 import AppBanner from "@/components/AppBanner";
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://buzz.app"),
   title: { default: "Buzz — every college event, one feed", template: "%s · Buzz" },
   description:
-    "Live discovery for college students. Parties, clubs, sports, free food, and academic events happening tonight on and around campus. Free on iOS, macOS, and web.",
+    "Live discovery for college students. Parties, clubs, sports, free food, and academic events happening tonight on and around campus. Free on iOS, macOS, and Android.",
   keywords: [
     "college events", "university events", "campus events", "college app",
     "rush week", "greek life", "college parties", "student app", "free food",
@@ -27,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Buzz",
     title: "Buzz — every college event, one feed",
-    description: "Live discovery for college students. Free. iOS, macOS, and web.",
+    description: "Live discovery for college students. Free. iOS, macOS, and Android.",
     url: "https://buzz.app",
     locale: "en_US",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Buzz — college events on a map" }],
@@ -38,12 +37,13 @@ export const metadata: Metadata = {
     description: "Live discovery for college students.",
     images: ["/og.png"],
   },
-  manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Buzz" },
   category: "social",
   robots: {
     index: true, follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
 };
 
@@ -63,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-itunes-app" content="app-id=TBD" />
       </head>
       <body className="font-sans">
+        <a href="#main" className="skip-link">Skip to content</a>
         <ScrollProgress />
         <CursorGlow />
         <AppBanner />
@@ -70,7 +71,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileTabBar />
         <CommandPalette />
         <KeyboardShortcuts />
-        <PWAInstaller />
         <Analytics />
         <SpeedInsights />
       </body>

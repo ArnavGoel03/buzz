@@ -15,9 +15,8 @@ The all-in-one college companion. Live discovery, social network, club operating
 | iOS + iPadOS | SwiftUI, iOS 17+ | ✅ Multiplatform single target |
 | macOS | SwiftUI, macOS 14+ | ✅ Native (no Catalyst) |
 | Web | Next.js 15, Tailwind 4 | ✅ Landing + link previews + admin dashboard |
-| PWA (Android, Chromebook, any browser) | Service worker + manifest | ✅ Installable, push-capable, offline shell |
+| Android | Jetpack Compose | 🟡 P0 surface (auth, feed, event, clubs, profile, settings, deep links, SOS) |
 | App Clip | SwiftUI | ✅ Stubbed, wired for AirDrop/QR/NFC handoff |
-| Android native | Jetpack Compose | 🟡 Deferred; PWA covers this until we have capacity |
 
 ## Stack
 
@@ -26,7 +25,7 @@ The all-in-one college companion. Live discovery, social network, club operating
 | Backend | Supabase (Postgres + PostGIS + Realtime + Storage + Auth) |
 | Auth | Multi-provider: Apple, Google, email OTP, phone OTP, verified `.edu` as fallback |
 | Map | MapKit (native both platforms) |
-| Push | APNs + FCM + Web Push (VAPID), one fan-out endpoint |
+| Push | APNs + FCM, one fan-out endpoint |
 | Payments | Stripe Connect (platform fee per transaction) |
 | Email | Postmark/Mailgun inbound + Resend outbound |
 | AR | ARKit + RealityKit (iOS-only gated) |

@@ -9,6 +9,7 @@ import RSVPButton from "@/components/RSVPButton";
 import EventMap from "@/components/EventMap";
 import OpenInApp from "@/components/OpenInApp";
 import EventHero from "@/components/EventHero";
+import { safeJsonLd } from "@/lib/security";
 
 type Params = Promise<{ id: string }>;
 
@@ -43,7 +44,9 @@ export default async function EventDetail({ params }: { params: Params }) {
   const { color, soft } = categoryColor(event.category);
   void color; void soft; // used by legacy code paths; kept for future referrals
 
-  const jsonLd = {
+  // Enriched per Google Event Rich Results guidelines: image, offers (free or paid),
+  // address, performer. Higher likelihood of card surfacing in Search + Discover.
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
@@ -52,14 +55,38 @@ export default async function EventDetail({ params }: { params: Params }) {
     endDate: event.ends_at ?? undefined,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    location: { "@type": "Place", name: event.location_name },
-    organizer: { "@type": "Organization", name: event.host_name },
+    image: [`https://buzz.app/api/poster/${id}`],
+    location: {
+      "@type": "Place",
+      name: event.location_name,
+      address: { "@type": "PostalAddress", addressLocality: event.location_name },
+      ...(event.latitude != null && event.longitude != null
+        ? { geo: { "@type": "GeoCoordinates", latitude: event.latitude, longitude: event.longitude } }
+        : {}),
+    },
+    organizer: {
+      "@type": "Organization",
+      name: event.host_name,
+      ...(event.host_handle ? { url: `https://buzz.app/o/${event.host_handle}` } : {}),
+    },
+    performer: { "@type": "Organization", name: event.host_name },
+    // Most Buzz events are free. Paid ones go through Stripe (ticket_types join, separate
+    // surface). Defaulting price to "0" keeps the Event Rich Result eligible without
+    // promising a price we can't verify here.
+    offers: {
+      "@type": "Offer",
+      url: `https://buzz.app/e/${id}`,
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      validFrom: event.starts_at,
+    },
     url: `https://buzz.app/e/${id}`,
   };
 
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
 
       <EventHero event={event} />
 

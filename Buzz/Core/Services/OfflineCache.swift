@@ -10,7 +10,9 @@ actor OfflineCache {
 
     private lazy var root: URL = {
         let fm = FileManager.default
-        let base = fm.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        // Rule §1: no `.first!`. On sandboxed daemons / restored sims this can be empty;
+        // fall back to the always-available temporary directory instead of crashing.
+        let base = fm.urls(for: .cachesDirectory, in: .userDomainMask).first ?? fm.temporaryDirectory
         let dir = base.appendingPathComponent("buzz-cache", isDirectory: true)
         try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir

@@ -70,12 +70,18 @@ struct TicketPurchaseSheet: View {
     private func checkout(_ type: TicketType) async {
         isCheckingOut = true
         defer { isCheckingOut = false }
-        // Production: POST to /api/tickets/checkout → get Stripe Checkout URL → open in
-        // ASWebAuthenticationSession. When the webhook finalizes the ticket, the app
-        // refreshes via a Supabase realtime subscription on `tickets`.
+        // Release builds refuse to fake a purchase. When the Stripe Checkout integration
+        // lands this branch wires through to /api/tickets/checkout + opens the URL in
+        // ASWebAuthenticationSession; until then we surface an honest "not yet" state.
+        #if DEBUG
         try? await Task.sleep(for: .milliseconds(300))
         Haptics.success()
         dismiss()
+        #else
+        Haptics.warning()
+        // No-op — leave the sheet open so the user can dismiss. A real implementation
+        // would also surface a toast: "Tickets aren't live yet on this campus."
+        #endif
     }
 }
 

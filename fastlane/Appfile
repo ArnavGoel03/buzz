@@ -1,4 +1,4 @@
-app_identifier("com.buzz.app")
+app_identifier("com.arnavgoel.buzz")
 apple_id(ENV["APPLE_ID"])          # your Apple Developer account email
 team_id(ENV["APPLE_TEAM_ID"])      # your 10-char team id
 

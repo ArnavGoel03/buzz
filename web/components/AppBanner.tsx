@@ -13,7 +13,11 @@ export default function AppBanner() {
   const [label, setLabel] = useState("Get the iPhone app");
 
   useEffect(() => {
-    if (localStorage.getItem("buzz:banner-dismissed") === "1") return;
+    // Safari Private Mode / cookie-blocked browsers throw on `localStorage` access;
+    // wrap so a SecurityError doesn't take down the whole banner.
+    try {
+      if (localStorage.getItem("buzz:banner-dismissed") === "1") return;
+    } catch { /* no-op — show the banner if we can't check the flag */ }
     const p = detectPlatform();
     if (p === "android") {
       setUrl(PLAY_STORE_URL);
@@ -31,7 +35,7 @@ export default function AppBanner() {
   }, []);
 
   function dismiss() {
-    localStorage.setItem("buzz:banner-dismissed", "1");
+    try { localStorage.setItem("buzz:banner-dismissed", "1"); } catch { /* see above */ }
     setVisible(false);
   }
 

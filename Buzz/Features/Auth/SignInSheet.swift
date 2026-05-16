@@ -111,11 +111,10 @@ struct SignInSheet: View {
             .buttonStyle(.plain)
             .padding(.top, BuzzSpacing.xs)
             #else
-            // Production: wire `GIDSignIn.sharedInstance.signIn(...)` for Google and a real
-            // email-OTP UI before re-enabling these.
-            Text("More sign-in options coming soon")
-                .font(BuzzFont.caption)
-                .foregroundStyle(BuzzColor.textTertiary)
+            // Release builds show only SIWA. The "more options coming soon" placeholder
+            // text was removed — App Store §4.2.2 / §2.1 rejects visible "coming soon"
+            // copy. Wire `GIDSignIn` + email OTP before re-introducing affordances.
+            EmptyView()
             #endif
         }
     }

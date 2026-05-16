@@ -18,26 +18,32 @@ export default function RSVPButton({ eventId }: { eventId: string }) {
     if (loading) return;
     setLoading(true);
     const next = !going;
-    if (next) {
-      setBursting(true);
-      burstId.current += 1;
-      setTimeout(() => setBursting(false), 800);
-    }
-    setGoing(next);
+    setGoing(next); // optimistic
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        const key = "buzz:rsvp:pending";
-        const pending = JSON.parse(localStorage.getItem(key) || "[]");
-        localStorage.setItem(key, JSON.stringify([...new Set([...pending, eventId])]));
+        // Pending RSVPs are kept locally and resolved after sign-in. Wrap storage in
+        // try/catch — Safari private mode + cookie-blocked browsers throw on setItem.
+        try {
+          const key = "buzz:rsvp:pending";
+          const pending = JSON.parse(localStorage.getItem(key) || "[]");
+          localStorage.setItem(key, JSON.stringify([...new Set([...pending, eventId])]));
+        } catch {}
       } else if (next) {
         await supabase.from("rsvps").upsert({ event_id: eventId, user_id: user.id, status: "going" });
       } else {
         await supabase.from("rsvps").delete().match({ event_id: eventId, user_id: user.id });
       }
+      // Confetti only on success — previously fired before the network resolved, so
+      // failed RSVPs got celebrated.
+      if (next) {
+        setBursting(true);
+        burstId.current += 1;
+        setTimeout(() => setBursting(false), 800);
+      }
     } catch {
-      setGoing(!next);
+      setGoing(!next); // roll back optimistic update
     } finally {
       setLoading(false);
     }

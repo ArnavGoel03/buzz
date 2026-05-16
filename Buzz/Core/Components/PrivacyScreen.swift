@@ -11,7 +11,9 @@ struct PrivacyScreen: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay {
-                if scenePhase != .active {
+                // Trigger on .background only — `.inactive` on macOS means "window unfocused"
+                // (every app switch), which would flash the overlay constantly.
+                if scenePhase == .background {
                     ZStack {
                         BuzzColor.background.ignoresSafeArea()
                         Image(systemName: "sparkles")

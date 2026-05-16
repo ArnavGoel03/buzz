@@ -27,6 +27,7 @@ struct SettingsView: View {
                 .listRowBackground(BuzzColor.surface)
 
                 Section("Legal") {
+                    // invariant: hardcoded https literals, validated by URL-parse test.
                     Link("Privacy Policy", destination: URL(string: "https://buzz.app/legal/privacy")!)
                     Link("Terms of Service", destination: URL(string: "https://buzz.app/legal/terms")!)
                     Link("Support", destination: URL(string: "https://buzz.app/support")!)
@@ -51,7 +52,8 @@ struct SettingsView: View {
                 .listRowBackground(BuzzColor.surface)
 
                 Section {
-                    Text("Buzz v0.1.0 · Built at a US college for US colleges.")
+                    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0"
+                    Text("Buzz v\(version) · Built at a US college for US colleges.")
                         .font(BuzzFont.caption)
                         .foregroundStyle(BuzzColor.textTertiary)
                 }

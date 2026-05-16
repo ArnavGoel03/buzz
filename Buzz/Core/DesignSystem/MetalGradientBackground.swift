@@ -1,31 +1,36 @@
 import SwiftUI
 
-/// Animated Metal shader background. Matches the web's WebGL shader visual —
-/// flowing noise-warped gradient (deep blue → magenta → yellow highlights) that
-/// runs on the GPU at <1ms per frame on Apple silicon.
+/// Animated Metal shader background. Matches the web's WebGL shader visual.
+/// Honors Reduce Motion, Reduce Transparency, and Low Power Mode — collapses to a
+/// static `BuzzColor.background` fill in any of those cases, per DEVELOP_RULES §8.
 struct MetalGradientBackground: View {
-    let start: Date
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @State private var start = Date()
     var intensity: Double = 1.0
 
-    init(intensity: Double = 1.0) {
-        self.start = Date()
-        self.intensity = intensity
+    private var shouldFlatten: Bool {
+        reduceMotion || reduceTransparency || ProcessInfo.processInfo.isLowPowerModeEnabled
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { timeline in
-            let elapsed = timeline.date.timeIntervalSince(start)
-            GeometryReader { proxy in
-                Rectangle()
-                    .fill(BuzzColor.background)
-                    .colorEffect(
-                        ShaderLibrary.buzzGradient(
-                            .float2(proxy.size.width, proxy.size.height),
-                            .float(elapsed * intensity)
+        if shouldFlatten {
+            BuzzColor.background.ignoresSafeArea()
+        } else {
+            TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { timeline in
+                let elapsed = timeline.date.timeIntervalSince(start)
+                GeometryReader { proxy in
+                    Rectangle()
+                        .fill(BuzzColor.background)
+                        .colorEffect(
+                            ShaderLibrary.buzzGradient(
+                                .float2(proxy.size.width, proxy.size.height),
+                                .float(elapsed * intensity)
+                            )
                         )
-                    )
+                }
             }
+            .ignoresSafeArea()
         }
-        .ignoresSafeArea()
     }
 }

@@ -30,5 +30,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  // Skip the auth refresh on hot, public, signature-gated routes so each request
+  // doesn't pay a Supabase `getUser()` cost (Web Audit #11). Cookie-gated routes
+  // still match.
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|api/poster/|api/tickets/webhook|api/inbound-email|api/webhook-relay|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };

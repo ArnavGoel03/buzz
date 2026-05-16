@@ -1,32 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
+import { assertPublicHttpsUrl, verifySharedSecret } from "@/lib/security";
 
 /**
- * Triggered by a Supabase Database Webhook on `events` insert/update where
- * `status = 'published'`. Looks up registered `webhook_endpoints` for the org and
- * fans out an announcement to Discord / Slack / generic JSON consumers.
+ * Supabase database-webhook receiver. Triggered on `events` insert/update where
+ * `status = 'published'`. Fans out to registered Discord/Slack/generic endpoints.
  *
- *   POST /api/webhook-relay
- *   Body: Supabase webhook payload
+ * Crit-#17 patch: the route was unauthenticated, so anyone could forge a Supabase
+ * webhook payload and use Buzz as a relay. We now require a shared `SUPABASE_WEBHOOK_SECRET`
+ * header, AND every outbound delivery URL passes the SSRF guard so a malicious officer
+ * can't register `http://169.254.169.254/...` and trigger it remotely.
  */
 export async function POST(req: NextRequest) {
+  if (!verifySharedSecret(req, "SUPABASE_WEBHOOK_SECRET")) {
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+
   const payload = (await req.json().catch(() => null)) as
     | { record?: { id: string; title: string; organization_id: string; starts_at: string; status: string } }
     | null;
-
   const event = payload?.record;
   if (!event || event.status !== "published") {
     return NextResponse.json({ ok: true, skipped: true });
   }
 
-  // Real impl: fetch all webhook_endpoints for event.organization_id from Supabase, then
-  // POST a kind-specific payload to each URL in parallel. We log failures but never block
-  // the publish flow — this is best-effort fan-out.
-  const endpoints = MOCK_ENDPOINTS_FOR_DEV;
+  const endpoints: Endpoint[] = MOCK_ENDPOINTS_FOR_DEV;
 
-  const results = await Promise.allSettled(
-    endpoints.map((ep) => deliverTo(ep, event))
-  );
-
+  const results = await Promise.allSettled(endpoints.map((ep) => deliverTo(ep, event)));
   return NextResponse.json({
     ok: true,
     event_id: event.id,
@@ -36,16 +35,29 @@ export async function POST(req: NextRequest) {
 }
 
 type Endpoint = { kind: "discord" | "slack" | "generic"; url: string };
-
 const MOCK_ENDPOINTS_FOR_DEV: Endpoint[] = [];
 
 async function deliverTo(
   ep: Endpoint,
   event: { id: string; title: string; starts_at: string }
 ): Promise<void> {
+  // SSRF guard before every outbound fetch — protects against an officer registering a
+  // metadata/loopback URL that we'd otherwise POST credentials-bearing payloads to.
+  let target: URL;
+  try { target = await assertPublicHttpsUrl(ep.url); }
+  catch { throw new Error(`blocked_${ep.kind}_url`); }
+
+  // Defense-in-depth: validate per-kind hostnames per Red-team #18.
+  const host = target.hostname.toLowerCase();
+  if (ep.kind === "discord" && !host.endsWith("discord.com") && !host.endsWith("discordapp.com")) {
+    throw new Error("discord_host_mismatch");
+  }
+  if (ep.kind === "slack" && !host.endsWith("slack.com")) {
+    throw new Error("slack_host_mismatch");
+  }
+
   const url = `https://buzz.app/e/${event.id}`;
   let body: object;
-
   switch (ep.kind) {
     case "discord":
       body = {
@@ -68,10 +80,15 @@ async function deliverTo(
       break;
   }
 
-  const res = await fetch(ep.url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`webhook ${ep.kind} ${res.status}`);
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), 5_000);
+  try {
+    const res = await fetch(target, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`webhook ${ep.kind} ${res.status}`);
+  } finally { clearTimeout(t); }
 }

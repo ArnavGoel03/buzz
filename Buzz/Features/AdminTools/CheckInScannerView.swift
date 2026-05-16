@@ -51,7 +51,12 @@ struct CheckInScannerView: View {
     private var qrImage: some View {
         // The QR encodes a signed check-in URL like
         // `buzz://checkin/<event_id>?token=<HMAC>`. Server validates the HMAC before
-        // inserting into event_check_ins. Real signing wired with backend.
+        // inserting into event_check_ins.
+        //
+        // Until the server-signed token endpoint is wired, this view is DEBUG-only;
+        // release builds render a "not yet available" placeholder so attendees can't
+        // scan an unsigned QR and self-check-in.
+        #if DEBUG
         let url = "buzz://checkin/\(event.id.uuidString)?token=DEV_STUB"
         return Group {
             if let img = QRCode.image(for: url) {
@@ -60,6 +65,17 @@ struct CheckInScannerView: View {
                 Image(systemName: "qrcode").resizable().scaledToFit()
             }
         }
+        #else
+        return VStack(spacing: BuzzSpacing.sm) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 48))
+                .foregroundStyle(BuzzColor.textTertiary)
+            Text("Check-in QR is coming in the next update.")
+                .font(BuzzFont.caption)
+                .foregroundStyle(BuzzColor.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        #endif
     }
 
     private var stats: some View {

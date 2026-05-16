@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="buzz_background">#FF080808</color>
+    <color name="buzz_surface">#FF141418</color>
+    <color name="buzz_purple">#FFC850FF</color>
+    <color name="buzz_pink">#FFFF4FA8</color>
+    <color name="buzz_text_primary">#FFF5F5F7</color>
+</resources>

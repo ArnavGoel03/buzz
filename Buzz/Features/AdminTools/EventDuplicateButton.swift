@@ -28,6 +28,7 @@ struct EventDuplicateButton: View {
                 hostOrganization: hostOrganization,
                 template: source
             )
+            .presentationDetents([.large])
             .iosDragIndicator()
             .presentationBackground(.ultraThinMaterial)
         }

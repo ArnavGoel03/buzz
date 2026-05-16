@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase-server";
 
 /**
- * Sends a broadcast (push / email / both) to org members. Server fans out to:
- *   - APNs / FCM for push
- *   - Postmark / Resend for email
- * Server-side rate limiting via the `enforce_broadcast_rate` trigger (5/24h per org).
+ * Officer-triggered broadcast (push / email / both) to org members.
  *
- *   POST /api/broadcast
- *   { organization_id, channel: "push"|"email"|"both", subject, body, event_id? }
+ * Crit-#9 patch: previously trusted the client-supplied `organization_id` with no auth.
+ * Anonymous callers could fan out at any org. We now require an authenticated session
+ * AND active officer membership of `organization_id` before the DB insert (the rate-limit
+ * trigger then enforces 5/24h).
  */
 export async function POST(req: NextRequest) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+
   const { organization_id, channel, subject, body, event_id } =
     (await req.json().catch(() => ({}))) as Partial<{
       organization_id: string;
@@ -25,20 +29,22 @@ export async function POST(req: NextRequest) {
   if (subject.length > 120 || body.length > 2000) {
     return NextResponse.json({ ok: false, error: "too_long" }, { status: 413 });
   }
+  if (!["push", "email", "both"].includes(channel)) {
+    return NextResponse.json({ ok: false, error: "bad_channel" }, { status: 400 });
+  }
+
+  const { data: officer } = await supabase
+    .from("memberships")
+    .select("role")
+    .eq("profile_id", user.id)
+    .eq("organization_id", organization_id)
+    .in("role", ["president", "founder", "vicePresident", "officer"])
+    .maybeSingle();
+  if (!officer) return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
 
   // Production:
-  //   1. Verify caller is an active officer of `organization_id` via Supabase JWT.
-  //   2. Insert into `broadcasts` table (rate limit enforced by trigger).
-  //   3. Pull active member profile_ids; resolve push tokens + email addresses.
-  //   4. Fan out via APNs/FCM/Postmark in parallel batches (background worker, not inline).
-  //
-  // For this scaffold we just echo the intent.
-  return NextResponse.json({
-    ok: true,
-    organization_id,
-    channel,
-    event_id: event_id ?? null,
-    estimatedRecipients: 412,
-    note: "Wire to APNs/FCM/Postmark; insert into public.broadcasts.",
-  });
+  //   1. Insert into `broadcasts` table (rate limit enforced by trigger).
+  //   2. Pull active member profile_ids; resolve push tokens + email addresses.
+  //   3. Fan out via /api/push/send (Bearer CRON_SECRET) + Postmark in parallel batches.
+  return NextResponse.json({ ok: true, organization_id, channel, event_id: event_id ?? null });
 }

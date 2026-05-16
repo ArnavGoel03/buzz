@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Don't back up the Supabase auth token DataStore — let users re-authenticate
+         on a new device rather than pulling a stale token across. -->
+    <exclude domain="sharedpref" path="auth.preferences_pb" />
+</full-backup-content>

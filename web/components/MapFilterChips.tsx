@@ -5,15 +5,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Music, Pizza, Users, Medal, BookOpen, Briefcase } from "lucide-react";
 import type { EventCategory } from "@/lib/types";
 
+// Hues sourced from design/tokens.json via `categoryColor`. Hardcoded here only for
+// the icon-tint reference; if a token changes, update `categories.ts` and re-mirror.
 const CHIPS: { cat: EventCategory | "all"; label: string; icon: React.ReactNode; color: string }[] = [
   { cat: "all",      label: "All",      icon: <Flame size={12} />,      color: "#FFD60A" },
   { cat: "party",    label: "Parties",  icon: <Music size={12} />,      color: "#FF2D92" },
-  { cat: "free_food",label: "Free food",icon: <Pizza size={12} />,      color: "#34C759" },
-  { cat: "club",     label: "Clubs",    icon: <Users size={12} />,      color: "#FFD60A" },
-  { cat: "sports",   label: "Sports",   icon: <Medal size={12} />,      color: "#FF9500" },
-  { cat: "academic", label: "Academic", icon: <BookOpen size={12} />,   color: "#5AC8FA" },
-  { cat: "career",   label: "Career",   icon: <Briefcase size={12} />,  color: "#0A84FF" },
-  { cat: "greek",    label: "Greek",    icon: <Users size={12} />,      color: "#BF5AF2" },
+  { cat: "free_food",label: "Free food",icon: <Pizza size={12} />,      color: "#FF9F0A" },
+  { cat: "club",     label: "Clubs",    icon: <Users size={12} />,      color: "#BF59F2" },
+  { cat: "sports",   label: "Sports",   icon: <Medal size={12} />,      color: "#30D158" },
+  { cat: "academic", label: "Academic", icon: <BookOpen size={12} />,   color: "#0A85FF" },
+  { cat: "career",   label: "Career",   icon: <Briefcase size={12} />,  color: "#0A85FF" },
+  { cat: "greek",    label: "Greek",    icon: <Users size={12} />,      color: "#BF59F2" },
 ];
 
 export default function MapFilterChips({

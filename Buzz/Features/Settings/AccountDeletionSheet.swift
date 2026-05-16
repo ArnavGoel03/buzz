@@ -87,8 +87,9 @@ struct AccountDeletionSheet: View {
     private func runDelete() async {
         isDeleting = true
         defer { isDeleting = false }
-        // Production: supabase.rpc("delete_my_account")
-        try? await Task.sleep(for: .seconds(1))
+        // Server-side cascade: drops auth.users + every FK that references it, plus the
+        // waitlist + audit-log payload PII (see 0002_security_hardening migration).
+        _ = try? await BuzzSupabase.shared.rpc("delete_my_account").execute()
         auth.signOut()
         dismiss()
     }

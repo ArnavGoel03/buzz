@@ -10,16 +10,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
-    runs-on: macos-14
-    timeout-minutes: 20
-    env:
-      XCODE_VERSION: "15.4"
+  apple:
+    name: Apple — iPhone, iPad, Mac
+    runs-on: macos-15
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_${XCODE_VERSION}.app
+        run: sudo xcode-select -s /Applications/Xcode_16.app
 
       - name: Install toolchain
         run: brew bundle --file=Brewfile
@@ -36,18 +35,77 @@ jobs:
       - name: Secret scan
         run: gitleaks detect --source . --config .gitleaks.toml --redact --verbose
 
-      - name: Build + test
+      # Tests run on iPhone — fastest sim, exercises the BuzzTests target end-to-end.
+      - name: Test (iPhone)
         run: |
           set -o pipefail && xcodebuild test \
             -project Buzz.xcodeproj \
             -scheme Buzz \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
-            -resultBundlePath TestResults \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -resultBundlePath TestResults-iPhone \
+            | xcpretty
+
+      # iPad: build-only smoke test. Catches regressions where iPad-specific code
+      # (NavigationSplitView sidebar, sheet detents) fails to compile or links.
+      - name: Build (iPad)
+        run: |
+          set -o pipefail && xcodebuild build \
+            -project Buzz.xcodeproj \
+            -scheme Buzz \
+            -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M4),OS=latest' \
+            | xcpretty
+
+      # macOS: build-only. Catches regressions in the `#if os(macOS)` branches —
+      # WindowGroup sizing, AppStore review prompt, MagneticPressable no-op, etc.
+      - name: Build (macOS)
+        run: |
+          set -o pipefail && xcodebuild build \
+            -project Buzz.xcodeproj \
+            -scheme Buzz \
+            -destination 'platform=macOS' \
             | xcpretty
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: TestResults
+          name: test-results-iphone
+          path: TestResults-iPhone
+
+  android:
+    name: Android — JVM unit tests + lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Generate Gradle wrapper if missing
+        run: |
+          if [ ! -f ./gradlew ]; then
+            gradle wrapper --gradle-version 8.10
+          fi
+
+      - name: Lint
+        run: ./gradlew :app:lintDebug --no-daemon
+
+      - name: Unit tests
+        run: ./gradlew :app:testDebugUnitTest --no-daemon
+
+      - name: Upload Android test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-results
+          path: android/app/build/reports
