@@ -1,0 +1,43 @@
+{
+  "$schema": "./bin/project.config.schema.json",
+  "_comment": "Canonical naming for Buzz. Edit ONLY this file when renaming; then run bin/proj validate.",
+
+  "version": 1,
+  "slug": "buzz",
+  "displayName": "Buzz",
+
+  "packageName": "buzz",
+
+  "urls": {
+    "production": "https://buzz-arnavgoel03s-projects.vercel.app",
+    "aliases": []
+  },
+
+  "github": {
+    "owner": "ArnavGoel03",
+    "repo": "buzz",
+    "url": "https://github.com/ArnavGoel03/buzz"
+  },
+
+  "vercel": {
+    "project": "buzz",
+    "projectId": "",
+    "teamSlug": "arnavgoel03s-projects"
+  },
+
+  "portfolio": {
+    "siteRepo": "~/Documents/Projects/portfolio",
+    "slug": "buzz",
+    "url": "https://arnavgoel.dev/projects/buzz"
+  },
+
+  "previousSlugs": [],
+  "previousDisplayNames": [],
+  "previousUrls": [],
+
+  "keepReferencesIn": [],
+
+  "notes": [
+    "Local folder is `Buzz` (capitalized) — GitHub repo + Vercel project are both lowercase `buzz`. Validate will flag the folder mismatch. To fix: `mv ~/Documents/Projects/Buzz ~/Documents/Projects/buzz` (close any open IDE/terminal in that folder first)."
+  ]
+}
