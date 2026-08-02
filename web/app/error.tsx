@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { RotateCcw, Sparkles } from "lucide-react";
+import { RotateCcw, Home } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 
-// Bespoke error page — shown when a Server Component throws. Same visual language
+// Bespoke error page - shown when a Server Component throws. Same visual language
 // as the 404 so error states don't break the product's aesthetic.
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           We hit an error loading this page.
         </h1>
         <p className="mt-4 text-[var(--color-text-secondary)]">
-          Not your fault. Our servers logged this — we&apos;ll fix it. Try again
+          Not your fault. Our servers logged this, so it can be fixed. Try again
           or head back to the feed.
         </p>
         {error.digest && (
@@ -45,7 +45,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={reset}
-            className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-[var(--color-accent)] text-black font-semibold text-sm"
+            className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-semibold text-sm"
           >
             <RotateCcw size={14} /> Try again
           </button>
@@ -53,7 +53,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
             href="/"
             className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-strong)] font-semibold text-sm"
           >
-            <Sparkles size={14} /> Back home
+            <Home size={14} /> Back home
           </Link>
         </div>
       </div>

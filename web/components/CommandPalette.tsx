@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Compass, Map as MapIcon, Users, MessageCircle, Settings, User, Sparkles } from "lucide-react";
+import { Search, Compass, Map as MapIcon, Users, MessageCircle, Settings, User, ChevronRight } from "lucide-react";
 import { mockEvents, mockOrgs } from "@/lib/mock-data";
 
 type Item = {
@@ -138,7 +138,7 @@ export default function CommandPalette() {
                               : "hover:bg-[var(--color-surface)]"
                           }`}
                         >
-                          <span className="text-[var(--color-text-tertiary)]">{row.icon ?? <Sparkles size={14} />}</span>
+                          <span className="text-[var(--color-text-tertiary)]">{row.icon ?? <ChevronRight size={14} />}</span>
                           <span className="font-medium">{row.label}</span>
                           {row.sub && (
                             <span className="text-[var(--color-text-tertiary)] truncate">{row.sub}</span>

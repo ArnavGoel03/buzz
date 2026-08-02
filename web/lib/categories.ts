@@ -1,28 +1,51 @@
-import type { EventCategory } from "./types";
+import { COLOR } from "./tokens";
 
 /**
- * Category hues — mirror design/tokens.json exactly. Update tokens.json + re-run
- * `node scripts/sync-tokens.mjs` whenever these need to change; do not edit values here.
+ * The one place a category is defined. Colour comes from design/tokens.json via
+ * lib/tokens.ts, the label lives beside it, and `EventCategory` is derived from the
+ * keys, so adding a category is a single edit here plus a hue in tokens.json.
+ *
+ * Nothing in the app should ever write a category hex or a category label again.
  */
+export const CATEGORIES = {
+  party: { color: COLOR.categoryParty, label: "Party", plural: "Parties" },
+  free_food: { color: COLOR.categoryFood, label: "Free food", plural: "Free food" },
+  club: { color: COLOR.categoryClub, label: "Club", plural: "Clubs" },
+  sports: { color: COLOR.categorySports, label: "Sports", plural: "Sports" },
+  academic: { color: COLOR.categoryAcademic, label: "Academic", plural: "Academic" },
+  greek: { color: COLOR.categoryClub, label: "Greek", plural: "Greek" },
+  career: { color: COLOR.categoryAcademic, label: "Career", plural: "Career" },
+  other: { color: COLOR.textTertiary, label: "Other", plural: "Other" },
+} as const;
+
+export type EventCategory = keyof typeof CATEGORIES;
+
+export const CATEGORY_KEYS = Object.keys(CATEGORIES) as EventCategory[];
+
+/** Tint strength for category-coloured backgrounds. One number, one meaning. */
+const SOFT_ALPHA = 0.14;
+
+function withAlpha(hex: string, alpha: number): string {
+  const h = hex.replace("#", "");
+  const n = parseInt(h.length === 3 ? h.split("").map((c) => c + c).join("") : h.slice(0, 6), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+}
+
+/** Falls back to `other` so an unknown category from the database still renders. */
+function entry(cat: EventCategory) {
+  return CATEGORIES[cat] ?? CATEGORIES.other;
+}
+
 export function categoryColor(cat: EventCategory): { color: string; soft: string } {
-  switch (cat) {
-    case "party":     return { color: "#FF2D92", soft: "rgba(255, 45, 146, 0.14)" };
-    case "free_food": return { color: "#FF9F0A", soft: "rgba(255, 159, 10, 0.14)" };
-    case "greek":     return { color: "#BF59F2", soft: "rgba(191, 89, 242, 0.14)" };
-    case "sports":    return { color: "#30D158", soft: "rgba(48, 209, 88, 0.14)" };
-    case "academic":  return { color: "#0A85FF", soft: "rgba(10, 133, 255, 0.14)" };
-    case "career":    return { color: "#0A85FF", soft: "rgba(10, 133, 255, 0.14)" };
-    case "club":      return { color: "#BF59F2", soft: "rgba(191, 89, 242, 0.14)" };
-    default:          return { color: "#8E8E93", soft: "rgba(142, 142, 147, 0.14)" };
-  }
+  const { color } = entry(cat);
+  return { color, soft: withAlpha(color, SOFT_ALPHA) };
 }
 
 export function categoryLabel(cat: EventCategory): string {
-  switch (cat) {
-    case "free_food": return "Free food";
-    case "greek":     return "Greek";
-    case "academic":  return "Academic";
-    case "career":    return "Career";
-    default:          return cat[0].toUpperCase() + cat.slice(1);
-  }
+  return entry(cat).label;
+}
+
+/** Filter chips and section headings read the plural form. */
+export function categoryPlural(cat: EventCategory): string {
+  return entry(cat).plural;
 }

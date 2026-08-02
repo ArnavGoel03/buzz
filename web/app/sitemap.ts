@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase-server";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * SEO sitemap. Pulls real published events + orgs from Supabase; falls back to an
@@ -14,7 +15,7 @@ import { createClient } from "@/lib/supabase-server";
  *   0.30  = legal
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = "https://buzz.app";
+  const base = SITE_URL;
   const now = new Date();
 
   const supabase = await createClient();
@@ -23,30 +24,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   type OrgRow   = { handle: string };
   type ProfileRow = { handle: string };
 
+  // Supabase's query builder is a PromiseLike, not a Promise, so it has no .catch().
+  // Promise.resolve() wraps it in a real promise the fallback can attach to, which
+  // keeps a Supabase outage from failing the whole sitemap build.
+  const rows = <T,>(q: PromiseLike<{ data: unknown }>): Promise<T[]> =>
+    Promise.resolve(q).then((r) => (r.data ?? []) as T[]).catch(() => [] as T[]);
+
   const [events, orgs, profiles] = await Promise.all([
-    supabase
-      .from("events")
-      .select("id, starts_at")
-      .eq("status", "published")
-      .gt("ends_at", now.toISOString())
-      .order("starts_at", { ascending: true })
-      .limit(5000)
-      .then((r) => (r.data ?? []) as EventRow[])
-      .catch(() => [] as EventRow[]),
-    supabase
-      .from("organizations")
-      .select("handle")
-      .limit(5000)
-      .then((r) => (r.data ?? []) as OrgRow[])
-      .catch(() => [] as OrgRow[]),
-    supabase
-      .from("profiles")
-      .select("handle")
-      .eq("verified", true)
-      .not("handle", "is", null)
-      .limit(5000)
-      .then((r) => (r.data ?? []) as ProfileRow[])
-      .catch(() => [] as ProfileRow[]),
+    rows<EventRow>(
+      supabase
+        .from("events")
+        .select("id, starts_at")
+        .eq("status", "published")
+        .gt("ends_at", now.toISOString())
+        .order("starts_at", { ascending: true })
+        .limit(5000)
+    ),
+    rows<OrgRow>(supabase.from("organizations").select("handle").limit(5000)),
+    rows<ProfileRow>(
+      supabase
+        .from("profiles")
+        .select("handle")
+        .eq("verified", true)
+        .not("handle", "is", null)
+        .limit(5000)
+    ),
   ]);
 
   const campuses = [

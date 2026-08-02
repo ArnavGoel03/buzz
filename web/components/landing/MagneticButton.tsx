@@ -39,7 +39,7 @@ export default function MagneticButton({
 
   const base =
     "relative inline-flex items-center gap-2 h-14 px-7 rounded-2xl font-semibold text-base overflow-hidden";
-  const primary = "bg-[var(--color-accent)] text-black";
+  const primary = "bg-[var(--color-accent)] text-[var(--color-accent-ink)]";
   const ghost   = "bg-[var(--color-surface)] border border-[var(--color-border-strong)] text-white";
 
   return (

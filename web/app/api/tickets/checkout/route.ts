@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { absoluteUrl } from "@/lib/site";
 
 /**
  * Create a Stripe Checkout session for a ticket purchase. Auth-gated; `buyer_id` is
@@ -10,7 +11,7 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
  *   { ticket_type_id }
  *
  * The org's Stripe Connect account receives the payment minus a 5% platform fee.
- * Missing `STRIPE_SECRET_KEY` returns 500 in production — never a plausible-looking
+ * Missing `STRIPE_SECRET_KEY` returns 500 in production - never a plausible-looking
  * "mock" URL that would deceive the iOS client into thinking a purchase succeeded.
  */
 export async function POST(req: NextRequest) {
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
   const supaServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!stripeKey || !supaUrl || !supaServiceKey) {
     if (process.env.NODE_ENV !== "production") {
-      // Local dev without keys — surface the unconfigured state explicitly rather than
+      // Local dev without keys - surface the unconfigured state explicitly rather than
       // returning a fake URL that downstream clients might treat as success.
       return NextResponse.json({ ok: false, error: "dev_unconfigured" }, { status: 503 });
     }
@@ -81,12 +82,12 @@ export async function POST(req: NextRequest) {
   body.set("payment_method_types[0]", "card");
   body.set("line_items[0][price_data][currency]", "usd");
   body.set("line_items[0][price_data][unit_amount]", String(type.price_cents));
-  body.set("line_items[0][price_data][product_data][name]", `${event.title} — ${type.name}`);
+  body.set("line_items[0][price_data][product_data][name]", `${event.title}: ${type.name}`);
   body.set("line_items[0][quantity]", "1");
   body.set("payment_intent_data[application_fee_amount]", String(fee));
   body.set("payment_intent_data[transfer_data][destination]", connectId);
-  body.set("success_url", "https://buzz.app/tickets/success?session_id={CHECKOUT_SESSION_ID}");
-  body.set("cancel_url", `https://buzz.app/e/${event.id}`);
+  body.set("success_url", absoluteUrl("/tickets/success?session_id={CHECKOUT_SESSION_ID}"));
+  body.set("cancel_url", absoluteUrl(`/e/${event.id}`));
 
   const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",

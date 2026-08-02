@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { safeJsonLd } from "@/lib/security";
+import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
 
 type Params = Promise<{ id: string }>;
 
@@ -11,14 +12,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { id } = await params;
   const display = CAMPUS_LABELS[id] ?? id.toUpperCase();
   return {
-    title: `${display} — events, clubs, rush on Buzz`,
-    description: `Live map of what's happening at ${display} tonight. Parties, clubs, rush, free food, sports, study sessions — all in one app.`,
-    alternates: { canonical: `https://buzz.app/campus/${id}` },
+    title: `${display}: events, clubs, and rush on ${SITE.name}`,
+    description: `Live map of what's happening at ${display} tonight. Parties, clubs, rush, free food, sports, and study sessions, all in one feed.`,
+    alternates: { canonical: absoluteUrl(`/campus/${id}`) },
     openGraph: {
-      title: `${display} on Buzz`,
+      title: `${display} on ${SITE.name}`,
       description: `Live college events happening at ${display} tonight.`,
       type: "website",
-      url: `https://buzz.app/campus/${id}`,
+      url: absoluteUrl(`/campus/${id}`),
     },
     twitter: { card: "summary_large_image" },
   };
@@ -28,60 +29,53 @@ export default async function CampusLanding({ params }: { params: Params }) {
   const { id } = await params;
   const display = CAMPUS_LABELS[id] ?? id.toUpperCase();
 
-  // JSON-LD structured data — Organization + BreadcrumbList + FAQ. These land in
-  // Google's Rich Results and get cited by AI Overviews / Perplexity.
+  // Written once, rendered twice: the FAQ below feeds both the visible list and the
+  // FAQPage schema. Google penalises structured data that disagrees with the page, and
+  // two hand-maintained copies of the same answer always drift apart eventually.
+  const faq = [
+    {
+      q: `What events are happening at ${display} tonight?`,
+      a: `Open ${SITE.name} in any browser for a live map of what is on at ${display} right now: parties, club meetings, sports, free food, and study sessions. It updates as RSVPs come in, and it installs to your home screen in two taps.`,
+    },
+    {
+      q: `How do I find clubs at ${display}?`,
+      a: `Open Clubs, find the org, and follow it. Everything that org posts from then on shows up in your feed. Officers can invite you as a full member, which puts a badge on your profile.`,
+    },
+    {
+      q: `Is ${SITE.name} free for ${display} students?`,
+      a: `Yes. No ads, no fee, and nothing sold to anyone. Some events charge at the door, but that money goes to the club running them, not to us.`,
+    },
+    {
+      q: `Is Greek life rush at ${display} on ${SITE.name}?`,
+      a: `Only what chapters post themselves. There is no official feed from Panhellenic or IFC, so during rush you see the chapters whose officers are actually using ${SITE.name}, not a complete roster.`,
+    },
+  ];
+
+  // JSON-LD structured data: Organization, BreadcrumbList, FAQ. These land in Google's
+  // Rich Results and get cited by AI Overviews and Perplexity.
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
         name: display,
-        url: `https://buzz.app/campus/${id}`,
+        url: absoluteUrl(`/campus/${id}`),
       },
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Buzz", item: "https://buzz.app" },
-          { "@type": "ListItem", position: 2, name: "Campuses", item: "https://buzz.app/campus" },
-          { "@type": "ListItem", position: 3, name: display, item: `https://buzz.app/campus/${id}` },
+          { "@type": "ListItem", position: 1, name: SITE.name, item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Campuses", item: absoluteUrl("/campus") },
+          { "@type": "ListItem", position: 3, name: display, item: absoluteUrl(`/campus/${id}`) },
         ],
       },
       {
         "@type": "FAQPage",
-        mainEntity: [
-          {
-            "@type": "Question",
-            name: `What events are happening at ${display} tonight?`,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: `Open Buzz on iOS or macOS to see a live map of every event happening at ${display} right now — parties, club meetings, sports, free food, study sessions, and more. It updates every few minutes as new RSVPs come in.`,
-            },
-          },
-          {
-            "@type": "Question",
-            name: `How do I join clubs at ${display} on Buzz?`,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: `Open the Clubs tab in Buzz, search for the org you want to join, and tap Follow. An officer can invite you as a full Member — you'll get a badge on your profile once you accept.`,
-            },
-          },
-          {
-            "@type": "Question",
-            name: `Is Buzz free for ${display} students?`,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: `Yes. Buzz is free for students. Paid event tickets (like sports games or formals) may cost money, but the app itself has no ads and doesn't sell data.`,
-            },
-          },
-          {
-            "@type": "Question",
-            name: `Does Buzz work for Greek life rush at ${display}?`,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: `Yes. During an active rush cycle at ${display}, Buzz shows every chapter running recruitment — Panhellenic, IFC, Multicultural, NPHC, and professional. Tap chapters you're interested in; officers can mark mutual interest for Bid Day.`,
-            },
-          },
-        ],
+        mainEntity: faq.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
       },
     ],
   };
@@ -94,7 +88,7 @@ export default async function CampusLanding({ params }: { params: Params }) {
       />
       <main className="max-w-3xl mx-auto px-6 py-16">
         <nav className="text-sm text-[var(--color-text-tertiary)]">
-          <Link href="/" className="hover:underline">Buzz</Link>
+          <Link href="/" className="hover:underline">{SITE.name}</Link>
           <span className="mx-2">›</span>
           <span>{display}</span>
         </nav>
@@ -104,28 +98,28 @@ export default async function CampusLanding({ params }: { params: Params }) {
         </h1>
         <p className="mt-4 text-lg text-[var(--color-text-secondary)]">
           Every party, club meeting, intramural game, study session, and free-food event
-          happening at {display} — on one live map. Free for students.
+          happening at {display}, on one live map. Free for students.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/" className="px-6 py-3 rounded-xl bg-[var(--color-accent)] text-black font-bold">Get Buzz</Link>
+          <Link href="/" className="px-6 py-3 rounded-xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-bold">Get {SITE.name}</Link>
           <Link href="/support" className="px-6 py-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] font-semibold">How it works</Link>
         </div>
 
         <section className="mt-14">
           <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)" }}>What students ask us</h2>
           <div className="mt-6 space-y-6">
-            <QA q={`What events are happening at ${display} tonight?`} a={`Open Buzz on iOS or macOS to see a live map of every event happening at ${display} right now — parties, club meetings, sports, free food, study sessions. Updates as RSVPs come in.`} />
-            <QA q={`How do I join a club at ${display}?`} a={`In the Clubs tab, tap Follow. Once an officer invites you as a full member, you'll get a badge on your profile. Member badges are clean; officer and president badges have visible prestige styling.`} />
-            <QA q={`Is ${display} Greek life on Buzz?`} a={`Yes — during rush week, Buzz shows every chapter running recruitment. Tap chapters you're interested in, see the round schedule, get notified on Bid Day.`} />
-            <QA q={`Does Buzz work for international students at ${display}?`} a={`Yes. Buzz supports 50+ campuses across 12 countries and handles international transfers. Your profile + badges follow you across schools.`} />
+            {faq.map((f) => (
+              <QA key={f.q} q={f.q} a={f.a} />
+            ))}
           </div>
         </section>
 
         <section className="mt-14 p-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)]">
           <h3 className="font-bold" style={{ fontFamily: "var(--font-display)" }}>Club officer at {display}?</h3>
           <p className="text-sm text-[var(--color-text-secondary)] mt-2">
-            Post events in 10 seconds. Forward event emails to <code>@events.buzz.app</code>. Replace stacks of printed flyers with one printable QR poster. Broadcast to members. It's free.
+            Post an event in about ten seconds, then hand out one printable QR poster
+            instead of a stack of flyers nobody keeps. Free, and it stays free.
           </p>
           <Link href="/support" className="inline-block mt-4 text-[var(--color-accent)] text-sm font-semibold">Learn more →</Link>
         </section>

@@ -72,7 +72,7 @@ function TopBar() {
         </Link>
         <Link
           href="/sign-in"
-          className="hidden md:inline-flex h-9 px-4 items-center rounded-lg bg-[var(--color-accent)] text-black font-semibold text-sm"
+          className="hidden md:inline-flex h-9 px-4 items-center rounded-lg bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-semibold text-sm"
         >
           Sign in
         </Link>

@@ -5,7 +5,7 @@ import { Check, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase-browser";
 
-// Client-side RSVP with particle burst on success. Tactile — the button pulses,
+// Client-side RSVP with particle burst on success. Tactile - the button pulses,
 // 12 accent-colored particles radiate outward, and a checkmark slides in. Feels
 // like committing to something real.
 export default function RSVPButton({ eventId }: { eventId: string }) {
@@ -24,7 +24,7 @@ export default function RSVPButton({ eventId }: { eventId: string }) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         // Pending RSVPs are kept locally and resolved after sign-in. Wrap storage in
-        // try/catch — Safari private mode + cookie-blocked browsers throw on setItem.
+        // try/catch - Safari private mode + cookie-blocked browsers throw on setItem.
         try {
           const key = "buzz:rsvp:pending";
           const pending = JSON.parse(localStorage.getItem(key) || "[]");
@@ -35,7 +35,7 @@ export default function RSVPButton({ eventId }: { eventId: string }) {
       } else {
         await supabase.from("rsvps").delete().match({ event_id: eventId, user_id: user.id });
       }
-      // Confetti only on success — previously fired before the network resolved, so
+      // Confetti only on success - previously fired before the network resolved, so
       // failed RSVPs got celebrated.
       if (next) {
         setBursting(true);
@@ -57,7 +57,7 @@ export default function RSVPButton({ eventId }: { eventId: string }) {
       className={`relative h-12 flex items-center justify-center gap-2 rounded-xl font-bold text-base overflow-visible transition-colors ${
         going
           ? "bg-[var(--color-surface)] border border-[var(--color-accent)] text-[var(--color-accent)]"
-          : "bg-[var(--color-accent)] text-black hover:brightness-110"
+          : "bg-[var(--color-accent)] text-[var(--color-accent-ink)] hover:brightness-110"
       }`}
     >
       <AnimatePresence mode="wait">
@@ -81,7 +81,7 @@ export default function RSVPButton({ eventId }: { eventId: string }) {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.2 }}
           >
-            <Plus size={18} /> RSVP — I&apos;m in
+            <Plus size={18} /> RSVP, I&apos;m in
           </motion.span>
         )}
       </AnimatePresence>
@@ -92,7 +92,7 @@ export default function RSVPButton({ eventId }: { eventId: string }) {
 }
 
 // 12 particles radiating outward, fading + scaling down. Pure transform animation
-// — no CPU cost beyond initial mount.
+// - no CPU cost beyond initial mount.
 function ParticleBurst() {
   const particles = Array.from({ length: 12 });
   return (

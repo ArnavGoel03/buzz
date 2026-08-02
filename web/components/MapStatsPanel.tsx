@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Radio, Users, Sparkles } from "lucide-react";
+import { Radio, Users, Calendar } from "lucide-react";
 import type { Event } from "@/lib/types";
 
 // Glass stats panel pinned to the top-left of the map. Conveys "real product,
@@ -42,7 +42,7 @@ export default function MapStatsPanel({
       </div>
       <div className="grid grid-cols-3 gap-px bg-white/5 mt-3">
         <Stat icon={<Radio size={12} />} label="Live" value={live} accent />
-        <Stat icon={<Sparkles size={12} />} label="Events" value={total} />
+        <Stat icon={<Calendar size={12} />} label="Events" value={total} />
         <Stat icon={<Users size={12} />} label="Going" value={attendees.toLocaleString()} />
       </div>
     </motion.div>

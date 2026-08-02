@@ -1,5 +1,5 @@
-// Mono-font stats band — plants "real product with real numbers" flags throughout
-// the site. Uses tabular-nums and tracking so alignment reads tight.
+// Stats band. Every value passed in has to be a real count from the database, not a
+// rounded-up number chosen to look busy.
 export default function StatBand({
   items,
 }: {

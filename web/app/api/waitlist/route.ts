@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { isAcademicEmail, resolveCampus } from "@/lib/campus-domains";
 
-// In-memory IP rate limiter — module-level so it survives across requests in the
+// In-memory IP rate limiter - module-level so it survives across requests in the
 // same Vercel function instance. Not perfect across cold starts / regions, but
 // blocks the basic flooding case until an Upstash/KV layer is wired.
 const HITS = new Map<string, { count: number; resetAt: number }>();
@@ -27,7 +27,7 @@ function rateLimited(ip: string): boolean {
 }
 
 /**
- * POST /api/waitlist — capture email for campuses not yet live.
+ * POST /api/waitlist - capture email for campuses not yet live.
  *
  * Rate-limited (5/min per IP). Uses `on conflict do nothing` so the response shape
  * doesn't leak whether an email was already in the list (would otherwise be an
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     const domain = email.split("@")[1]?.toLowerCase() ?? "";
     const supabase = await createClient();
     // upsert with ignoreDuplicates so the response is identical whether or not the
-    // row existed — closes the existence-oracle gap.
+    // row existed - closes the existence-oracle gap.
     await supabase.from("campus_waitlist").upsert(
       { email, domain },
       { onConflict: "email", ignoreDuplicates: true }

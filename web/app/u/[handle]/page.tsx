@@ -5,6 +5,7 @@ import ProfileHero from "@/components/ProfileHero";
 import CountUp from "@/components/landing/CountUp";
 import { createClient } from "@/lib/supabase-server";
 import { safeJsonLd } from "@/lib/security";
+import { absoluteUrl } from "@/lib/site";
 
 type Params = Promise<{ handle: string }>;
 
@@ -41,14 +42,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const title = `@${profile.handle}`;
   const description = profile.bio?.trim()
     ? profile.bio
-    : `${profile.display_name} on Buzz — college events, RSVPs, and clubs${profile.campus ? ` at ${profile.campus}` : ""}.`;
+    : `${profile.display_name} on Buzz: college events, RSVPs, and clubs${profile.campus ? ` at ${profile.campus}` : ""}.`;
   return {
     title, description,
-    alternates: { canonical: `https://buzz.app/u/${profile.handle}` },
+    alternates: { canonical: absoluteUrl(`/u/${profile.handle}`) },
     openGraph: {
       title, description, type: "profile",
-      url: `https://buzz.app/u/${profile.handle}`,
-      images: [{ url: `https://buzz.app/api/poster/${profile.handle}`, width: 1200, height: 630, alt: title }],
+      url: absoluteUrl(`/u/${profile.handle}`),
+      images: [{ url: absoluteUrl(`/api/poster/${profile.handle}`), width: 1200, height: 630, alt: title }],
     },
     twitter: { card: "summary_large_image", title, description },
   };
@@ -65,7 +66,7 @@ export default async function UserProfile({ params }: { params: Params }) {
     "@type": "Person",
     name: profile.display_name,
     alternateName: `@${profile.handle}`,
-    url: `https://buzz.app/u/${profile.handle}`,
+    url: absoluteUrl(`/u/${profile.handle}`),
     description: profile.bio ?? undefined,
     affiliation: profile.campus
       ? { "@type": "CollegeOrUniversity", name: profile.campus }

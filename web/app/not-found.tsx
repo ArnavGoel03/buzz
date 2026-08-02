@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Home, ArrowRight } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 
-// Bespoke 404 — uses the same editorial typography + ambient glow as the landing.
+// Bespoke 404 - uses the same editorial typography + ambient glow as the landing.
 // Default Next.js "Page not found" is a dead giveaway that no one sweated the edges.
 export const metadata = { title: "Not found", robots: { index: false } };
 
@@ -42,9 +42,9 @@ export default function NotFound() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-[var(--color-accent)] text-black font-semibold text-sm"
+            className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-semibold text-sm"
           >
-            <Sparkles size={14} strokeWidth={2.6} /> Back to Buzz
+            <Home size={14} strokeWidth={2.6} /> Back to Buzz
             <ArrowRight size={14} />
           </Link>
           <Link

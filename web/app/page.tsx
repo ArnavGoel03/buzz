@@ -4,7 +4,8 @@ import BentoFeed from "@/components/BentoFeed";
 import StatBand from "@/components/StatBand";
 import EventMap from "@/components/EventMap";
 import AppPushStrip from "@/components/AppPushStrip";
-import { getFeedEvents, getActiveCampus } from "@/lib/data";
+import { getFeedEvents, getActiveCampus, getOrgs } from "@/lib/data";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const revalidate = 60;
 
@@ -12,22 +13,23 @@ const homeJsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "MobileApplication",
+      "@type": "WebApplication",
       name: "Buzz",
-      operatingSystem: "iOS, macOS, Web",
+      operatingSystem: "Any",
+      browserRequirements: "Requires JavaScript. Installs as a PWA on iOS, Android, and desktop.",
       applicationCategory: "SocialNetworkingApplication",
       description: "Live discovery of college events happening tonight on and around your campus.",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      // aggregateRating removed — "4.9 of 1" is the kind of dishonesty Google flags.
+      // aggregateRating removed - "4.9 of 1" is the kind of dishonesty Google flags.
       // Re-add when there's a real review pipeline backing it.
-      url: "https://buzz.app",
+      url: SITE_URL,
     },
-    { "@type": "Organization", name: "Buzz", url: "https://buzz.app", logo: "https://buzz.app/icon-512.png" },
+    { "@type": "Organization", name: "Buzz", url: SITE_URL, logo: absoluteUrl("/icon-512.png") },
   ],
 };
 
 export default async function Home() {
-  const [events, campus] = await Promise.all([getFeedEvents(), getActiveCampus()]);
+  const [events, campus, orgs] = await Promise.all([getFeedEvents(), getActiveCampus(), getOrgs()]);
   const live = events.filter((e) => e.is_live);
   const soon = events.filter((e) => !e.is_live);
 
@@ -66,9 +68,9 @@ export default async function Home() {
       <section className="px-4 md:px-8 py-10">
         <StatBand
           items={[
-            { label: "Events this week", value: events.length, accent: true },
+            { label: "Events listed", value: events.length, accent: true },
             { label: "Live right now", value: live.length },
-            { label: "Verified students", value: "1.2k" },
+            { label: "Clubs posting", value: orgs.length },
             { label: "Campuses live", value: 1 },
           ]}
         />

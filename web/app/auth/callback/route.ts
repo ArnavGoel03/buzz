@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         { onConflict: "profile_id,campus" }
       );
     } catch {
-      // best-effort — don't block sign-in on write failure
+      // best-effort - don't block sign-in on write failure
     }
   }
   return NextResponse.redirect(`${origin}${next}`);

@@ -6,7 +6,7 @@ import * as THREE from "three";
 
 // Fragment shader: multi-octave simplex noise warps a 3-stop gradient (yellow →
 // magenta → deep blue). Shifts on scroll + cursor so the background feels alive
-// without distracting from content. Runs entirely on GPU — ~0.3ms on M-chips.
+// without distracting from content. Runs entirely on GPU - ~0.3ms on M-chips.
 const fragmentShader = /* glsl */ `
   precision highp float;
   uniform float u_time;
@@ -48,7 +48,7 @@ const fragmentShader = /* glsl */ `
     float n2 = snoise(uv * 4.0 - u_time * 0.03 + vec2(u_scroll * 0.3, 0.0));
     float n  = n1 * 0.6 + n2 * 0.4;
 
-    // Gradient palette — cool base with warm highlights
+    // Gradient palette - cool base with warm highlights
     vec3 c1 = vec3(0.06, 0.06, 0.10);   // deep blue-black base
     vec3 c2 = vec3(0.18, 0.08, 0.30);   // magenta bloom
     vec3 c3 = vec3(1.00, 0.84, 0.04);   // buzz yellow accent

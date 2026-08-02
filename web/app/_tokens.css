@@ -1,11 +1,11 @@
-/* GENERATED from design/tokens.json — do not edit by hand.
+/* GENERATED from design/tokens.json. Do not edit by hand.
    Run `node scripts/sync-tokens.mjs` after editing tokens. */
 
 :root {
   /* Brand */
   --color-accent: #FFD60A;
   --color-accent-bright: #FFE34A;
-  --color-accent-dim: #22FFD60A;
+  --color-accent-dim: #FFD60A22;
   --color-accent-ink: #000000;
   /* Surface */
   --color-background: #080808;

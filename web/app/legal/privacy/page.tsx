@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { CONTACT, SITE, absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy · Buzz",
-  description: "How Buzz handles your data. Plain-English, no dark patterns.",
+  title: "Privacy Policy",
+  description: `How ${SITE.name} handles your data. Plain English, no dark patterns.`,
+  alternates: { canonical: absoluteUrl("/legal/privacy") },
 };
 
 export default function Privacy() {
@@ -20,7 +22,7 @@ export default function Privacy() {
       <Section title="What we collect">
         <Bullet><b>Identity you give us</b>: display name, handle, pronouns (optional), bio (optional), avatar.</Bullet>
         <Bullet><b>Campus affiliation</b>: the college(s) you verify at via `.edu` OTP, institutional email, or student ID. We store when each affiliation was verified and by which method.</Bullet>
-        <Bullet><b>Sign-in identity</b>: Apple user ID, Google sub, email, or phone — whichever provider(s) you chose.</Bullet>
+        <Bullet><b>Sign-in identity</b>: Apple user ID, Google sub, email, or phone, whichever providers you chose.</Bullet>
         <Bullet><b>Events you RSVP to</b> and <b>check in to</b>, so we can show them in your calendar + feed.</Bullet>
         <Bullet><b>Location</b> when in-use, only to center the map on you. Never stored on our servers.</Bullet>
         <Bullet><b>Device push tokens</b> (APNs / FCM / Web Push) so we can deliver notifications you opt into.</Bullet>
@@ -31,7 +33,7 @@ export default function Privacy() {
         <Bullet>We do not upload your contact list.</Bullet>
         <Bullet>We do not sell data to advertisers or data brokers.</Bullet>
         <Bullet>We do not track you across other apps.</Bullet>
-        <Bullet>We do not read your private DMs — they're end-to-end-visible-server-side-only for moderation if reported.</Bullet>
+        <Bullet>We do not read your private DMs unless one is reported, in which case a moderator can see the reported messages.</Bullet>
       </Section>
 
       <Section title="Who sees what">
@@ -44,7 +46,7 @@ export default function Privacy() {
         <Bullet><b>Download your data</b>: Settings → "Download my data." Returns a JSON export within 7 days.</Bullet>
         <Bullet><b>Delete your account</b>: Settings → "Delete account." Your profile and linked rows are removed within 30 days. Audit-log entries are anonymized but retained for legal compliance.</Bullet>
         <Bullet><b>Restrict use</b>: opt out of any notification category in Settings; disable location in iOS Settings → Buzz.</Bullet>
-        <Bullet><b>Contact us</b> with concerns at <a className="underline" href="mailto:privacy@buzz.app">privacy@buzz.app</a>.</Bullet>
+        <Bullet><b>Contact us</b> with concerns at <a className="underline" href={CONTACT.href}>{CONTACT.label}</a>.</Bullet>
       </Section>
 
       <Section title="Security">
@@ -52,7 +54,7 @@ export default function Privacy() {
       </Section>
 
       <Section title="Under-13">
-        <p>Buzz is not directed to children under 13. We do not knowingly collect data from users under 13. If you believe a child has provided us data, contact <a className="underline" href="mailto:privacy@buzz.app">privacy@buzz.app</a> and we'll delete it.</p>
+        <p>Buzz is not directed to children under 13. We do not knowingly collect data from users under 13. If you believe a child has provided us data, contact <a className="underline" href={CONTACT.href}>{CONTACT.label}</a> and we'll delete it.</p>
       </Section>
 
       <Section title="Changes">

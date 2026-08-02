@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import type { Organization } from "@/lib/types";
 import TextReveal from "./landing/TextReveal";
 
-// Parallax club cover — accent-color orb zooms + fades on scroll, grain overlay,
+// Parallax club cover - accent-color orb zooms + fades on scroll, grain overlay,
 // serif name reveals word-by-word. Matches EventHero's treatment.
 export default function OrgHero({ org }: { org: Organization }) {
   const ref = useRef<HTMLDivElement>(null);

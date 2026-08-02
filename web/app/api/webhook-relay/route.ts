@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { assertPublicHttpsUrl, verifySharedSecret } from "@/lib/security";
+import { absoluteUrl } from "@/lib/site";
 
 /**
  * Supabase database-webhook receiver. Triggered on `events` insert/update where
@@ -41,7 +42,7 @@ async function deliverTo(
   ep: Endpoint,
   event: { id: string; title: string; starts_at: string }
 ): Promise<void> {
-  // SSRF guard before every outbound fetch — protects against an officer registering a
+  // SSRF guard before every outbound fetch - protects against an officer registering a
   // metadata/loopback URL that we'd otherwise POST credentials-bearing payloads to.
   let target: URL;
   try { target = await assertPublicHttpsUrl(ep.url); }
@@ -56,7 +57,7 @@ async function deliverTo(
     throw new Error("slack_host_mismatch");
   }
 
-  const url = `https://buzz.app/e/${event.id}`;
+  const url = absoluteUrl(`/e/${event.id}`);
   let body: object;
   switch (ep.kind) {
     case "discord":
@@ -72,7 +73,7 @@ async function deliverTo(
       break;
     case "slack":
       body = {
-        text: `*<${url}|${event.title}>* — starts ${new Date(event.starts_at).toLocaleString()}`,
+        text: `*<${url}|${event.title}>* - starts ${new Date(event.starts_at).toLocaleString()}`,
       };
       break;
     case "generic":

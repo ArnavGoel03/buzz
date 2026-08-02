@@ -28,7 +28,7 @@ export function safeJsonLd(value: unknown): string {
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026")
     // Also escape `/` so an embedded `</script>` cannot terminate the tag in legacy
-    // parsing modes — matches React's `htmlEscapeJsonString` behaviour.
+    // parsing modes - matches React's `htmlEscapeJsonString` behaviour.
     .replace(/\//g, "\\u002f")
     .replace(SEP_2028, "\\u2028")
     .replace(SEP_2029, "\\u2029");
@@ -61,7 +61,7 @@ export function verifySharedSecret(req: Request, envVar: string): boolean {
   const expected = process.env[envVar];
   if (!expected) return false;
   const header = envVar.toLowerCase().replace(/_/g, "-");
-  // Bearer fallback removed — callers had to know the exact header anyway, and the
+  // Bearer fallback removed - callers had to know the exact header anyway, and the
   // `Authorization` header is routinely logged by CDNs/proxies, leaking the secret.
   const got = req.headers.get(header);
   if (typeof got !== "string" || got.length !== expected.length) return false;

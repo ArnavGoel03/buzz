@@ -5,7 +5,7 @@ import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatRelativeTime } from "@/lib/format";
 import { eventUrgency, urgencyColor } from "@/lib/urgency";
 
-// Secondary event card — used outside the bento grid (club pages, search). Still
+// Secondary event card - used outside the bento grid (club pages, search). Still
 // carries the category bar + mono time for brand consistency.
 export default function EventCard({ event }: { event: Event }) {
   const { color, soft } = categoryColor(event.category);

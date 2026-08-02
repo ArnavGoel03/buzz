@@ -1,41 +1,44 @@
-import { Sparkles, Bell, MessageCircle, QrCode, Ticket } from "lucide-react";
-import AppStoreBadges from "./AppStoreBadges";
+"use client";
 
-// Section placed at the bottom of main browse pages to funnel web visitors into the
-// native app, where the full product lives.
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import GetApp from "./GetApp";
+import { useInstall } from "@/lib/use-install";
+import { INSTALL_PATH } from "@/lib/app-links";
+
+/**
+ * The closing band on the feed-shaped pages. Once Buzz is installed there is nothing
+ * left to sell, so the whole strip disappears rather than nagging someone who already
+ * said yes.
+ */
 export default function AppPushStrip() {
-  const bullets = [
-    { icon: <Bell size={14} />, text: "Push alerts for free food + RSVPs" },
-    { icon: <MessageCircle size={14} />, text: "Real-time chat with attendees" },
-    { icon: <QrCode size={14} />, text: "Tap-to-check-in at the door" },
-    { icon: <Ticket size={14} />, text: "Apple Pay tickets + Wallet" },
-  ];
+  const { mode, ready } = useInstall();
+  if (ready && mode === "installed") return null;
+
   return (
-    <section className="mx-4 md:mx-8 my-10 p-6 md:p-8 rounded-2xl bg-gradient-to-br from-[var(--color-accent-dim)] to-[var(--color-surface)] border border-[var(--color-accent)]/30">
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)] flex items-center justify-center">
-          <Sparkles size={16} className="text-black" strokeWidth={2.6} />
+    <section className="px-4 md:px-8 py-10">
+      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
+        <div className="flex-1">
+          <h2
+            className="font-display font-medium tracking-[-0.02em] text-2xl md:text-3xl leading-[1.05]"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Keep Buzz on your home screen.
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-text-secondary)] max-w-md">
+            Two taps, no app store, works offline. The free food goes fast and the feed is
+            faster when you are not hunting for a tab.
+          </p>
         </div>
-        <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-accent)]">
-          Full product
-        </p>
-      </div>
-      <h2
-        className="mt-3 text-2xl md:text-3xl font-black tracking-tight"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        Get Buzz — it unlocks everything.
-      </h2>
-      <ul className="mt-4 grid gap-2 md:grid-cols-2 text-sm text-[var(--color-text-secondary)]">
-        {bullets.map((b) => (
-          <li key={b.text} className="flex items-center gap-2">
-            <span className="text-[var(--color-accent)]">{b.icon}</span>
-            {b.text}
-          </li>
-        ))}
-      </ul>
-      <div className="mt-6">
-        <AppStoreBadges />
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <GetApp />
+          <Link
+            href={INSTALL_PATH}
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--color-text-tertiary)] hover:text-[var(--color-text)]"
+          >
+            Details <ArrowRight size={12} />
+          </Link>
+        </div>
       </div>
     </section>
   );

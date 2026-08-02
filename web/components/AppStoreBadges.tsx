@@ -1,30 +1,27 @@
-import Link from "next/link";
-import { Apple, Smartphone, Monitor } from "lucide-react";
-import { APP_STORE_URL, PLAY_STORE_URL, MAC_APP_STORE_URL } from "@/lib/app-links";
+"use client";
 
-// Three store badges: App Store, Mac App Store, Play Store. Use on download strips,
-// the sign-in page, empty states ("No messages here — get the app"), etc.
+import Link from "next/link";
+import GetApp from "./GetApp";
+import { INSTALL_PATH } from "@/lib/app-links";
+
+/**
+ * Replaces the old store badges. There is no App Store or Play listing yet, so a pair
+ * of badge images would have been decoration pointing at nothing. This offers the
+ * install that actually works, plus the link to the full install page.
+ */
 export default function AppStoreBadges({ layout = "row" }: { layout?: "row" | "stack" }) {
-  const badges = [
-    { href: APP_STORE_URL, icon: <Apple size={18} />, top: "Download on the", bottom: "App Store" },
-    { href: MAC_APP_STORE_URL, icon: <Monitor size={18} />, top: "Download on the", bottom: "Mac App Store" },
-    { href: PLAY_STORE_URL, icon: <Smartphone size={18} />, top: "Get it on", bottom: "Google Play" },
-  ];
+  const stacked = layout === "stack";
   return (
-    <div className={layout === "stack" ? "flex flex-col gap-2" : "flex flex-wrap gap-2"}>
-      {badges.map((b) => (
-        <Link
-          key={b.bottom}
-          href={b.href}
-          className="flex items-center gap-2.5 px-4 h-12 rounded-xl bg-white text-black font-semibold"
-        >
-          {b.icon}
-          <div className="text-left leading-none">
-            <p className="text-[9px] uppercase tracking-wider opacity-70">{b.top}</p>
-            <p className="text-sm font-black">{b.bottom}</p>
-          </div>
-        </Link>
-      ))}
+    <div className={stacked ? "grid gap-2" : "flex flex-wrap items-center gap-3"}>
+      <GetApp className={stacked ? "w-full" : ""} />
+      <Link
+        href={INSTALL_PATH}
+        className={`h-11 px-5 rounded-xl border border-[var(--color-border-strong)] inline-flex items-center justify-center text-sm font-semibold hover:border-[var(--color-border-bright)] ${
+          stacked ? "w-full" : ""
+        }`}
+      >
+        How it works
+      </Link>
     </div>
   );
 }

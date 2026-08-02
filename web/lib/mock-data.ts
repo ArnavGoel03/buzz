@@ -34,7 +34,7 @@ export const mockEvents: Event[] = [
   {
     id: "acm-boba",
     title: "ACM Boba Night",
-    summary: "Free boba and chill vibes with the computing community. First 50.",
+    summary: "Free boba, and whoever from the computing community turns up. First 50 cups.",
     starts_at: new Date(Date.now() + 45 * 60_000).toISOString(),
     ends_at: new Date(Date.now() + 3 * 3600_000).toISOString(),
     location_name: "CSE Building Lobby",
@@ -49,7 +49,7 @@ export const mockEvents: Event[] = [
   },
   {
     id: "greek-rush-fiji",
-    title: "FIJI Rush — Beach Day",
+    title: "FIJI Rush - Beach Day",
     summary: "Round 2 rush event. Transportation provided from Price Center.",
     starts_at: new Date(Date.now() + 26 * 3600_000).toISOString(),
     location_name: "La Jolla Shores",
@@ -91,8 +91,8 @@ export const mockEvents: Event[] = [
   },
   {
     id: "ai-seminar",
-    title: "Prof. Ng on LLM Agents",
-    summary: "Public research talk — no ticket needed. Q&A after.",
+    title: "Guest lecture: agents that use tools",
+    summary: "Public research talk, no ticket needed. Questions after.",
     starts_at: new Date(Date.now() + 4 * 3600_000).toISOString(),
     location_name: "CSE 1202",
     latitude: 32.8812,

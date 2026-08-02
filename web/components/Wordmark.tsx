@@ -1,4 +1,4 @@
-// Kerned wordmark — distinctive without leaning on a generic "star" icon.
+// Kerned wordmark - distinctive without leaning on a generic "star" icon.
 // The italic Z with Fraunces WONK axis is the whole personality.
 export default function Wordmark() {
   return (

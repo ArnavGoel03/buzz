@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { mockOrg } from "@/lib/supabase";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 type Params = Promise<{ handle: string }>;
 
 // Minimal page designed for iframe embedding on club websites:
-//   <iframe src="https://buzz.app/embed/o/acm-ucsd" width="100%" height="600"
+//   <iframe src="https://<your-buzz-host>/embed/o/acm-ucsd" width="100%" height="600"
 //           style="border:0;border-radius:16px"></iframe>
 // Removes site chrome (header / footer), shows just upcoming events for the org,
-// and routes clicks back to buzz.app/o/<handle> in a new tab.
+// and routes clicks back to the org page on the canonical host in a new tab.
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -44,10 +45,10 @@ export default async function EmbedOrg({ params }: { params: Params }) {
           <div className="text-xs text-[var(--color-text-tertiary)]">Upcoming on Buzz</div>
         </div>
         <a
-          href={`https://buzz.app/o/${handle}`}
+          href={absoluteUrl(`/o/${handle}`)}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs font-semibold px-3 py-1 rounded-full bg-[var(--color-accent)] text-black"
+          className="text-xs font-semibold px-3 py-1 rounded-full bg-[var(--color-accent)] text-[var(--color-accent-ink)]"
         >
           Open
         </a>
@@ -57,7 +58,7 @@ export default async function EmbedOrg({ params }: { params: Params }) {
         {upcoming.map((e) => (
           <li key={e.id}>
             <a
-              href={`https://buzz.app/e/${e.id}`}
+              href={absoluteUrl(`/e/${e.id}`)}
               target="_blank"
               rel="noopener noreferrer"
               className="block p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors"
@@ -73,7 +74,7 @@ export default async function EmbedOrg({ params }: { params: Params }) {
 
       <div className="mt-4 text-center">
         <a
-          href="https://buzz.app"
+          href={SITE_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-[var(--color-text-tertiary)]"

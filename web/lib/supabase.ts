@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Public anon key — safe to ship in the browser. Real protection lives in Supabase RLS,
+// Public anon key - safe to ship in the browser. Real protection lives in Supabase RLS,
 // not in keeping this string secret. Placeholder values let the site build without
 // backend env vars wired up yet; mock data kicks in at runtime when the URL is fake.
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";

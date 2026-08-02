@@ -80,7 +80,7 @@ export default function SignIn() {
         </h1>
         <p className="mt-5 text-white/70 leading-relaxed">
           Type your school email. We send one magic link. Possession of the
-          inbox is the verification — no passwords, no profile fill.
+          inbox is the verification. No passwords, no profile to fill in.
         </p>
 
         {status === "sent" ? (
@@ -119,7 +119,7 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="group relative w-full h-14 flex items-center justify-center gap-2 rounded-2xl bg-[var(--color-accent)] text-black font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+              className="group relative w-full h-14 flex items-center justify-center gap-2 rounded-2xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
                 {status === "sending" ? "Sending…" : "Email me a link"}
@@ -134,10 +134,10 @@ export default function SignIn() {
 
         <div className="mt-12 pt-8 border-t border-white/10">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 mb-3">
-            § Or — native app
+            § Keep it handy
           </p>
           <p className="text-sm text-white/65 mb-4">
-            Sign in with Apple in one tap. Push, chat, check-in — all native.
+            Add Buzz to your home screen and you stay signed in. Two taps, no app store.
           </p>
           <AppStoreBadges layout="stack" />
         </div>

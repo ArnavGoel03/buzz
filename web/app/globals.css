@@ -56,7 +56,7 @@ html, body {
 
 *::selection { background: var(--color-accent); color: var(--color-accent-ink); }
 
-/* Grain overlay — premium tactile feel, subtle */
+/* Grain overlay - premium tactile feel, subtle */
 body::before {
   content: "";
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -65,7 +65,7 @@ body::before {
   mix-blend-mode: overlay;
 }
 
-/* Ambient radial glow anchored behind the hero — cheap depth. */
+/* Ambient radial glow anchored behind the hero - cheap depth. */
 body::after {
   content: "";
   position: fixed; top: -20%; left: 50%; transform: translateX(-50%);
@@ -117,7 +117,7 @@ main, header, nav { position: relative; z-index: 1; }
   animation: shine-sweep 2.6s linear infinite;
 }
 
-/* Glass card — layered depth without the performance hit of full backdrop-blur */
+/* Glass card - layered depth without the performance hit of full backdrop-blur */
 .glass {
   background: linear-gradient(180deg, oklch(1 0 0 / 0.04), oklch(1 0 0 / 0.01));
   border: 1px solid var(--color-border);
@@ -144,7 +144,7 @@ main, header, nav { position: relative; z-index: 1; }
 .maplibregl-ctrl-attrib { background: oklch(0.12 0.015 265 / 0.6) !important; }
 .maplibregl-ctrl-attrib a { color: oklch(0.98 0 0 / 0.5) !important; }
 
-/* Skip-to-content — visible only when focused. Keyboard / screen-reader entrypoint. */
+/* Skip-to-content - visible only when focused. Keyboard / screen-reader entrypoint. */
 .skip-link {
   position: fixed; top: -100px; left: 16px; z-index: 100;
   background: var(--color-accent); color: var(--color-accent-ink);

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { isMobile } from "@/lib/platform";
 
-// Ambient gradient orb that trails the cursor. Only on desktop — mobile users don't
+// Ambient gradient orb that trails the cursor. Only on desktop - mobile users don't
 // have a cursor and it's a performance hit to animate it anyway. Uses transform +
 // will-change so it doesn't trigger layout reflows.
 export default function CursorGlow() {

@@ -1,20 +1,28 @@
-import { MessageCircle, Bell, QrCode, Camera, Ticket, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import AppStoreBadges from "@/components/AppStoreBadges";
+import { ArrowRight, MessageCircle, Bell, QrCode, Ticket } from "lucide-react";
+import GetApp from "@/components/GetApp";
+import NotifyForm from "@/components/NotifyForm";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata = {
-  title: "Chat & more — in the app",
-  description: "Real-time DMs, push notifications, and check-in live in the Buzz native app.",
+  title: "Messages",
+  description: "Direct messages are not built yet. Here is what Buzz does today.",
+  alternates: { canonical: absoluteUrl("/messages") },
 };
 
+/**
+ * This page used to advertise chat, push, AR, and ticketing as if they shipped. None
+ * of them do. Saying so costs one honest paragraph and buys the trust that makes the
+ * rest of the product believable.
+ */
 export default function Messages() {
-  const features = [
-    { icon: <MessageCircle size={18} />, title: "DMs & group chat", desc: "Message anyone you RSVP with, in realtime." },
-    { icon: <Bell size={18} />, title: "Push notifications", desc: "Never miss a free-food drop." },
-    { icon: <QrCode size={18} />, title: "Tap-to-check-in", desc: "QR scanner at the door. Your streak builds." },
-    { icon: <Camera size={18} />, title: "AR Look Around", desc: "Point your phone, see events in real space." },
-    { icon: <Ticket size={18} />, title: "Paid tickets", desc: "Apple Pay · Wallet · scanned at entry." },
+  const planned = [
+    { icon: <MessageCircle size={18} />, title: "DMs and group chat", desc: "Message the people you RSVP with." },
+    { icon: <Bell size={18} />, title: "Push notifications", desc: "A ping when free food drops near you." },
+    { icon: <QrCode size={18} />, title: "Tap to check in", desc: "A QR at the door instead of a clipboard." },
+    { icon: <Ticket size={18} />, title: "Paid tickets", desc: "For the events that charge at the door." },
   ];
+
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-8 py-10">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)]">
@@ -24,24 +32,32 @@ export default function Messages() {
         className="mt-3 font-display font-medium tracking-[-0.02em] leading-[1] text-4xl md:text-5xl"
         style={{ fontFamily: "var(--font-display)" }}
       >
-        Chat lives in the app.
+        Not built yet.
       </h1>
       <p className="mt-4 text-[var(--color-text-secondary)] max-w-xl">
-        Realtime messaging, push, and check-in are smoother on native. Get Buzz — it&apos;s free for students.
+        There is no chat in Buzz today. What works right now is the part that matters
+        most: finding what is on tonight, seeing who else is going, and sending it to
+        the people you want there.
       </p>
 
-      <div className="mt-8">
-        <AppStoreBadges />
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <Link
+          href="/feed"
+          className="h-11 px-5 rounded-xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] inline-flex items-center gap-2 font-semibold text-sm"
+        >
+          See tonight <ArrowRight size={14} />
+        </Link>
+        <GetApp variant="secondary" />
       </div>
 
       <section className="mt-12">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)] mb-3">
-          § Also in the app
+          § Planned, not shipped
         </p>
         <ul className="rim rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden divide-y divide-[var(--color-border)]">
-          {features.map((f) => (
-            <li key={f.title} className="p-4 flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-accent-dim)] text-[var(--color-accent)] flex items-center justify-center shrink-0">
+          {planned.map((f) => (
+            <li key={f.title} className="p-4 flex items-start gap-3 opacity-80">
+              <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-2)] text-[var(--color-text-tertiary)] flex items-center justify-center shrink-0">
                 {f.icon}
               </div>
               <div className="flex-1">
@@ -51,11 +67,18 @@ export default function Messages() {
             </li>
           ))}
         </ul>
+        <p className="mt-3 text-xs text-[var(--color-text-tertiary)]">
+          Order depends on what students actually ask for. Leave your email and you get
+          told when one of these lands.
+        </p>
+        <div className="mt-4">
+          <NotifyForm label="Tell me when there is more" hint="School email. One message, no newsletter." />
+        </div>
       </section>
 
       <Link
         href="/feed"
-        className="mt-10 inline-flex items-center gap-2 font-mono text-xs text-[var(--color-text-tertiary)] hover:text-white"
+        className="mt-10 inline-flex items-center gap-2 font-mono text-xs text-[var(--color-text-tertiary)] hover:text-[var(--color-text)]"
       >
         Back to feed <ArrowRight size={12} />
       </Link>

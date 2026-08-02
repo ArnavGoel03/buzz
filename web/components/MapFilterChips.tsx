@@ -2,21 +2,35 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, Music, Pizza, Users, Medal, BookOpen, Briefcase } from "lucide-react";
+import { Flame, Music, Pizza, Users, Medal, BookOpen, Briefcase, Sparkle } from "lucide-react";
 import type { EventCategory } from "@/lib/types";
+import { categoryColor, categoryPlural } from "@/lib/categories";
+import { COLOR } from "@/lib/tokens";
 
-// Hues sourced from design/tokens.json via `categoryColor`. Hardcoded here only for
-// the icon-tint reference; if a token changes, update `categories.ts` and re-mirror.
-const CHIPS: { cat: EventCategory | "all"; label: string; icon: React.ReactNode; color: string }[] = [
-  { cat: "all",      label: "All",      icon: <Flame size={12} />,      color: "#FFD60A" },
-  { cat: "party",    label: "Parties",  icon: <Music size={12} />,      color: "#FF2D92" },
-  { cat: "free_food",label: "Free food",icon: <Pizza size={12} />,      color: "#FF9F0A" },
-  { cat: "club",     label: "Clubs",    icon: <Users size={12} />,      color: "#BF59F2" },
-  { cat: "sports",   label: "Sports",   icon: <Medal size={12} />,      color: "#30D158" },
-  { cat: "academic", label: "Academic", icon: <BookOpen size={12} />,   color: "#0A85FF" },
-  { cat: "career",   label: "Career",   icon: <Briefcase size={12} />,  color: "#0A85FF" },
-  { cat: "greek",    label: "Greek",    icon: <Users size={12} />,      color: "#BF59F2" },
+// Icons only. Colour and label come from lib/categories.ts, which reads
+// design/tokens.json, so a hue change lands here without anyone touching this file.
+const ICONS: Record<EventCategory | "all", React.ReactNode> = {
+  all: <Flame size={12} />,
+  party: <Music size={12} />,
+  free_food: <Pizza size={12} />,
+  club: <Users size={12} />,
+  sports: <Medal size={12} />,
+  academic: <BookOpen size={12} />,
+  career: <Briefcase size={12} />,
+  greek: <Users size={12} />,
+  other: <Sparkle size={12} />,
+};
+
+const ORDER: (EventCategory | "all")[] = [
+  "all", "party", "free_food", "club", "sports", "academic", "career", "greek",
 ];
+
+const CHIPS = ORDER.map((cat) => ({
+  cat,
+  label: cat === "all" ? "All" : categoryPlural(cat),
+  icon: ICONS[cat],
+  color: cat === "all" ? COLOR.accent : categoryColor(cat).color,
+}));
 
 export default function MapFilterChips({
   selected,
@@ -42,7 +56,7 @@ export default function MapFilterChips({
             onClick={() => onSelect(c.cat)}
             className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors"
             style={{
-              color: active ? "#000" : c.color,
+              color: active ? COLOR.accentInk : c.color,
             }}
           >
             <AnimatePresence>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 
 /**
- * Vercel Cron handler — fires per `vercel.json` schedule (currently daily).
+ * Vercel Cron handler - fires per `vercel.json` schedule (currently daily).
  *
  * Picks pending rows from `event_reminders` whose `fires_at <= now()` and `fired = false`,
  * looks up RSVPs for that event, sends a push to each, marks the reminder fired.

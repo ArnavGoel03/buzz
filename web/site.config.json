@@ -1,0 +1,10 @@
+{
+  "$comment": "Values that both TypeScript and the build scripts need. lib/site.ts imports this; scripts/gen-qr.mjs reads it. Change a value here and every canonical URL, QR code, sitemap entry, OG tag, and contact link follows.",
+  "productionHost": "buzzcampus.vercel.app",
+  "repo": { "owner": "ArnavGoel03", "name": "buzz" },
+  "contact": {
+    "$comment": "Null until a real inbox exists. Every contact link falls back to GitHub issues rather than printing an address that bounces. Set `email` once and support, legal, and trust pages all pick it up.",
+    "email": null,
+    "inboundEmailDomain": null
+  }
+}

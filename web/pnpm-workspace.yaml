@@ -1,0 +1,5 @@
+# pnpm 11 reads build approval from here, and it overrides package.json, so this is the
+# only place it is written down. sharp compiles a native binary and is used by the
+# offline icon rasterizer (`pnpm icons`), never at request time.
+allowBuilds:
+  sharp: true

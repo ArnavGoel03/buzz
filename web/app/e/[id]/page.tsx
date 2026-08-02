@@ -1,15 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MapPin, Clock, Users, Calendar, Share2, Building2 } from "lucide-react";
+import { MapPin, Clock, Users, Calendar, Building2 } from "lucide-react";
 import { getEvent } from "@/lib/data";
 import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatFullDate } from "@/lib/format";
 import RSVPButton from "@/components/RSVPButton";
 import EventMap from "@/components/EventMap";
-import OpenInApp from "@/components/OpenInApp";
+import ShareButton from "@/components/ShareButton";
 import EventHero from "@/components/EventHero";
+import GetApp from "@/components/GetApp";
 import { safeJsonLd } from "@/lib/security";
+import { absoluteUrl } from "@/lib/site";
 
 type Params = Promise<{ id: string }>;
 
@@ -18,18 +20,18 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const event = await getEvent(id);
   if (!event) return { title: "Event" };
   const title = `${event.title} · Buzz`;
-  const description = `${event.summary} — ${event.location_name}`;
+  const description = `${event.summary} · ${event.location_name}`;
   // Dynamic OG card rendered at /api/poster/[id]. iMessage, Discord, Slack, etc
-  // all pull this when the link is shared — it's how the event visualizes before
+  // all pull this when the link is shared - it's how the event visualizes before
   // the click.
-  const ogImage = `https://buzz.app/api/poster/${id}`;
+  const ogImage = absoluteUrl(`/api/poster/${id}`);
   return {
     title, description,
     openGraph: {
       title, description,
       type: "article",
       siteName: "Buzz",
-      url: `https://buzz.app/e/${id}`,
+      url: absoluteUrl(`/e/${id}`),
       images: [{ url: ogImage, width: 1200, height: 630, alt: event.title }],
     },
     twitter: { card: "summary_large_image", title, description, images: [ogImage] },
@@ -55,7 +57,7 @@ export default async function EventDetail({ params }: { params: Params }) {
     endDate: event.ends_at ?? undefined,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    image: [`https://buzz.app/api/poster/${id}`],
+    image: [absoluteUrl(`/api/poster/${id}`)],
     location: {
       "@type": "Place",
       name: event.location_name,
@@ -67,7 +69,7 @@ export default async function EventDetail({ params }: { params: Params }) {
     organizer: {
       "@type": "Organization",
       name: event.host_name,
-      ...(event.host_handle ? { url: `https://buzz.app/o/${event.host_handle}` } : {}),
+      ...(event.host_handle ? { url: absoluteUrl(`/o/${event.host_handle}`) } : {}),
     },
     performer: { "@type": "Organization", name: event.host_name },
     // Most Buzz events are free. Paid ones go through Stripe (ticket_types join, separate
@@ -75,13 +77,13 @@ export default async function EventDetail({ params }: { params: Params }) {
     // promising a price we can't verify here.
     offers: {
       "@type": "Offer",
-      url: `https://buzz.app/e/${id}`,
+      url: absoluteUrl(`/e/${id}`),
       price: "0",
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
       validFrom: event.starts_at,
     },
-    url: `https://buzz.app/e/${id}`,
+    url: absoluteUrl(`/e/${id}`),
   };
 
   return (
@@ -116,17 +118,17 @@ export default async function EventDetail({ params }: { params: Params }) {
 
       <div className="mt-6 grid grid-cols-[1fr_auto] gap-2">
         <RSVPButton eventId={event.id} />
-        <ShareButton title={event.title} url={`https://buzz.app/e/${event.id}`} />
+        <ShareButton kind="e" id={event.id} title={event.title} />
       </div>
 
       <div className="mt-3 p-4 rounded-xl bg-[var(--color-accent-dim)] border border-[var(--color-accent)]/30 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-bold">Get notified when it starts</p>
+          <p className="text-sm font-bold">Everything else on tonight</p>
           <p className="text-xs text-[var(--color-text-secondary)]">
-            Push alerts, chat with attendees, check-in — all in the app.
+            Put Buzz on your home screen and the rest of the week is one tap away.
           </p>
         </div>
-        <OpenInApp kind="e" id={event.id} label="Open" />
+        <GetApp variant="compact" label="Install" />
       </div>
 
       {event.latitude != null && event.longitude != null && (
@@ -181,14 +183,3 @@ function InfoRow({
   );
 }
 
-function ShareButton({ title, url }: { title: string; url: string }) {
-  return (
-    <a
-      href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`}
-      className="h-12 w-12 flex items-center justify-center rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]"
-      aria-label="Share"
-    >
-      <Share2 size={18} />
-    </a>
-  );
-}

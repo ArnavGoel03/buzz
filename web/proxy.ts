@@ -3,7 +3,10 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Refreshes the Supabase auth session cookie on every request so server components
 // always see an accurate `user`. Matches Supabase's Next.js App Router pattern.
-export async function middleware(request: NextRequest) {
+//
+// Next 16 renamed middleware.ts to proxy.ts and `middleware()` to `proxy()`; the old
+// names still work but log a deprecation on every build.
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(

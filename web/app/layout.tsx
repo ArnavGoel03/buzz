@@ -10,32 +10,35 @@ import CommandPalette from "@/components/CommandPalette";
 import CursorGlow from "@/components/CursorGlow";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 import ScrollProgress from "@/components/ScrollProgress";
+import PWA from "@/components/PWA";
+import { SITE, SITE_URL } from "@/lib/site";
+
+const TITLE = `${SITE.name}: ${SITE.tagline}`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://buzz.app"),
-  title: { default: "Buzz — every college event, one feed", template: "%s · Buzz" },
-  description:
-    "Live discovery for college students. Parties, clubs, sports, free food, and academic events happening tonight on and around campus. Free on iOS, macOS, and Android.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE, template: `%s · ${SITE.name}` },
+  description: SITE.description,
+  applicationName: SITE.name,
+  appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "black-translucent" },
   keywords: [
     "college events", "university events", "campus events", "college app",
     "rush week", "greek life", "college parties", "student app", "free food",
     "college clubs", "campus map", "ucsd events", "ucla events",
   ],
-  alternates: { canonical: "https://buzz.app" },
+  alternates: { canonical: SITE_URL },
   openGraph: {
     type: "website",
-    siteName: "Buzz",
-    title: "Buzz — every college event, one feed",
-    description: "Live discovery for college students. Free. iOS, macOS, and Android.",
-    url: "https://buzz.app",
+    siteName: SITE.name,
+    title: TITLE,
+    description: SITE.shortDescription,
+    url: SITE_URL,
     locale: "en_US",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Buzz — college events on a map" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Buzz — every college event, one feed",
-    description: "Live discovery for college students.",
-    images: ["/og.png"],
+    title: TITLE,
+    description: SITE.shortDescription,
   },
   category: "social",
   robots: {
@@ -48,9 +51,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0f",
+  themeColor: SITE.themeColor,
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -59,9 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable}`}
     >
-      <head>
-        <meta name="apple-itunes-app" content="app-id=TBD" />
-      </head>
       <body className="font-sans">
         <a href="#main" className="skip-link">Skip to content</a>
         <ScrollProgress />
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileTabBar />
         <CommandPalette />
         <KeyboardShortcuts />
+        <PWA />
         <Analytics />
         <SpeedInsights />
       </body>

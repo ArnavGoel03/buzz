@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { mockOrg } from "@/lib/supabase";
 import { createClient } from "@/lib/supabase-server";
+import { Users, Calendar, Megaphone, FileText, Webhook, KeyRound } from "lucide-react";
+import { absoluteUrl } from "@/lib/site";
 
 type Params = Promise<{ handle: string }>;
 
@@ -63,20 +65,22 @@ export default async function AdminDashboard({ params }: { params: Params }) {
         </Link>
       </header>
 
-      <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Stat label="Members" value="412" />
-        <Stat label="Events / 30d" value="9" />
-        <Stat label="RSVPs / 30d" value="1.2k" />
-        <Stat label="Attend rate" value="73%" />
-      </section>
-
-      <section className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <ActionCard title="Members" body="Bulk invite via paste / CSV. Approve join requests." href="#" icon="👥" />
-        <ActionCard title="Events" body="Create, duplicate, recur, draft." href="#" icon="📅" />
-        <ActionCard title="Broadcast" body="Push or email to all members." href="#" icon="📣" />
-        <ActionCard title="Drafts" body="Forwarded-email drafts awaiting review." href="#" icon="✉️" />
-        <ActionCard title="Webhooks" body="Discord, Slack, generic JSON outputs." href="#" icon="🔗" />
-        <ActionCard title="Transfer ownership" body="Hand off to next year's officers." href="#" icon="🪪" />
+      <section className="mt-8">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)]">
+          § On the way
+        </p>
+        <p className="mt-2 text-sm text-[var(--color-text-secondary)] max-w-xl">
+          Member management, broadcasts, and analytics are being built. The embed below
+          works today. Nothing here shows a number until it is a real one.
+        </p>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ActionCard title="Members" body="Bulk invite by paste or CSV. Approve join requests." icon={<Users size={18} />} />
+          <ActionCard title="Events" body="Create, duplicate, repeat, draft." icon={<Calendar size={18} />} />
+          <ActionCard title="Broadcast" body="Push or email everyone who follows you." icon={<Megaphone size={18} />} />
+          <ActionCard title="Drafts" body="Forwarded-email drafts waiting on review." icon={<FileText size={18} />} />
+          <ActionCard title="Webhooks" body="Discord, Slack, and generic JSON outputs." icon={<Webhook size={18} />} />
+          <ActionCard title="Transfer ownership" body="Hand off to next year's officers." icon={<KeyRound size={18} />} />
+        </div>
       </section>
 
       <section className="mt-10">
@@ -84,10 +88,10 @@ export default async function AdminDashboard({ params }: { params: Params }) {
           Embed code
         </h2>
         <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-          Paste this on your existing club website — it'll show your upcoming events live.
+          Paste this on your existing club website. It shows your upcoming events live.
         </p>
         <pre className="mt-3 p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-x-auto text-xs">
-{`<iframe src="https://buzz.app/embed/o/${handle}"
+{`<iframe src="${absoluteUrl(`/embed/o/${handle}`)}"
         width="100%" height="500"
         style="border:0;border-radius:16px"></iframe>`}
         </pre>
@@ -96,28 +100,15 @@ export default async function AdminDashboard({ params }: { params: Params }) {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+/** Not a link yet. A card that navigates nowhere is worse than one that says so. */
+function ActionCard({ title, body, icon }: { title: string; body: string; icon: React.ReactNode }) {
   return (
-    <div className="p-4 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)]">
-      <div className="text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>
-        {value}
-      </div>
-      <div className="text-xs text-[var(--color-text-secondary)] mt-1">{label}</div>
-    </div>
-  );
-}
-
-function ActionCard({ title, body, href, icon }: { title: string; body: string; href: string; icon: string }) {
-  return (
-    <Link
-      href={href}
-      className="p-5 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors"
-    >
-      <div className="text-2xl">{icon}</div>
+    <div className="p-5 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] opacity-70">
+      <div className="text-[var(--color-text-tertiary)]">{icon}</div>
       <div className="font-bold mt-2" style={{ fontFamily: "var(--font-display)" }}>
         {title}
       </div>
       <div className="text-sm text-[var(--color-text-secondary)] mt-1">{body}</div>
-    </Link>
+    </div>
   );
 }

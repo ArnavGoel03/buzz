@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
-// Infinite horizontal marquee — duplicates children so the scroll loops seamlessly.
+// Infinite horizontal marquee - duplicates children so the scroll loops seamlessly.
 // Pauses on hover so users can actually read items. Used for campus logos +
 // testimonial snippets.
 export default function Marquee({

@@ -8,7 +8,7 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
  *
  * - Verifies the Stripe v1 signature manually (multi-`v1=` tolerant; any one match
  *   passes), with a 5-minute replay window.
- * - Idempotent via `stripe_events_seen.event_id` UNIQUE — duplicate Stripe deliveries
+ * - Idempotent via `stripe_events_seen.event_id` UNIQUE - duplicate Stripe deliveries
  *   no-op without re-writing the ticket row.
  * - Missing `STRIPE_WEBHOOK_SECRET` now returns 500 (was 200), so Stripe retries +
  *   logs the misconfig instead of silently dropping every payment forever.
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
   const supabase = createSupabaseClient(supaUrl, supaServiceKey, { auth: { persistSession: false } });
 
-  // Idempotency dedupe — UNIQUE PK on event_id means a duplicate fails fast.
+  // Idempotency dedupe - UNIQUE PK on event_id means a duplicate fails fast.
   const { error: dupeErr } = await supabase
     .from("stripe_events_seen")
     .insert({ event_id: event.id });

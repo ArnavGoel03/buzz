@@ -3,7 +3,7 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 
 // Thin accent-colored progress bar pinned at the very top of the viewport.
-// Use sparingly — makes long reading pages feel premium (event detail, org
+// Use sparingly - makes long reading pages feel premium (event detail, org
 // detail, profile). Width 0→1 driven by window scroll progress.
 export default function ScrollProgress() {
   const { scrollYProgress } = useScroll();

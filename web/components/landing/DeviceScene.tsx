@@ -5,7 +5,7 @@ import { Float, Environment, ContactShadows } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
-// Floating 3D device mockup — WebGL-rendered iPhone chassis with a glowing event
+// Floating 3D device mockup - WebGL-rendered iPhone chassis with a glowing event
 // card "screen". Rotates on mouse position, tilts on scroll. Real-time render;
 // no prebaked textures.
 function Phone({
@@ -45,7 +45,7 @@ function Phone({
           <planeGeometry args={[1.48, 3.08]} />
           <meshStandardMaterial color="#050508" />
         </mesh>
-        {/* hero event "card" on screen — glowing gradient */}
+        {/* hero event "card" on screen - glowing gradient */}
         <mesh position={[0, 0.5, 0.095]}>
           <planeGeometry args={[1.32, 1.4]} />
           <meshBasicMaterial color="#FFD60A" transparent opacity={0.18} />

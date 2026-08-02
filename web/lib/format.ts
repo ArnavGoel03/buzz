@@ -6,7 +6,7 @@ export function formatRelativeTime(iso: string): string {
   const diffMs = date.getTime() - now;
   const absMs = Math.abs(diffMs);
 
-  // Under an hour — "in 45m" / "45m ago"
+  // Under an hour - "in 45m" / "45m ago"
   if (absMs < 3600_000) {
     return formatDistanceToNow(date, { addSuffix: true });
   }

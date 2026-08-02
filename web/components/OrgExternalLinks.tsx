@@ -1,7 +1,7 @@
 import { Globe2 } from "lucide-react";
 import type { Organization } from "@/lib/types";
 
-// Inlined Instagram glyph — lucide-react doesn't ship this icon at our version,
+// Inlined Instagram glyph - lucide-react doesn't ship this icon at our version,
 // and pulling in a brand-icon package for one SVG isn't worth the bundle cost.
 function InstagramGlyph({ size = 14, color }: { size?: number; color?: string }) {
   return (
@@ -33,7 +33,7 @@ function instagramURL(raw: string | null | undefined): string | null {
   return `https://instagram.com/${stripped}`;
 }
 
-// Only surface http(s) sites — no javascript:, data:, etc.
+// Only surface http(s) sites - no javascript:, data:, etc.
 function safeWebsiteURL(raw: string | null | undefined): string | null {
   if (!raw) return null;
   try {
@@ -62,7 +62,7 @@ export default function OrgExternalLinks({ org }: Props) {
   const web = safeWebsiteURL(org.website_url);
   if (!ig && !web) return null;
 
-  // The accent rim mirrors the iOS OrgExternalLinksRow pill — same visual language on both surfaces.
+  // The accent rim mirrors the iOS OrgExternalLinksRow pill - same visual language on both surfaces.
   const pillStyle = { borderColor: `${org.accent_hex}38` } as const;
   const handle = org.instagram_handle?.replace(/^@/, "") ?? "";
 

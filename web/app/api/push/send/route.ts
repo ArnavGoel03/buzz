@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Fan-out send across APNs + FCM. Internal-only — invoked by Supabase triggers, the
+ * Fan-out send across APNs + FCM. Internal-only - invoked by Supabase triggers, the
  * reminder cron, and broadcast workers via the CRON_SECRET header. Web push was
  * removed with the PWA shell; web is marketing/share-previews/admin only.
  *

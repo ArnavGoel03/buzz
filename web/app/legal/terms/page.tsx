@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { CONTACT, SITE, absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Terms of Service · Buzz",
-  description: "The rules of using Buzz. Short and in English.",
+  title: "Terms of Service",
+  description: `The rules of using ${SITE.name}. Short, and in English.`,
+  alternates: { canonical: absoluteUrl("/legal/terms") },
 };
 
 export default function Terms() {
@@ -44,11 +46,11 @@ export default function Terms() {
       </Section>
 
       <Section title="Disclaimers">
-        <p>Buzz is provided "as is." We don't guarantee an event will happen, be fun, or be safe. We're not responsible for things that happen at events — attend at your own discretion and good judgment.</p>
+        <p>Buzz is provided "as is." We don't guarantee an event will happen, be fun, or be safe. We're not responsible for things that happen at events. Attend at your own discretion and good judgment.</p>
       </Section>
 
       <Section title="Contact">
-        <p>Questions: <a className="underline" href="mailto:hi@buzz.app">hi@buzz.app</a>. Legal: <a className="underline" href="mailto:legal@buzz.app">legal@buzz.app</a>.</p>
+        <p>Questions, legal or otherwise: <a className="underline" href={CONTACT.href}>{CONTACT.label}</a>.</p>
       </Section>
     </main>
   );

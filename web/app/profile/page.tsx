@@ -25,7 +25,7 @@ export default async function MyProfile() {
         </p>
         <Link
           href="/sign-in"
-          className="mt-6 inline-flex h-11 px-6 items-center rounded-xl bg-[var(--color-accent)] text-black font-bold"
+          className="mt-6 inline-flex h-11 px-6 items-center rounded-xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-bold"
         >
           Sign in
         </Link>

@@ -36,7 +36,7 @@ export default function FollowButton({ handle }: { handle: string }) {
       className={`h-11 px-6 flex items-center gap-2 rounded-xl font-bold text-sm transition-colors ${
         following
           ? "bg-[var(--color-surface)] border border-[var(--color-border-strong)] text-white"
-          : "bg-[var(--color-accent)] text-black hover:brightness-110"
+          : "bg-[var(--color-accent)] text-[var(--color-accent-ink)] hover:brightness-110"
       }`}
     >
       {following ? <Check size={16} /> : <Plus size={16} />}

@@ -1,12 +1,7 @@
-export type EventCategory =
-  | "party"
-  | "free_food"
-  | "club"
-  | "sports"
-  | "academic"
-  | "greek"
-  | "career"
-  | "other";
+// Derived from the CATEGORIES map so the list of categories exists in exactly one
+// place. Re-exported here because most call sites import their types from this file.
+import type { EventCategory } from "./categories";
+export type { EventCategory };
 
 export type Event = {
   id: string;

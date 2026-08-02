@@ -19,6 +19,9 @@ export type DraftEvent = {
 };
 
 const TIME_RE =
+  // The en dash in this character class is deliberate and must stay: officers paste
+  // ranges like "7–10pm" straight out of Word and Gmail, so the pattern has to match
+  // the character their mail client actually produced.
   /(\d{1,2})(?::(\d{2}))?\s*(am|pm|AM|PM)\s*(?:[-–to]+\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm|AM|PM))?/;
 const DATE_RE =
   /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:[a-z]{0,2})?(?:,?\s+(\d{4}))?/i;

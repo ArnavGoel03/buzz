@@ -1,15 +1,19 @@
-// Central source of truth for deep links + store URLs. When Apple assigns real App
-// Store IDs post-submission, only this file needs updating.
+// Deep links and install destinations. Store URLs live in lib/site.ts as nullable
+// listings so a placeholder App Store ID can never ship as a real-looking button.
 
-export const APP_STORE_ID = "TBD"; // iOS App Store numeric ID — replace post-submit
-export const APP_STORE_URL = "https://apps.apple.com/app/id0000000000"; // placeholder
-export const MAC_APP_STORE_URL = "https://apps.apple.com/app/id0000000000"; // placeholder
-export const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=app.buzz"; // Phase 3
+import { SITE_URL, STORE_LISTINGS } from "./site";
 
-export const UNIVERSAL_LINK_HOST = "https://buzz.app";
+export const UNIVERSAL_LINK_HOST = SITE_URL;
 export const CUSTOM_SCHEME = "buzz://";
 
-/** Deep-link an event/org/user page into the native app, falling back to the store. */
+/** Where every "get the app" CTA points. One canonical anchor for the whole site. */
+export const INSTALL_PATH = "/download";
+
+export const APP_STORE_URL = STORE_LISTINGS.ios;
+export const PLAY_STORE_URL = STORE_LISTINGS.android;
+export const MAC_APP_STORE_URL = STORE_LISTINGS.macAppStore;
+
+/** Deep-link an event/org/user page into the native app when it is installed. */
 export function deepLink(kind: "e" | "o" | "u", id: string): string {
   return `${CUSTOM_SCHEME}${kind}/${id}`;
 }

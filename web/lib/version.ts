@@ -1,4 +1,4 @@
-// GENERATED from /VERSION — do not edit by hand.
+// GENERATED from /VERSION - do not edit by hand.
 // Run `node scripts/sync-version.mjs` after editing /VERSION.
 export const VERSION = "1.0.0";
 export const BUILD_ID =

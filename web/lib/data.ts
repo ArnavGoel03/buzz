@@ -4,7 +4,7 @@ import type { Event, Organization, Profile, Campus } from "./types";
 
 // Thin data layer. When Supabase env is configured and tables exist, these hit the
 // real Postgres. Otherwise they fall back to the mock fixtures so the site always
-// renders — useful for previews, demos, and this-weekend builds.
+// renders - useful for previews, demos, and this-weekend builds.
 
 function hasRealSupabase(): boolean {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";

@@ -1,14 +1,19 @@
 import usUniversitiesRaw from "@/data/us-universities.json";
+import { ACADEMIC_SUFFIXES, COUNTRY_BY_SUFFIX, isAcademicEmail } from "./academic-domains";
 
-// Any academic TLD works as a sign-in gate — the inbox is the verification. New
-// school accredited tomorrow? Their student signs in with @newschool.edu and they're
+// Any academic TLD works as a sign-in gate, because the inbox is the verification. A
+// school accredited tomorrow? Their student signs in with @newschool.edu and they are
 // in, no deploy needed.
 //
 // On top of that we ship two lookup layers for nice branding:
-//   1. FEATURED_DOMAINS  — hand-curated priority schools (nicer names/copy)
-//   2. us-universities.json — 2,300+ accredited US schools (refreshable via script)
+//   1. FEATURED_DOMAINS, hand-curated priority schools (nicer names/copy)
+//   2. us-universities.json, 2,300+ accredited US schools (refreshable via script)
 //
-// Cascade: featured → US bundle → derive from domain.
+// Cascade: featured, then the US bundle, then derived from the domain.
+//
+// The suffix rules live in academic-domains.ts so client components can validate an
+// address without shipping the university dataset to the browser.
+export { isAcademicEmail, rejectReason } from "./academic-domains";
 
 export type CampusResolution = {
   campusId: string;
@@ -44,26 +49,6 @@ const FEATURED_DOMAINS: Record<string, { campusId: string; campusName: string; c
   "cam.ac.uk":        { campusId: "cambridge",campusName: "Cambridge",     country: "UK" },
   "utoronto.ca":      { campusId: "utoronto", campusName: "U of Toronto",  country: "Canada" },
 };
-
-const ACADEMIC_SUFFIXES = [
-  ".edu", ".ac.uk", ".ac.in", ".edu.in", ".edu.au", ".ac.nz", ".ac.ca",
-  ".ac.il", ".ac.jp", ".ac.kr", ".edu.sg", ".edu.hk", ".ac.za",
-];
-
-const COUNTRY_BY_SUFFIX: Record<string, string> = {
-  ".edu": "USA", ".ac.uk": "UK", ".ac.in": "India", ".edu.in": "India",
-  ".edu.au": "Australia", ".ac.nz": "New Zealand", ".ac.ca": "Canada",
-  ".ac.il": "Israel", ".ac.jp": "Japan", ".ac.kr": "South Korea",
-  ".edu.sg": "Singapore", ".edu.hk": "Hong Kong", ".ac.za": "South Africa",
-};
-
-export function isAcademicEmail(email: string): boolean {
-  const lower = email.trim().toLowerCase();
-  if (!lower.includes("@")) return false;
-  const domain = lower.split("@")[1];
-  if (!domain) return false;
-  return ACADEMIC_SUFFIXES.some((suf) => domain.endsWith(suf));
-}
 
 export function resolveCampus(email: string): CampusResolution | null {
   const lower = email.trim().toLowerCase();
@@ -107,12 +92,3 @@ export function resolveCampus(email: string): CampusResolution | null {
   };
 }
 
-export function rejectReason(email: string): string | null {
-  const t = email.trim();
-  if (!t) return "Enter your school email.";
-  if (!t.includes("@")) return "That's not an email address.";
-  if (!isAcademicEmail(t)) {
-    return "Buzz uses your school email to verify you're a real student (.edu, .ac.uk, .ac.in, .edu.au, etc.).";
-  }
-  return null;
-}

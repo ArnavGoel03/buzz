@@ -9,7 +9,7 @@ import { verifyMailgunSignature } from "@/lib/security";
  *
  * Mailgun's "Forward" / "Store and Notify" routes POST `multipart/form-data`, not JSON,
  * with `timestamp`/`token`/`signature` at the top level (per Mailgun docs). The previous
- * implementation assumed JSON and a nested signature shape — both wrong. This version
+ * implementation assumed JSON and a nested signature shape - both wrong. This version
  * uses `req.formData()` and the canonical Mailgun field names.
  *
  * Crit-#6 patch: HMAC verified; sender must own an officer membership of the target org.
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
   const supabase = await createClient();
   // Look up the sender by email on `profiles` (which carries `email` after the auth-callback
-  // upsert). Falls back to a 403 — no draft is created for unknown senders.
+  // upsert). Falls back to a 403 - no draft is created for unknown senders.
   const { data: senderProfile } = await supabase
     .from("profiles")
     .select("id")
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "sender_unknown" }, { status: 403 });
   }
   // Officer check by handle. The membership table uses `organization_id`; resolve the
-  // org first, then check membership against its UUID — avoids the `org_handle` column
+  // org first, then check membership against its UUID - avoids the `org_handle` column
   // mismatch that broke earlier versions.
   const { data: org } = await supabase
     .from("organizations")

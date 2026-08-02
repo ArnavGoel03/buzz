@@ -4,10 +4,11 @@ import { CheckCircle2, Users, Globe2 } from "lucide-react";
 import { getOrg, getEventsByOrg } from "@/lib/data";
 import EventCard from "@/components/EventCard";
 import FollowButton from "@/components/FollowButton";
-import OpenInApp from "@/components/OpenInApp";
+import ShareButton from "@/components/ShareButton";
 import OrgHero from "@/components/OrgHero";
 import OrgExternalLinks from "@/components/OrgExternalLinks";
 import { safeJsonLd } from "@/lib/security";
+import { absoluteUrl } from "@/lib/site";
 
 type Params = Promise<{ handle: string }>;
 
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       description: org.tagline,
       type: "profile",
       siteName: "Buzz",
-      url: `https://buzz.app/o/${handle}`,
+      url: absoluteUrl(`/o/${handle}`),
     },
   };
 }
@@ -50,7 +51,7 @@ export default async function OrgDetail({ params }: { params: Params }) {
     "@type": "Organization",
     name: org.name,
     description: org.tagline,
-    url: `https://buzz.app/o/${handle}`,
+    url: absoluteUrl(`/o/${handle}`),
     ...(sameAs.length ? { sameAs } : {}),
   };
 
@@ -82,7 +83,7 @@ export default async function OrgDetail({ params }: { params: Params }) {
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <FollowButton handle={org.handle} />
-          <OpenInApp kind="o" id={org.handle} label="Open in app" />
+          <ShareButton kind="o" id={org.handle} title={org.name} label="Share" />
         </div>
 
         <OrgExternalLinks org={org} />

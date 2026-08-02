@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 
 // Global keyboard router + shortcut overlay. Matches GitHub / Linear / Raycast
 // conventions: `g` then a single key = go to section; `/` focuses search; `?`
-// opens help. Respects inputs — no hijacking when the user is typing.
+// opens help. Respects inputs - no hijacking when the user is typing.
 
 type Shortcut = { combo: string[]; label: string };
 const SECTIONS: { title: string; items: Shortcut[] }[] = [

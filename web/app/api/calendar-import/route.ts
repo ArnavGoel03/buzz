@@ -6,8 +6,8 @@ import { assertPublicHttpsUrl } from "@/lib/security";
  * Imports events from a public iCal feed. Officer pastes the URL → all upcoming
  * events become drafts in the org's queue.
  *
- * Crit-#5 patch: previously an unauthenticated caller could pass any URL — including
- * `http://169.254.169.254/...` or `http://localhost/...` — and the response body would
+ * Crit-#5 patch: previously an unauthenticated caller could pass any URL - including
+ * `http://169.254.169.254/...` or `http://localhost/...` - and the response body would
  * be reflected in the error path. We now require a signed-in session AND that the
  * caller belongs to `handle`'s officer set, then route the fetch through the SSRF
  * guard (https-only, blocks RFC1918/link-local/loopback after DNS resolution), enforce
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "missing_params" }, { status: 400 });
   }
 
-  // Officer check — server-side, RLS-readable. The `memberships` table uses
+  // Officer check - server-side, RLS-readable. The `memberships` table uses
   // `organization_id` (UUID), so resolve `handle` → org first, then check membership.
   const { data: org } = await supabase
     .from("organizations")
