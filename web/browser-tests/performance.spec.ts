@@ -27,10 +27,10 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 700 }], ["pho
       await expect.poll(() => styles).toBeGreaterThan(0);
       await expect.soft(map.locator("..")).toHaveCSS("height", "360px");
       await page.screenshot({ path: testInfo.outputPath(`${name}-${path === "/" ? "home" : "feed"}-map.png`) });
-      const marker = map.getByRole("button", { name: "ACM Boba Night", exact: true });
+      const marker = map.getByRole("button", { name: "Warren Quad Takeover", exact: true });
       await marker.click();
       await map.getByText("Tap to view", { exact: false }).click();
-      await expect(page).toHaveURL(/\/e\/acm-boba$/);
+      await expect(page).toHaveURL(/\/e\/warren-quad-1$/);
     }
     await page.goto("/o/acm-ucsd");
     await expect(page.getByRole("heading", { name: "Events", exact: true })).toBeVisible();

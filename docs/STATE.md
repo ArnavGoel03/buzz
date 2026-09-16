@@ -25,3 +25,7 @@ retained as run artifacts.
 The portfolio performance IMPLEMENTATION.md records the exact GitHub merge and
 live deployment receipt. Earlier native/product obligations remain in
 SESSION_STATE.md; this release does not close them.
+
+Browser follow-up: the existing boba and lecture fixture pins overlap at the
+default zoom. The performance smoke uses an unobscured marker; clustering or
+changing pin selection is a separate product change and remains unimplemented.
