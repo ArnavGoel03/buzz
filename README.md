@@ -361,3 +361,14 @@ supabase/
 - [ ] First ambassador at UCSD seeds 20 events for launch week
 
 **File count: ~315** across iOS/Mac app + Next.js web + AppClip + Supabase schema. Single backend. Five surfaces. One product.
+
+## Web performance verification
+
+Home and feed load MapLibre and its styles near the reserved map viewport. Club
+event lists use 25-row keyset pages ordered by timestamp and UUID, including
+older history. Existing cookie-aware Supabase access and RLS remain in place;
+no global caching of personalized data was added.
+
+From `web`: `pnpm run typecheck`, `pnpm run test:performance`, `pnpm run build`,
+then `node scripts/check-map-assets.mjs`. Runtime browser and real Supabase
+authorization checks remain separate from these source and fixture checks.

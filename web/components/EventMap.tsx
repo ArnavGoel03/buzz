@@ -1,5 +1,6 @@
 "use client";
 
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useMemo } from "react";
 import Map, { Marker, Popup, NavigationControl } from "react-map-gl/maplibre";
 import { useRouter } from "next/navigation";

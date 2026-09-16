@@ -6,7 +6,7 @@ import { getEvent } from "@/lib/data";
 import { categoryColor, categoryLabel } from "@/lib/categories";
 import { formatFullDate } from "@/lib/format";
 import RSVPButton from "@/components/RSVPButton";
-import EventMap from "@/components/EventMap";
+import EventMap from "@/components/DeferredEventMap";
 import ShareButton from "@/components/ShareButton";
 import EventHero from "@/components/EventHero";
 import GetApp from "@/components/GetApp";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import EventMap from "@/components/EventMap";
+import EventMap from "@/components/DeferredEventMap";
 import MapOverlayCTA from "@/components/MapOverlayCTA";
 import MapStatsPanel from "@/components/MapStatsPanel";
 import MapFilterChips from "@/components/MapFilterChips";

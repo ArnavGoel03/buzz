@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { parseEventCursor } from "@/lib/org-events";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CheckCircle2, Users, Globe2 } from "lucide-react";
@@ -29,9 +31,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function OrgDetail({ params }: { params: Params }) {
+export default async function OrgDetail({ params, searchParams }: { params: Params; searchParams: Promise<{ after?: string; page?: string }> }) {
   const { handle } = await params;
-  const [org, events] = await Promise.all([getOrg(handle), getEventsByOrg(handle)]);
+  const search = await searchParams;
+  const after = typeof search.after === "string" && parseEventCursor(search.after) ? search.after : undefined;
+  const requestedPage = Number(search.page);
+  const page = after && Number.isSafeInteger(requestedPage) && requestedPage > 1 && requestedPage < 1_000_000 ? requestedPage : 1;
+  const [org, result] = await Promise.all([getOrg(handle), getEventsByOrg(handle, after)]);
+  const { events, next } = result;
   if (!org) notFound();
 
   const sameAs: string[] = [];
@@ -97,7 +104,7 @@ export default async function OrgDetail({ params }: { params: Params }) {
 
         <section className="mt-10">
           <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
-            Upcoming events
+            Events
           </h2>
           {events.length === 0 ? (
             <p className="text-sm text-[var(--color-text-tertiary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
@@ -109,6 +116,13 @@ export default async function OrgDetail({ params }: { params: Params }) {
                 <EventCard key={e.id} event={e} />
               ))}
             </div>
+          )}
+          {(after || next) && (
+            <nav aria-label="Events" className="mt-4 flex items-center gap-3">
+              {after && <Link href={`/o/${handle}`} prefetch={false} className="p-3 underline">1</Link>}
+              <span aria-current="page" className="p-3">{page}</span>
+              {next && <Link href={{ pathname: `/o/${handle}`, query: { after: next, page: page + 1 } }} prefetch={false} rel="next" className="p-3 underline">{page + 1}</Link>}
+            </nav>
           )}
         </section>
 

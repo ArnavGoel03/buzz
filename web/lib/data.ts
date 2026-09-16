@@ -1,3 +1,4 @@
+import { mockOrgEventPage, queryOrgEventPage, type OrgEventPage } from "./org-events";
 import { createClient } from "./supabase-server";
 import { mockCampus, mockEvents, mockOrgs, mockProfile } from "./mock-data";
 import type { Event, Organization, Profile, Campus } from "./types";
@@ -65,21 +66,9 @@ export async function getOrgs(): Promise<Organization[]> {
   }
 }
 
-export async function getEventsByOrg(handle: string): Promise<Event[]> {
-  if (!hasRealSupabase()) {
-    return mockEvents.filter((e) => e.host_handle === handle);
-  }
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("events")
-      .select("*")
-      .eq("host_handle", handle)
-      .order("starts_at", { ascending: true });
-    return (data as Event[]) ?? [];
-  } catch {
-    return [];
-  }
+export async function getEventsByOrg(handle: string, cursor?: string): Promise<OrgEventPage> {
+  if (!hasRealSupabase()) return mockOrgEventPage(mockEvents, handle, cursor);
+  return queryOrgEventPage(await createClient(), handle, cursor);
 }
 
 export async function getActiveCampus(): Promise<Campus> {

@@ -2,7 +2,7 @@ import HeroBanner from "@/components/HeroBanner";
 import LiveTicker from "@/components/LiveTicker";
 import BentoFeed from "@/components/BentoFeed";
 import StatBand from "@/components/StatBand";
-import EventMap from "@/components/EventMap";
+import EventMap from "@/components/DeferredEventMap";
 import AppPushStrip from "@/components/AppPushStrip";
 import { getFeedEvents, getActiveCampus, getOrgs } from "@/lib/data";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
