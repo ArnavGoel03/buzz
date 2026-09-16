@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mapAssets } from "../scripts/check-map-assets.mjs";
 const mapPaths = new Set([...mapAssets].map(path => path.replace(".next/", "/_next/")));
-for (const [name, viewport] of [["desktop", { width: 1440, height: 900 }], ["phone", { width: 390, height: 844 }]] as const) {
+for (const [name, viewport] of [["desktop", { width: 1440, height: 700 }], ["phone", { width: 390, height: 844 }]] as const) {
   test(`${name}: maps defer, activate and navigate`, async ({ page }, testInfo) => {
     await page.setViewportSize(viewport);
     const requests: string[] = [];

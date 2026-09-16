@@ -3,9 +3,10 @@
 The active web app is `web/`, deployed from GitHub main to
 https://buzzcampus.vercel.app. Native apps are separate release targets.
 
-Home/feed share a near-viewport map gate with the original 360px container,
+All map consumers share a near-viewport map gate with the original 360px container,
 cleanup and no-IntersectionObserver fallback. Map CSS travels with the lazy
-module. Organization pages read 25 events plus one lookahead, ordered by exact
+module. This includes map/detail routes so link prefetch cannot eagerly load
+MapLibre through another consumer. Organization pages read 25 events plus one lookahead, ordered by exact
 timestamp and UUID. Cursor validation preserves database microseconds and rejects
 filter injection, malformed IDs and calendar rollover dates. The existing Events
 label and numeric links provide navigation through the full chronological list.
