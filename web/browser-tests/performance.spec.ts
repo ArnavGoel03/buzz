@@ -18,14 +18,14 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 700 }], ["pho
       const map = page.locator("[data-deferred-map]");
       await expect(map).toBeAttached();
       const box = await map.boundingBox();
-      expect(box?.y).toBeGreaterThan(viewport.height + 200);
+      expect.soft(box?.y).toBeGreaterThan(viewport.height + 200);
       await page.waitForTimeout(350);
-      expect(styles).toBe(0);
-      expect(requests.filter(path => mapPaths.has(path))).toEqual([]);
+      expect.soft(styles).toBe(0);
+      expect.soft(requests.filter(path => mapPaths.has(path))).toEqual([]);
       await map.scrollIntoViewIfNeeded();
       await expect(map.locator("canvas")).toBeVisible();
       await expect.poll(() => styles).toBeGreaterThan(0);
-      await expect(map).toHaveJSProperty("clientHeight", 360);
+      await expect.soft(map.locator("..")).toHaveCSS("height", "360px");
       await page.screenshot({ path: testInfo.outputPath(`${name}-${path === "/" ? "home" : "feed"}-map.png`) });
       const marker = map.getByRole("button", { name: "ACM Boba Night", exact: true });
       await marker.click();

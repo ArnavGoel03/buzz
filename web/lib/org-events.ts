@@ -12,6 +12,8 @@ export function parseEventCursor(raw?: string): Cursor | null {
     if (typeof value.date !== "string" || typeof value.id !== "string" ||
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.id) ||
         !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?(?:Z|[+-][0-9]{2}:[0-9]{2})$/.test(value.date) || !Number.isFinite(Date.parse(value.date))) return null;
+    const offset = value.date.match(/[+-]([0-9]{2}):([0-9]{2})$/);
+    if (offset && (Number(offset[1]) > 14 || Number(offset[2]) > 59 || (Number(offset[1]) === 14 && Number(offset[2]) !== 0))) return null;
     const [year, month, day] = value.date.slice(0, 10).split("-").map(Number);
     const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
     const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

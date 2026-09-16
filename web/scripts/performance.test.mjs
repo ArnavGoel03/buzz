@@ -53,7 +53,7 @@ test("unmounted map never activates; older browsers use the immediate fallback",
 });
 
 test("malformed database IDs and calendar rollover dates cannot reach cursor filters", async () => {
-  for (const cursor of [{ date: rows[0].starts_at, id: "slug" }, { date: "2026-02-31T10:00:00Z", id: rows[0].id }]) {
+  for (const cursor of [{ date: rows[0].starts_at, id: "slug" }, { date: "2026-02-31T10:00:00Z", id: rows[0].id }, { date: "2026-09-17T10:00:00+23:00", id: rows[0].id }]) {
     const encoded = Buffer.from(JSON.stringify(cursor)).toString("base64url");
     assert.equal(parseEventCursor(encoded), null);
     let filtered = false;
