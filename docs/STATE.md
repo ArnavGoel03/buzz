@@ -16,11 +16,13 @@ Verified: typecheck, seven Node tests including 1,051 tied-date events and the
 actual query adapter, production build, and a calibrated initial-resource check
 that excludes map code/styles while preserving layout height. No lint command is
 configured. Node 26 reports an existing module.register deprecation during build.
-Rendered layout, map marker interaction, real Supabase query plans/RLS and native
-apps were not verified. Local browser startup is blocked. The public GitHub runner is available;
-a focused Playwright workflow is now verifying desktop/phone map deferral and
-marker navigation with a deterministic Carto style fixture. Screenshots are
-retained as run artifacts.
+GitHub browser run 35163988412 passed desktop (1440x700) and phone (390x844)
+map deferral, activation, reserved height and marker navigation. Map and event-list
+screenshots were inspected; organization headers were captured mid-animation,
+so this does not certify that animation. The Carto style was a deterministic
+fixture. Real tiles, production Supabase query plans/RLS and native apps remain
+unverified. Local browser startup is blocked; public GitHub runners work.
+PR #1 merged as 5ac9b5b; the portfolio queue owns live deployment readback.
 
 The portfolio performance IMPLEMENTATION.md records the exact GitHub merge and
 live deployment receipt. Earlier native/product obligations remain in
