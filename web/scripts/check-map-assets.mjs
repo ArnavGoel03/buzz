@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 const root = ".next";
 const markers = ["basemaps.cartocdn.com/gl/dark-matter", "MapLibre GL JS", "maplibregl-map{"];
-const mapAssets = new Set(readdirSync(join(root, "static/chunks")).filter(name => markers.some(marker => readFileSync(join(root, "static/chunks", name), "utf8").includes(marker))).map(name => `${root}/static/chunks/${name}`));
+export const mapAssets = new Set(readdirSync(join(root, "static/chunks")).filter(name => markers.some(marker => readFileSync(join(root, "static/chunks", name), "utf8").includes(marker))).map(name => `${root}/static/chunks/${name}`));
 assert.ok(mapAssets.size, "Map detector positive control missing");
 for (const page of ["index", "feed"]) {
   const html = readFileSync(join(root, `server/app/${page}.html`), "utf8");

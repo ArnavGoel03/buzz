@@ -2,8 +2,10 @@ name: CI
 
 on:
   pull_request:
+    paths-ignore: ["web/**", "docs/**", "README.md", ".github/workflows/web-performance.yml"]
   push:
     branches: [main]
+    paths-ignore: ["web/**", "docs/**", "README.md", ".github/workflows/web-performance.yml"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

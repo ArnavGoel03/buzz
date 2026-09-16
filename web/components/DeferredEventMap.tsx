@@ -15,7 +15,7 @@ export default function DeferredEventMap(props: ComponentProps<typeof EventMapCo
     return whenNearViewport(container.current, () => setVisible(true));
   }, []);
   return (
-    <div ref={container} className="w-full h-full">
+    <div data-deferred-map ref={container} className="w-full h-full">
       {visible && <Suspense fallback={<div className="w-full h-full" aria-busy="true" />}><EventMap {...props} /></Suspense>}
     </div>
   );
