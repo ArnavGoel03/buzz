@@ -1,3 +1,13 @@
+# Poster glyph follow-up, 2026-09-18
+
+The remaining poster dynamic-font HTTP400 is fixed with equivalent triangle
+and ring SVG marks. Both actual PNG routes pass signature/dimension checks
+(1200x630 and1080x1920), invalid IDs still return400, and both renders were
+visually inspected with no runtime font errors. Native typecheck,11 existing
+regressions and warning-free build pass. The request-only Playwright poster
+regression needs no local browser and passes against production output.
+Production remains paused; this does not claim live availability.
+
 # Stack upgrade candidate, 2026-09-18
 
 Next 16.3.5, Tailwind 4.3.3 and native TypeScript 7.0.2 are installed.
