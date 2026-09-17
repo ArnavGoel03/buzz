@@ -1,3 +1,31 @@
+# Current production restoration, 18 September 2026
+
+At 2026-09-17T21:01:24 UTC, provider readback confirmed `paused: false`
+and READY production deployment `dpl_HwMjwW2sEP3np1cYERQVAADgfLNK` at source
+`5ac9b5b01fb55816722b538b2cdd93078e706ceb`. Canonical https://buzzcampus.vercel.app/
+returned HTTP 200 after the supported project resume operation.
+The existing Hobby plan and spending limits were unchanged; no upgrade,
+budget reset or payment was made. This restored the existing deployment,
+without a new build or Git merge.
+
+The canonical homepage returns the expected title. Latest merged candidate
+`2fe2d18` is not live: the restored source predates the web performance repair,
+stack upgrade and poster SVG fix. Hosted run
+[35272624001](https://github.com/ArnavGoel03/buzz/actions/runs/35272624001)
+at `cd7b1c1` passed four of five browser cases. The phone map case failed at
+`performance.spec.ts:21` because `box?.y` was undefined after `map.boundingBox()`. The earlier
+four-case success does not close this latest failure; diagnose it and obtain
+matching successful browser acceptance before another candidate deployment.
+Live map tile delivery, production Supabase RLS and native-device obligations
+remain unverified. No runtime repair or deployment retry occurred in this
+records-only follow-up.
+
+Evidence: project GET, production deployment identity and live HTTP/content
+readback from the restoration pass. The dated receipts below remain historical
+and do not override this current availability or close the remaining holds.
+
+## Earlier status and verification receipts
+
 # Poster glyph follow-up, 2026-09-18
 
 The remaining poster dynamic-font HTTP400 is fixed with equivalent triangle
