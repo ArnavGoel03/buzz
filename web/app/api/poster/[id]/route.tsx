@@ -116,8 +116,8 @@ export async function GET(
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <Row icon="▸" text={startLabel} size={isStory ? 36 : 26} />
-            <Row icon="◉" text={event.location_name} size={isStory ? 36 : 26} />
+            <Row icon="time" text={startLabel} size={isStory ? 36 : 26} />
+            <Row icon="location" text={event.location_name} size={isStory ? 36 : 26} />
           </div>
         </div>
       </div>
@@ -133,10 +133,19 @@ export async function GET(
   );
 }
 
-function Row({ icon, text, size }: { icon: string; text: string; size: number }) {
+function Row({ icon, text, size }: { icon: "time" | "location"; text: string; size: number }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: size, fontWeight: 700, opacity: 0.96 }}>
-      <span style={{ color: COLOR.accent }}>{icon}</span>
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={COLOR.accent}>
+        {icon === "time" ? (
+          <path d="M7 4 19 12 7 20Z" />
+        ) : (
+          <g>
+            <circle cx="12" cy="12" r="9" fill="none" stroke={COLOR.accent} strokeWidth="2" />
+            <circle cx="12" cy="12" r="5" />
+          </g>
+        )}
+      </svg>
       <span>{text}</span>
     </div>
   );
