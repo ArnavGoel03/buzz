@@ -10,7 +10,7 @@
     "tokens": "node scripts/sync-tokens.mjs",
     "icons": "node scripts/gen-icons.mjs",
     "brand": "pnpm tokens && pnpm icons",
-    "test:performance": "node --test scripts/performance.test.mjs"
+    "test:performance": "node --test scripts/performance.test.mjs scripts/org-events-page.test.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
