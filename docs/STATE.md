@@ -1,10 +1,21 @@
 # Buzz web performance release, 2026-09-17
 
+## Availability and regression reconciliation, 18 September 2026
+
+https://buzzcampus.vercel.app/ still returns HTTP 503 `DEPLOYMENT_PAUSED`.
+GitHub confirms run 35253752112 succeeded. Its repaired web source is unchanged
+through current HEAD: organization failure/retry, pagination and lazy-map fixture
+acceptance remain valid historical tests. They do not establish live tile delivery,
+production Supabase RLS or native-device behavior; these remain open. No browser
+suite rerun because neither its application source nor the fixture changed.
+Repository visibility is public, verified with GitHub API.
+
 The active web app is `web/`, connected from GitHub main to
 https://buzzcampus.vercel.app. Native apps are separate release targets.
 Production is currently unavailable: on 2026-09-17 Vercel reports the Buzz project
 `paused: true`; the public organization URL returns HTTP 503 `DEPLOYMENT_PAUSED`.
-The pause reason is not exposed by the project API. Do not mistake merged code
+The project API did not expose the reason; the shared team event later
+identified the spend-management budget being reached. Do not mistake merged code
 or a successful preview for a live release.
 
 All map consumers share a near-viewport map gate with the original 360px container,
