@@ -16,7 +16,9 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 700 }], ["pho
       requests.length = 0; styles = 0;
       await page.goto(path);
       const map = page.locator("[data-deferred-map]");
-      await expect(map).toBeAttached();
+      // Streamed sections can be attached inside React's hidden staging node.
+      // Require committed layout before measuring its distance below the fold.
+      await expect(map).toBeVisible();
       const box = await map.boundingBox();
       expect.soft(box?.y).toBeGreaterThan(viewport.height + 200);
       await page.waitForTimeout(350);

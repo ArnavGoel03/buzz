@@ -1,3 +1,14 @@
+# Map acceptance qualification, 18 September 2026
+
+The latest failed phone map assertion in run35272624001 was traced to the
+/feed map still inside React's hidden streaming container DIV#S:0 when the
+harness measured boundingBox. The map subsequently activated and navigated
+successfully in the same run. The harness now waits for visible committed
+layout instead of attachment before retaining the same below-fold, no-early
+requests,360px height and navigation assertions. No application code changed.
+Matching successful hosted acceptance and exact-source production deployment
+remain pending. This supersedes the earlier undiagnosed failure, not its gate.
+
 # Current production restoration, 18 September 2026
 
 At 2026-09-17T21:01:24 UTC, provider readback confirmed `paused: false`
