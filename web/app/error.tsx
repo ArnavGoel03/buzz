@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { PAGE_LOAD_ERROR, TRY_AGAIN } from "@/lib/error-copy";
 import Link from "next/link";
 import { RotateCcw, Home } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
@@ -31,7 +32,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           className="mt-5 font-display font-medium tracking-[-0.02em] text-4xl md:text-5xl leading-tight"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          We hit an error loading this page.
+          {PAGE_LOAD_ERROR}
         </h1>
         <p className="mt-4 text-[var(--color-text-secondary)]">
           Not your fault. Our servers logged this, so it can be fixed. Try again
@@ -47,7 +48,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
             onClick={reset}
             className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-semibold text-sm"
           >
-            <RotateCcw size={14} /> Try again
+            <RotateCcw size={14} /> {TRY_AGAIN}
           </button>
           <Link
             href="/"

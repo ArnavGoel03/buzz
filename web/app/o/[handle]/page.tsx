@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PAGE_LOAD_ERROR, TRY_AGAIN } from "@/lib/error-copy";
 import { parseEventCursor } from "@/lib/org-events";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -11,6 +12,9 @@ import OrgHero from "@/components/OrgHero";
 import OrgExternalLinks from "@/components/OrgExternalLinks";
 import { safeJsonLd } from "@/lib/security";
 import { absoluteUrl } from "@/lib/site";
+
+// An unavailable response must be retried against the source, not reused as a page.
+export const dynamic = "force-dynamic";
 
 type Params = Promise<{ handle: string }>;
 
@@ -37,8 +41,15 @@ export default async function OrgDetail({ params, searchParams }: { params: Para
   const after = typeof search.after === "string" && parseEventCursor(search.after) ? search.after : undefined;
   const requestedPage = Number(search.page);
   const page = after && Number.isSafeInteger(requestedPage) && requestedPage > 1 && requestedPage < 1_000_000 ? requestedPage : 1;
-  const [org, result] = await Promise.all([getOrg(handle), getEventsByOrg(handle, after)]);
-  const { events, next } = result;
+  const [org, result] = await Promise.all([
+    getOrg(handle),
+    getEventsByOrg(handle, after).catch(() => {
+      console.error("[buzz] organization event query failed");
+      return null;
+    }),
+  ]);
+  const { events, next } = result ?? { events: [], next: null };
+  const retryHref = `/o/${handle}${after ? `?${new URLSearchParams({ after, page: String(page) })}` : ""}`;
   if (!org) notFound();
 
   const sameAs: string[] = [];
@@ -106,7 +117,12 @@ export default async function OrgDetail({ params, searchParams }: { params: Para
           <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
             Events
           </h2>
-          {events.length === 0 ? (
+          {result === null ? (
+            <div className="text-sm text-[var(--color-text-tertiary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+              <p role="alert">{PAGE_LOAD_ERROR}</p>
+              <a href={retryHref} className="inline-flex min-h-11 items-center mt-2 underline">{TRY_AGAIN}</a>
+            </div>
+          ) : events.length === 0 ? (
             <p className="text-sm text-[var(--color-text-tertiary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
               No events scheduled yet.
             </p>
@@ -117,7 +133,7 @@ export default async function OrgDetail({ params, searchParams }: { params: Para
               ))}
             </div>
           )}
-          {(after || next) && (
+          {result !== null && (after || next) && (
             <nav aria-label="Events" className="mt-4 flex items-center gap-3">
               {after && <Link href={`/o/${handle}`} prefetch={false} className="p-3 underline">1</Link>}
               <span aria-current="page" className="p-3">{page}</span>

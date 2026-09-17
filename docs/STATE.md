@@ -10,7 +10,11 @@ MapLibre through another consumer. Organization pages read 25 events plus one lo
 timestamp and UUID. Cursor validation preserves database microseconds and rejects
 filter injection, malformed IDs and calendar rollover dates. The existing Events
 label and numeric links provide navigation through the full chronological list.
-Errors propagate instead of pretending the archive is empty.
+Query errors propagate to the organization page boundary, which retains the
+profile and shows the existing load-error and retry text. A failed page never
+shows empty-list copy, partial events, or pagination. Retry reloads the same
+cursor with dynamic rendering. The query includes past events, so its existing
+Events heading remains accurate.
 
 Verified: typecheck, seven Node tests including 1,051 tied-date events and the
 actual query adapter, production build, and a calibrated initial-resource check
@@ -25,6 +29,13 @@ retained as run artifacts.
 The portfolio performance IMPLEMENTATION.md records the exact GitHub merge and
 live deployment receipt. Earlier native/product obligations remain in
 SESSION_STATE.md; this release does not close them.
+
+Organization failure repair candidate: `fix/org-events-unavailable`. The actual
+page regression tests first reproduced the original Supabase and transport
+exceptions, then passed with the fix. Typecheck and all 11 Node tests pass.
+The local build compiled in 22.6 seconds but hit the 30-second process budget
+during its TypeScript phase, so the full build and browser verification remain
+pending GitHub CI. No lint command is configured. This candidate is not yet live.
 
 Browser follow-up: the existing boba and lecture fixture pins overlap at the
 default zoom. The performance smoke uses an unobscured marker; clustering or
