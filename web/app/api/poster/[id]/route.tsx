@@ -15,7 +15,6 @@ import { SITE } from "@/lib/site";
  * Returns long Cache-Control because the underlying event title rarely changes after
  * publish; cache busts naturally on a new deploy because the URL includes the BUILD_ID.
  */
-export const runtime = "edge";
 
 // Accept event UUIDs (e.g. `8c4d…`) plus handle-style fallbacks (a-z/0-9/_- up to 64).
 // Bounds the attack surface so we don't render a poster for arbitrary ID shapes.

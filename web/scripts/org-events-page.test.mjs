@@ -10,7 +10,7 @@ import { queryOrgEventPage, parseEventCursor, eventPage } from "../lib/org-event
 
 const require = createRequire(import.meta.url);
 const source = readFileSync(new URL("../app/o/[handle]/page.tsx", import.meta.url), "utf8");
-const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 } }).outputText;
+const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: false, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 } }).outputText;
 const org = { handle: "club", name: "Fixture Club", tagline: "Fixture tagline", accent_hex: "#ffffff", member_count: 10 };
 const rows = Array.from({ length: 26 }, (_, index) => ({ id: `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`, starts_at: "2026-09-17T10:00:00.123456Z", host_handle: "club", title: `Event ${index}` }));
 function queryResult(result) {

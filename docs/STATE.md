@@ -1,3 +1,21 @@
+# Stack upgrade candidate, 2026-09-18
+
+Next 16.3.5, Tailwind 4.3.3 and native TypeScript 7.0.2 are installed.
+React stays on 19.2.8 because React Three Fiber excludes 19.3. The real
+TypeScript 6 compatibility package remains for Next and test transpilation;
+`pnpm run typecheck` explicitly invokes the native compiler. The Node test
+transpiler now explicitly keeps its existing CommonJS interop convention.
+The poster route uses Next's supported default Node runtime with unchanged
+CDN caching. Native typecheck, all 11 regression tests and the final production
+build pass without warnings. Public CI https://github.com/ArnavGoel03/buzz/actions/runs/35268929001
+passed native typecheck, 11 tests, build and all four desktop/phone browser
+cases at 94e1e7b. All eight screenshot artifacts were visually inspected: map
+fixture activation/navigation, organization pagination and failure/retry layouts
+remain intact. The screenshots are retained by that run for seven days. Local
+HTTP checks also returned both poster PNG dimensions correctly, but existing
+glyph font downloads logged HTTP 400; poster font coverage remains an explicit
+limitation. Production release remains blocked by the paused host.
+
 # Buzz web performance release, 2026-09-17
 
 ## Availability and regression reconciliation, 18 September 2026
