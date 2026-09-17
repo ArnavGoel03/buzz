@@ -34,8 +34,10 @@ Organization failure repair candidate: `fix/org-events-unavailable`. The actual
 page regression tests first reproduced the original Supabase and transport
 exceptions, then passed with the fix. Typecheck and all 11 Node tests pass.
 The local build compiled in 22.6 seconds but hit the 30-second process budget
-during its TypeScript phase, so the full build and browser verification remain
-pending GitHub CI. No lint command is configured. This candidate is not yet live.
+during its TypeScript phase. GitHub run 35253055242 completed the production
+build and existing map browser tests; the new fallback browser assertion needed
+a selector narrowed to exclude Next.js's hidden route announcer. Its rerun is
+pending. No lint command is configured. This candidate is not yet live.
 
 Browser follow-up: the existing boba and lecture fixture pins overlap at the
 default zoom. The performance smoke uses an unobscured marker; clustering or
