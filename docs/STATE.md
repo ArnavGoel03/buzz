@@ -7,8 +7,14 @@ TypeScript 6 compatibility package remains for Next and test transpilation;
 transpiler now explicitly keeps its existing CommonJS interop convention.
 The poster route uses Next's supported default Node runtime with unchanged
 CDN caching. Native typecheck, all 11 regression tests and the final production
-build pass without warnings. Browser CI and production release remain open;
-production is paused as recorded below.
+build pass without warnings. Public CI https://github.com/ArnavGoel03/buzz/actions/runs/35268929001
+passed native typecheck, 11 tests, build and all four desktop/phone browser
+cases at 94e1e7b. All eight screenshot artifacts were visually inspected: map
+fixture activation/navigation, organization pagination and failure/retry layouts
+remain intact. The screenshots are retained by that run for seven days. Local
+HTTP checks also returned both poster PNG dimensions correctly, but existing
+glyph font downloads logged HTTP 400; poster font coverage remains an explicit
+limitation. Production release remains blocked by the paused host.
 
 # Buzz web performance release, 2026-09-17
 
