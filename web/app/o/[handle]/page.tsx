@@ -118,7 +118,7 @@ export default async function OrgDetail({ params, searchParams }: { params: Para
             Events
           </h2>
           {result === null ? (
-            <div className="text-sm text-[var(--color-text-tertiary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+            <div className="text-sm text-[var(--color-text-secondary)] p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
               <p role="alert">{PAGE_LOAD_ERROR}</p>
               <a href={retryHref} className="inline-flex min-h-11 items-center mt-2 underline">{TRY_AGAIN}</a>
             </div>
