@@ -1,13 +1,36 @@
 # Map acceptance qualification, 18 September 2026
 
-The latest failed phone map assertion in run35272624001 was traced to the
-/feed map still inside React's hidden streaming container DIV#S:0 when the
-harness measured boundingBox. The map subsequently activated and navigated
-successfully in the same run. The harness now waits for visible committed
-layout instead of attachment before retaining the same below-fold, no-early
-requests,360px height and navigation assertions. No application code changed.
-Matching successful hosted acceptance and exact-source production deployment
-remain pending. This supersedes the earlier undiagnosed failure, not its gate.
+The failed phone map assertion in run35272624001 was traced to the /feed map
+still inside React's hidden streaming container DIV#S:0 when the harness
+measured boundingBox. The map subsequently activated and navigated successfully
+in that same run. PR #5 waits for visible committed layout instead of attachment.
+Its below-fold distance, no-early-request, 360px height, activation and marker
+navigation assertions are unchanged. No application code changed.
+
+Hosted run [35285961597](https://github.com/ArnavGoel03/buzz/actions/runs/35285961597)
+passed at `298f01559a062f273706c7fc60ca376f6a625f48`: native TypeScript 7,
+all 11 Node regressions, production build and all five browser cases. All eight
+desktop/phone captures and both poster PNGs were visually inspected. Artifact
+`10522954922` retains those captures for seven days. The build has no compiler
+warnings; fresh-run cache and existing artifact-action Node deprecation notices
+remain CI infrastructure notices. No lint command is configured.
+
+Fresh provider readback still identifies canonical https://buzzcampus.vercel.app/
+as READY deployment `dpl_HwMjwW2sEP3np1cYERQVAADgfLNK`, source
+`5ac9b5b01fb55816722b538b2cdd93078e706ceb`. The project is not paused. Homepage,
+/feed and /o/acm-ucsd return HTTP 200 with Buzz HTML; both poster formats return
+valid PNGs at 1200x630 and 1080x1920, and invalid poster ID returns 400. These
+checks prove the old production is available, not that the upgrade is live.
+
+Deployment remains held: the shared Vercel team returned HTTP 402
+`api-deployments-free-per-day` for Portfolio and Watch, total 100, remaining 0,
+with reset September 19 around 04:42 IST. No redundant Buzz deployment POST,
+budget change or paid resource was attempted. After reset, requeue the exact
+verified GitHub source and verify canonical alias/source plus production HTTP.
+Real map tile delivery, production Supabase RLS and native-device acceptance
+remain separate pre-existing obligations. The matching successful run above
+closes the earlier harness failure; historical receipts below do not override
+this current qualification and release boundary.
 
 # Current production restoration, 18 September 2026
 
